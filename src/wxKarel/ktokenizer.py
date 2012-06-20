@@ -13,7 +13,7 @@ except ImportError:
     from StringIO import StringIO
 
 class ktokenizer:
-    "A lexical analyzer class for simple shell-like syntaxes."
+    "Un tokenizador diseñado para la sintaxis de Karel el Robot"
     def __init__(self, instream=None, infile=None):
         if isinstance(instream, basestring):
             instream = StringIO(instream)
@@ -29,10 +29,11 @@ class ktokenizer:
                           'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')
         self.whitespace = ' \t\r\n'
         self.whitespace_split = False
-        self.quotes = '\'"'
-        self.escape = '\\'
+        self.quotes = '\'"' #Comillas agrupadoras
+        self.escape = '\\'  #Caracter de escape
         self.escapedquotes = '"'
         self.state = ' '
+        #El estado en que se encuentra el tokenizador
         self.pushback = deque()
         self.lineno = 1
         self.debug = 0
@@ -44,7 +45,7 @@ class ktokenizer:
                   % (self.instream, self.lineno)
 
     def push_token(self, tok):
-        "Push a token onto the stack popped by the get_token method"
+        "Pone un token en la pila obtenido por el método get_token"
         if self.debug >= 1:
             print "shlex: pushing token " + repr(tok)
         self.pushback.appendleft(tok)
