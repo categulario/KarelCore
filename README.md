@@ -1,4 +1,4 @@
 PyRel
 =====
 
-ded
+Karel el robot, escrito completamente en python
