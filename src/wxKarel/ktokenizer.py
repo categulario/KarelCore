@@ -36,6 +36,7 @@ class ktokenizer:
         #El estado en que se encuentra el tokenizador
         self.pushback = deque()
         self.lineno = 1
+        self.has_lineno_change = False #Indica cuando hay que cambiar de linea, usado para corregir el conteo de lineas
         self.debug = 0
         self.token = ''
         self.filestack = deque()
@@ -111,10 +112,16 @@ class ktokenizer:
         """
         quoted = False
         escapedstate = ' '
+
         while True:
+            if self.has_lineno_change:
+                self.lineno +=1
+                self.has_lineno_change = False
+
             nextchar = self.instream.read(1) #Lee un caracter del bufer de entrada
             if nextchar == '\n':
-                self.lineno = self.lineno + 1 #Una variable que lleva la cuenta de las lineas que pasan
+                #self.lineno = self.lineno + 1 #Una variable que lleva la cuenta de las lineas que pasan
+                self.has_lineno_change = True
             if self.debug >= 3:
                 print "shlex: in state", repr(self.state), \
                       "I see character:", repr(nextchar)
@@ -135,7 +142,8 @@ class ktokenizer:
                         continue
                 elif nextchar in self.commenters: #Si es un comentario nos comemos la linea completa
                     self.instream.readline()
-                    self.lineno = self.lineno + 1
+                    #self.lineno = self.lineno + 1
+                    self.has_lineno_change = True
                 elif nextchar in self.wordchars:
                     self.token = nextchar
                     self.state = 'a'
@@ -188,7 +196,8 @@ class ktokenizer:
                     break   # emit current token
                 elif nextchar in self.commenters:
                     self.instream.readline()
-                    self.lineno = self.lineno + 1
+                    #self.lineno = self.lineno + 1
+                    self.has_lineno_change = True
                 elif nextchar in self.wordchars or nextchar in self.quotes \
                     or self.whitespace_split:
                     self.token = self.token + nextchar
@@ -252,8 +261,7 @@ if __name__ == '__main__':
     while True:
         tt = lexer.get_token()
         if tt:
-            print "Token: " + repr(tt)
-            print "Line: " + str(lexer.lineno)
+            print "Token: " + repr(tt), "\t\t","Line: " + str(lexer.lineno)
         else:
             break
 
