@@ -1,12 +1,16 @@
+#!coding:iso-8859-1
 """
 Define la gramatica de Karel
 """
+
+from ktokenizer import ktokenizer
+import sys
 
 class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self):
+    def __init__(self, flujo=None, archivo=None):
         self.palabras_reservadas = [
             "iniciar-programa",
             "inicia-ejecucion",
@@ -56,6 +60,18 @@ class kgrammar:
             "verdadero",
             "falso"
         ]
+        self.tokenizador = ktokenizer(flujo, archivo)
+        self.token_actual = self.tokenizador.get_token().lower()
+        self.estado = True #Almacena el estado del programa, cambia si se encuentra un error
+    
+    def avanza_token (self):
+        """ Avanza un token en el archivo """
+        siguiente_token = self.tokenizador.get_token().lower()
+        if siguiente_token:
+            self.token_actual = siguiente_token
+            return True
+        else:
+            return False
 
     def bloque(self):
         """
@@ -66,8 +82,18 @@ class kgrammar:
                    ExpresionGeneral [";" ExpresionGeneral]...
                 "TERMINA-EJECUCION"
         }
+        Un bloque se compone de todo el codigo admitido entre iniciar-programa
+        y finalizar-programa
         """
-        pass
+        while self.token_actual == 'define-nueva-instruccion' or self.token_actual == 'define-prototipo-instruccion' or self.token_actual == 'externo':
+            if self.token_actual == 'define-nueva-instruccion':
+                self.declaracion_de_procedimiento()
+            elif self.token_actual == 'define-prototipo-instruccion':
+                self.declaracion_de_prototipo()
+            else:
+                #Se trata de una declaracion de enlace 
+                #TODO averiguar que cosa es esa
+                self.declaracion_de_enlace()
 
     def clausula_atomica(self):
         """
@@ -107,8 +133,11 @@ class kgrammar:
             DeclaracionDeProcedimiento ::= "DEFINE-NUEVA-INSTRUCCION" Identificador ["(" Identificador ")"] "COMO"
                                          Expresion
         }
+        Aqui se definen las nuevas funciones que extienden el lenguaje
+        de Karel, como por ejemplo gira-derecha
         """
-        pass
+        self.avanza_token()
+        
 
     def declaracion_de_prototipo(self):
         """
@@ -117,6 +146,11 @@ class kgrammar:
             DeclaracionDePrototipo ::= "DEFINE-PROTOTIPO-INSTRUCCION" Identificador ["(" Identificador ")"]
         }
         """
+        pass
+
+    def declaracion_de_enlace (self):
+        """ Se utilizará para tomar funciones de librerías externas,
+        aun no implementado"""
         pass
 
     def expresion(self):
@@ -230,6 +264,32 @@ class kgrammar:
         }
         """
         pass
+    
+    def verificar (self):
+        """ Verifica que este correcta la gramatica de un programa
+        en karel """
+        if self.token_actual == 'iniciar-programa':
+            if self.avanza_token():
+                self.bloque()
+                if self.token_actual != 'finalizar-programa':
+                    print "Se esperaba 'finalizar-programa' al final del codigo"
+                    self.estado = False
+            else:
+                self.estado = False
+                print "Codigo mal formado"
+        else:
+            print "Se esperaba 'iniciar-programa' al inicio del programa"
+            self.estado = False
+        
 
 if __name__ == "__main__":
-    print "kgrammar"
+    if len(sys.argv) == 1:
+        gramar = kgrammar()
+    else:
+        fil = sys.argv[1]
+        gramar = kgrammar(open(fil), fil)
+    gramar.verificar()
+    if gramar.estado:
+        print "El programa esta correcto"
+    else:
+        print "Hay problemas con la sintaxis"
