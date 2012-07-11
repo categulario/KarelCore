@@ -418,8 +418,13 @@ if __name__ == "__main__":
     try:
         grammar.verificar()
         print
-        print "Sintaxis Verificada, todo bien"
     except KarelException, ke:
         print ke.args[0], "cerca de la línea", grammar.tokenizador.lineno
         print
         print "El programa tiene errores de sintaxis"
+    else:
+        print
+        print "La sintaxis está correcta"
+    finally:
+        print ">Sintaxis Verificada"
+
