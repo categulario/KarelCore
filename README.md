@@ -5,6 +5,8 @@ Karel el robot, escrito completamente en python. Por [@Categulario](https://twit
 
 El objetivo de este proyecto es ofrecer la plataforma de aprendizaje de la programación ''Karel'' para todas las plataformas y sin requerir librerías privativas.
 
+Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel.
+
 Testing
 -------
 
