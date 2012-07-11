@@ -4,6 +4,7 @@ iniciar-programa
         gira-izquierda;
         gira-izquierda;
     fin;
+    /Pongo un comentario de varias lineas/
     define-nueva-instruccion come-columna como inicio
         mientras junto-a-zumbador y frente-libre hacer inicio
             coge-zumbador;

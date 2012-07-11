@@ -3,9 +3,9 @@ PyRel
 
 Karel el robot, escrito completamente en python. Por [@Categulario](https://twitter.com/categulario)
 
-El objetivo de este proyecto es ofrecer la plataforma de aprendizaje de la programación ''Karel'' para todas las plataformas y sin requerir librerías privativas.
+El objetivo de este proyecto es ofrecer el lenguaje ''Karel'' orientado al aprendizaje de la programación para todas las plataformas y sin requerir librerías privativas.
 
-Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel.
+Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos cambios en la sintaxis pueden haber sido influenciados por la sintaxis de Python, sin embargo cualquier código en la sintaxis original de Karel será reconocido (Excepto por los comentarios de una sola línea con `//`).
 
 Testing
 -------
@@ -44,4 +44,5 @@ Notas
 
 * Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan.
 * Trato de hacer los mensajes de error lo más comprensibles posible.
-* Se pueden hacer comentarios en una línea usando `#` no hay soporte aun para comentarios de varias líneas, pero planeo que se abran y cierren con `/`
+* Se pueden hacer comentarios en una línea usando `#` no hay soporte aun para comentarios de varias líneas, pero planeo que se abran y cierren con `/`.
+* Estoy pensando seriamente en eliminar la necesidad de `;` después de cada instrucción, en un arranque de locura podría hacerlo.

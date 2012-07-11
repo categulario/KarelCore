@@ -6,6 +6,7 @@ Un analizador lexico para archivos Karel, basado en el módulo shlex de python
 import os.path
 import sys
 from collections import deque
+from kutil import KarelException
 
 try:
     from cStringIO import StringIO
@@ -166,11 +167,11 @@ class ktokenizer:
                     if self.debug >= 2:
                         print "shlex: I see EOF in quotes state"
                     # XXX what error should be raised here?
-                    raise ValueError, "Hay un comentario que no termina"
+                    raise KarelException("Hay un comentario que no termina")
                 if nextchar == self.state:
-                    self.token = self.token + nextchar
+                    self.token = ''
                     self.state = ' '
-                    break
+                    #break
                 else:
                     self.token = self.token + nextchar
             elif self.state in self.escape:
