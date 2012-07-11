@@ -8,7 +8,7 @@ El objetivo de este proyecto es ofrecer la plataforma de aprendizaje de la progr
 Testing
 -------
 
-Para probar alguno de los componentes hay que ir a la carpeta /src/wxKarel y correr el script elegido
+Para probar alguno de los componentes hay que ir a la carpeta `/karel` y correr el script elegido
 
 Ejemplo:
 
