@@ -20,7 +20,7 @@ O también
 
 `$ python ktokenizer.py`
 
-También es posible pasar un archivo como parámetro, se supondrá que el archivo contiene un programa en karel, en la misma carpeta que los scripts existen archivos con código karel.
+También es posible pasar un archivo como parámetro, se supondrá que el archivo contiene un programa en karel. En la misma carpeta que los scripts existen archivos con código karel para pruebas.
 
 * `codigo.karel` contiene un programa correcto sintácticamente
 * `malo.karel` tiene algún error de sintaxis

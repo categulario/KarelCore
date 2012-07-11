@@ -14,7 +14,7 @@ iniciar-programa
             "hola mundo!"
             avanza;
         fin;
-        repetir sucede(5) veces inicio
+        repetir sucede(5) veces inicio #Esto es un comentario de una linea
             deja-zumbador;
         fin;
         repite 452 veces inicio
