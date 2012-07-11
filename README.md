@@ -14,13 +14,25 @@ Para probar alguno de los componentes hay que ir a la carpeta `/karel` y correr 
 
 Ejemplo:
 
-`python kgrammar.py`
+`$ python kgrammar.py`
 
 O también
 
-`python ktokenizer.py`
+`$ python ktokenizer.py`
 
 También es posible pasar un archivo como parámetro, se supondrá que el archivo contiene un programa en karel, en la misma carpeta que los scripts existen archivos con código karel.
 
 * `codigo.karel` contiene un programa correcto sintácticamente
 * `malo.karel` tiene algún error de sintaxis
+
+Un ejemplo de cómo pasar un archivo como parámetro:
+
+`$ python kgrammar.py codigo.karel`
+
+TODO
+----
+
+Algunas buenas ideas por implementar en este proyecto
+
+* Implementar la GUI del IDE
+* Poner una sección con un tutorial de Karel a modo de 'misiones'
