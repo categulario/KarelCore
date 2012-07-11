@@ -95,6 +95,14 @@ class kgrammar:
                 #Se trata de una declaracion de enlace
                 #TODO averiguar que cosa es esa
                 self.declaracion_de_enlace()
+        #Sigue el bloque con la lógica del programa
+        if self.token_actual == 'inicia-ejecucion':
+            self.avanza_token()
+            self.expresion_general()
+            if self.token_actual != 'termina-ejecucion':
+                raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lógico del programa")
+            else:
+                avanza_token()
 
     def clausula_atomica(self):
         """
@@ -144,7 +152,7 @@ class kgrammar:
         if self.token_actual in self.palabras_reservadas:
             #No esta permitido usar una palabra reservada
             self.estado = False
-            raise KarelException("Se esperaba un nombre de procedimiento válido, %s no lo es"%self.token_actual)
+            raise KarelException("Se esperaba un nombre de procedimiento válido, '%s' no lo es"%self.token_actual)
 
         self.avanza_token()
 
