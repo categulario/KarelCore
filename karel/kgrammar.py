@@ -36,6 +36,7 @@ class kgrammar:
             "mientras",
             "hacer",
             "repite",
+            "repetir",
             "veces",
             "si",
             "entonces",
@@ -72,7 +73,7 @@ class kgrammar:
         """ Avanza un token en el archivo """
         siguiente_token = self.tokenizador.get_token().lower()
         if self.debug:
-            print "debug:", "avanza_token()", siguiente_token
+            print "debug:", "avanza_token()", "'"+siguiente_token+"'"
         if siguiente_token:
             self.token_actual = siguiente_token
             return True
@@ -125,6 +126,27 @@ class kgrammar:
         if self.debug:
             print "debug:", "clausula_atomica()"
 
+        if self.token_actual == 'si-es-cero':
+            self.avanza_token()
+            if self.token_actual == '(':
+                self.avanza_token()
+                self.expresion_entera()
+                if self.token_actual == ')':
+                    self.avanza_token()
+                else:
+                    raise KarelException("Se esperaba ')'")
+            else:
+                raise KarelException("Se esperaba '('")
+        elif self.token_actual == '(':
+            self.avanza_token()
+            self.termino()
+            if self.token_actual == ')':
+                avanza_token()
+            else:
+                raise KarelException("Se esperaba ')'")
+        else:
+            self.funcion_booleana()
+
     def clausula_no(self):
         """
         Define una clausula de negacion
@@ -134,6 +156,11 @@ class kgrammar:
         """
         if self.debug:
             print "debug:", "clausula_no()"
+        if self.token_actual == 'no':
+            self.avanza_token()
+            self.clausula_atomica()
+        else:
+            self.clausula_atomica()
 
     def clausula_y(self):
         """
@@ -144,6 +171,11 @@ class kgrammar:
         """
         if self.debug:
             print "debug:", "clausula_y()"
+        self.clausula_no()
+
+        while self.token_actual == 'y':
+            self.avanza_token()
+            self.clausula_no()
 
     def declaracion_de_procedimiento(self):
         """
@@ -272,7 +304,7 @@ class kgrammar:
             self.expresion_si()
         elif self.token_actual == 'mientras':
             self.expresion_mientras()
-        elif self.token_actual == 'repetir':
+        elif self.token_actual == 'repite' or self.token_actual == 'repetir':
             self.expresion_repite()
         elif self.token_actual == 'inicio':
             self.avanza_token()
@@ -282,9 +314,9 @@ class kgrammar:
             else:
                 raise KarelException("Se esperaba 'fin' para concluir el bloque")
         elif self.token_actual not in self.palabras_reservadas:
-            pass
+            self.avanza_token()
         else:
-            raise KarelException("Se esperaba un procedimiento")
+            raise KarelException("Se esperaba un procedimiento, %s no es válido"%self.token_actual)
 
     def expresion_entera(self):
         """
@@ -295,6 +327,43 @@ class kgrammar:
         """
         if self.debug:
             print "debug:", "expresion_entera()"
+        #En este punto hay que verificar que se trate de un numero entero
+        try:
+            #Intentamos convertir el numero
+            int(self.token_actual, 10)
+        except ValueError:
+            #No era un entero
+            if self.token_actual == 'precede':
+                self.avanza_token()
+                if self.token_actual == '(':
+                    self.avanza_token()
+                    self.expresion_entera()
+                    if self.token_actual == ')':
+                        self.avanza_token()
+                    else:
+                        raise KarelException("Se esperaba ')'")
+                else:
+                    raise KarelException("Se esperaba '('")
+            elif self.token_actual == 'sucede':
+                self.avanza_token()
+                if self.token_actual == '(':
+                    self.avanza_token()
+                    self.expresion_entera()
+                    if self.token_actual == ')':
+                        self.avanza_token()
+                    else:
+                        raise KarelException("Se esperaba ')'")
+                else:
+                    raise KarelException("Se esperaba '('")
+            elif self.token_actual not in self.palabras_reservadas:
+                #Se trata de una variable definida por el usuario
+                #TODO añadir verificacion de variables
+                self.avanza_token()
+            else:
+                raise KarelException("Se esperaba un entero, variable, sucede o predece, %s no es válido"%self.token_actual)
+        else:
+            #Si se pudo convertir, avanzamos
+            self.avanza_token()
 
     def expresion_general(self):
         """
@@ -322,6 +391,14 @@ class kgrammar:
         """
         if self.debug:
             print "debug:", "expresion_mientras()"
+        self.avanza_token()
+
+        self.termino()
+
+        if self.token_actual != 'hacer':
+            raise KarelException("Se esperaba 'hacer'")
+        self.avanza_token()
+        self.expresion()
 
     def expresion_repite(self):
         """
@@ -333,6 +410,15 @@ class kgrammar:
         """
         if self.debug:
             print "debug:", "expresion_repite()"
+
+        self.avanza_token()
+        self.expresion_entera()
+
+        if self.token_actual != 'veces':
+            raise KarelException("Se esperaba la palabra 'veces'")
+
+        self.avanza_token()
+        self.expresion()
 
     def expresion_si(self):
         """
@@ -347,6 +433,20 @@ class kgrammar:
         """
         if self.debug:
             print "debug:", "expresion_si()"
+
+        self.avanza_token()
+        self.termino()
+
+        if self.token_actual != 'entonces':
+            raise KarelException("Se esperaba 'entonces'")
+
+        self.avanza_token()
+
+        self.expresion()
+
+        if self.token_actual == 'sino':
+            self.avanza_token()
+            self.expresion()
 
     def funcion_booleana(self):
         """
@@ -375,9 +475,47 @@ class kgrammar:
                                "FALSO"
                             }{
         }
+        Son las posibles funciones booleanas para Karel
         """
         if self.debug:
             print "debug:", "funcion_booleana()"
+
+        if self.token_actual == 'frente-libre':
+            self.avanza_token()
+        elif self.token_actual == 'frente-bloqueado':
+            self.avanza_token()
+        elif self.token_actual == 'derecha-libre':
+            self.avanza_token()
+        elif self.token_actual == 'derecha-bloqueada':
+            self.avanza_token()
+        elif self.token_actual == 'izquierda-libre':
+            self.avanza_token()
+        elif self.token_actual == 'izquierda-bloqueada':
+            self.avanza_token()
+        elif self.token_actual == 'junto-a-zumbador':
+            self.avanza_token()
+        elif self.token_actual == 'algun-zumbador-en-la-mochila':
+            self.avanza_token()
+        elif self.token_actual == 'ningun-zumbador-en-la-mochila':
+            self.avanza_token()
+        elif self.token_actual == 'orientado-al-norte':
+            self.avanza_token()
+        elif self.token_actual == 'no-orientado-al-norte':
+            self.avanza_token()
+        elif self.token_actual == 'orientado-al-este':
+            self.avanza_token()
+        elif self.token_actual == 'no-orientado-al-este':
+            self.avanza_token()
+        elif self.token_actual == 'orientado-al-sur':
+            self.avanza_token()
+        elif self.token_actual == 'no-orientado-al-sur':
+            self.avanza_token()
+        elif self.token_actual == 'orientado-al-oeste':
+            self.avanza_token()
+        elif self.token_actual == 'no-orientado-al-oeste':
+            self.avanza_token()
+        else:
+            raise KarelException("Se esperaba una condición como 'frente-libre', %s no es una condición"%self.token_actual)
 
     def termino(self):
         """
@@ -385,9 +523,15 @@ class kgrammar:
         {
             Termino ::= ClausulaY [ "o" ClausulaY] ...
         }
+        Se usan dentro de los condicionales 'si' y el bucle 'mientras'
         """
         if self.debug:
             print "debug:", "termino()"
+        self.clausula_y()
+
+        while self.token_actual == 'o':
+            self.avanza_token()
+            self.clausula_y()
 
     def verificar (self):
         """ Verifica que este correcta la gramatica de un programa

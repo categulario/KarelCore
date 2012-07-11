@@ -36,3 +36,8 @@ Algunas buenas ideas por implementar en este proyecto
 
 * Implementar la GUI del IDE
 * Poner una sección con un tutorial de Karel a modo de 'misiones'
+
+Notas
+-----
+
+Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan.
