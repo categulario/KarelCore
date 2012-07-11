@@ -11,7 +11,7 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=None, archivo=None):
+    def __init__(self, flujo=None, archivo=None, debug=False):
         self.palabras_reservadas = [
             "iniciar-programa",
             "inicia-ejecucion",
@@ -61,13 +61,18 @@ class kgrammar:
             "verdadero",
             "falso"
         ]
+        self.debug = debug
         self.tokenizador = ktokenizer(flujo, archivo)
         self.token_actual = self.tokenizador.get_token().lower()
         self.estado = True #Almacena el estado del programa, cambia si se encuentra un error
+        if self.debug:
+            print "debug:", "Primer token:", self.token_actual
 
     def avanza_token (self):
         """ Avanza un token en el archivo """
         siguiente_token = self.tokenizador.get_token().lower()
+        if self.debug:
+            print "debug:", "avanza_token()", siguiente_token
         if siguiente_token:
             self.token_actual = siguiente_token
             return True
@@ -86,6 +91,8 @@ class kgrammar:
         Un bloque se compone de todo el codigo admitido entre iniciar-programa
         y finalizar-programa
         """
+        if self.debug:
+            print "debug:", "bloque()"
         while self.token_actual == 'define-nueva-instruccion' or self.token_actual == 'define-prototipo-instruccion' or self.token_actual == 'externo':
             if self.token_actual == 'define-nueva-instruccion':
                 self.declaracion_de_procedimiento()
@@ -100,9 +107,9 @@ class kgrammar:
             self.avanza_token()
             self.expresion_general()
             if self.token_actual != 'termina-ejecucion':
-                raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lÃ³gico del programa")
+                raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lógico del programa")
             else:
-                avanza_token()
+                self.avanza_token()
 
     def clausula_atomica(self):
         """
@@ -115,7 +122,8 @@ class kgrammar:
                              }{
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "clausula_atomica()"
 
     def clausula_no(self):
         """
@@ -124,7 +132,8 @@ class kgrammar:
             ClausulaNo ::= ["NO"] ClausulaAtomica
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "clausula_no()"
 
     def clausula_y(self):
         """
@@ -133,7 +142,8 @@ class kgrammar:
             ClausulaY ::= ClausulaNo ["Y" ClausulaNo]...
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "clausula_y()"
 
     def declaracion_de_procedimiento(self):
         """
@@ -145,6 +155,8 @@ class kgrammar:
         Aqui se definen las nuevas funciones que extienden el lenguaje
         de Karel, como por ejemplo gira-derecha
         """
+        if self.debug:
+            print "debug:", "declaracion_de_procedimiento()"
         self.avanza_token()
 
         requiere_parametros = False #Indica si la funcion a definir tiene parametros
@@ -184,13 +196,40 @@ class kgrammar:
         {
             DeclaracionDePrototipo ::= "DEFINE-PROTOTIPO-INSTRUCCION" Identificador ["(" Identificador ")"]
         }
+        Los prototipos son definiciones de funciones que se hacen previamente
+        para poderse utilizar dentro de una función declarada antes.
         """
-        pass
+        if self.debug:
+            print "debug:", "declaracion_de_prototipo()"
+        requiere_parametros = False
+        self.avanza_token()
+        if self.token_actual in self.palabras_reservadas:
+            raise KarelException("Se esperaba un nombre de función, '%s' no es válido"%self.token_actual)
+        self.avanza_token()
+        if self.token_actual == ';':
+            self.avanza_token();
+        elif self.token_actual == '(':
+            requiere_parametros = True
+            self.avanza_token()
+            if self.token_actual in self.palabras_reservadas:
+                raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
+        else:
+            raise KarelException("Se esperaba ';' o un parámetro")
+
+        if requiere_parametros:
+            self.avanza_token()
+            if self.token_actual != ')':
+                raise KarelException("Se esperaba ')'")
+            self.avanza_token()
+            if self.token_actual != ';':
+                raise KarelException("Se esperaba ';' o una variable")
+            self.avanza_token()
 
     def declaracion_de_enlace (self):
         """ Se utilizarÃ¡ para tomar funciones de librerÃ­as externas,
         aun no implementado"""
-        pass
+        if self.debug:
+            print "debug:", "declaracion_de_enlace()"
 
     def expresion(self):
         """
@@ -214,6 +253,9 @@ class kgrammar:
 
         }
         """
+        if self.debug:
+            print "debug:", "expresion()"
+
         if self.token_actual == 'apagate':
             self.avanza_token()
         elif self.token_actual == 'gira-izquierda':
@@ -251,7 +293,8 @@ class kgrammar:
             ExpresionEntera ::= { Decimal | Identificador | "PRECEDE" "(" ExpresionEntera ")" | "SUCEDE" "(" ExpresionEntera ")" }{
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "expresion_entera()"
 
     def expresion_general(self):
         """
@@ -260,6 +303,8 @@ class kgrammar:
         Generalmente se trata de una expresiÃ³n dentro de las etiquetas
         'inicio' y 'fin'
         """
+        if self.debug:
+            print "debug:", "expresion_general()"
         while self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
             self.expresion()
             if self.token_actual != ';' and self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
@@ -275,7 +320,8 @@ class kgrammar:
                                   Expresion
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "expresion_mientras()"
 
     def expresion_repite(self):
         """
@@ -285,7 +331,8 @@ class kgrammar:
                               Expresion
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "expresion_repite()"
 
     def expresion_si(self):
         """
@@ -298,7 +345,8 @@ class kgrammar:
                         ]
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "expresion_si()"
 
     def funcion_booleana(self):
         """
@@ -328,7 +376,8 @@ class kgrammar:
                             }{
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "funcion_booleana()"
 
     def termino(self):
         """
@@ -337,11 +386,15 @@ class kgrammar:
             Termino ::= ClausulaY [ "o" ClausulaY] ...
         }
         """
-        pass
+        if self.debug:
+            print "debug:", "termino()"
 
     def verificar (self):
         """ Verifica que este correcta la gramatica de un programa
         en karel """
+        if self.debug:
+            print "debug:", "verificando la gramática"
+
         if self.token_actual == 'iniciar-programa':
             if self.avanza_token():
                 self.bloque()
@@ -358,15 +411,15 @@ class kgrammar:
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        gramar = kgrammar()
+        grammar = kgrammar(debug=True)
     else:
         fil = sys.argv[1]
-        gramar = kgrammar(open(fil), fil)
+        grammar = kgrammar(flujo=open(fil), archivo=fil, debug=True)
     try:
-        gramar.verificar()
+        grammar.verificar()
         print
         print "Sintaxis Verificada, todo bien"
     except KarelException, ke:
-        print ke.args[0]
+        print ke.args[0], "cerca de la línea", grammar.tokenizador.lineno-1, "(No olvides mirar la línea siguiente)"
         print
         print "El programa tiene errores de sintaxis"

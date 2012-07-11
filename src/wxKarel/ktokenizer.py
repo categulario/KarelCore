@@ -253,6 +253,7 @@ if __name__ == '__main__':
         tt = lexer.get_token()
         if tt:
             print "Token: " + repr(tt)
+            print "Line: " + str(lexer.lineno)
         else:
             break
 
