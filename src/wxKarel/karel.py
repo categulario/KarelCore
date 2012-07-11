@@ -1,4 +1,4 @@
-#coding:iso-8859-1
+# -*- coding: iso-8859-1 -*-
 """
 Verifica que la gramática del archivo sea correcto según la sintaxis seleccionada
 """
