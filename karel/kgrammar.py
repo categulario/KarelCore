@@ -108,7 +108,7 @@ class kgrammar:
             self.avanza_token()
             self.expresion_general()
             if self.token_actual != 'termina-ejecucion':
-                raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lógico del programa")
+                raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lógico del programa, encontré '%s'"%self.token_actual)
             else:
                 self.avanza_token()
 
@@ -312,7 +312,7 @@ class kgrammar:
             if self.token_actual == 'fin':
                 self.avanza_token()
             else:
-                raise KarelException("Se esperaba 'fin' para concluir el bloque")
+                raise KarelException("Se esperaba 'fin' para concluir el bloque, encontré '%s'"%self.token_actual)
         elif self.token_actual not in self.palabras_reservadas:
             self.avanza_token()
         else:
@@ -369,7 +369,7 @@ class kgrammar:
         """
         Define una expresion general
         { Expresion | ExpresionVacia }
-        Generalmente se trata de una expresiÃ³n dentro de las etiquetas
+        Generalmente se trata de una expresión dentro de las etiquetas
         'inicio' y 'fin'
         """
         if self.debug:

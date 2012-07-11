@@ -37,8 +37,11 @@ Algunas buenas ideas por implementar en este proyecto
 * Implementar la GUI del IDE
 * Poner una sección con un tutorial de Karel a modo de 'misiones'
 * El analizador sintáctico no verifica puntos y comas
+* Implementar comentarios de varias lineas con `/`
 
 Notas
 -----
 
-Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan.
+* Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan.
+* Trato de hacer los mensajes de error lo más comprensibles posible.
+* Se pueden hacer comentarios en una línea usando `#` y `/`, no hay soporte aun para comentarios de varias líneas, pero planeo que se abran y cierren con `/`
