@@ -571,4 +571,3 @@ if __name__ == "__main__":
         print "La sintaxis está correcta"
     finally:
         print ">Sintaxis Verificada"
-

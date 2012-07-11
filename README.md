@@ -36,6 +36,7 @@ Algunas buenas ideas por implementar en este proyecto
 
 * Implementar la GUI del IDE
 * Poner una sección con un tutorial de Karel a modo de 'misiones'
+* El analizador sintáctico no verifica puntos y comas
 
 Notas
 -----
