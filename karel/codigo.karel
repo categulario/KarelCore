@@ -10,6 +10,7 @@ iniciar-programa
             mientras junto-a-zumbador hacer inicio
                 coge-zumbador;
             fin;
+            "hola mundo!"
             avanza;
         fin;
         repetir sucede(5) veces inicio

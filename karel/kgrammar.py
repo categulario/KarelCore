@@ -316,7 +316,7 @@ class kgrammar:
         elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
             self.avanza_token()
         else:
-            raise KarelException("Se esperaba un procedimiento, %s no es válido"%self.token_actual)
+            raise KarelException("Se esperaba un procedimiento, '%s' no es válido"%self.token_actual)
 
     def expresion_entera(self):
         """

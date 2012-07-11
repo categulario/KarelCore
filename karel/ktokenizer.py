@@ -25,12 +25,12 @@ class ktokenizer:
             self.instream = sys.stdin
             self.infile = None
         self.eof = ''
-        self.commenters = ('#', '/')
+        self.commenters = ('#')
         self.wordchars = ('abcdfeghijklmnopqrstuvwxyz'
                           'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')
         self.whitespace = ' \t\r\n'
         self.whitespace_split = False
-        self.quotes = '\'"' #Comillas agrupadoras
+        self.quotes = '\'"/' #Comillas agrupadoras, se usaran como comentarios multi-linea
         self.escape = '\\'  #Caracter de escape
         self.escapedquotes = '"'
         self.state = ' '
@@ -166,7 +166,7 @@ class ktokenizer:
                     if self.debug >= 2:
                         print "shlex: I see EOF in quotes state"
                     # XXX what error should be raised here?
-                    raise ValueError, "No closing quotation"
+                    raise ValueError, "Hay un comentario que no termina"
                 if nextchar == self.state:
                     self.token = self.token + nextchar
                     self.state = ' '
