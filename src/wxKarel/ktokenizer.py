@@ -13,7 +13,8 @@ except ImportError:
     from StringIO import StringIO
 
 class ktokenizer:
-    "Un tokenizador diseñado para la sintaxis de Karel el Robot"
+    """ Un tokenizador diseñado para la sintaxis de Karel el Robot,
+    osea un analizador léxico"""
     def __init__(self, instream=None, infile=None):
         if isinstance(instream, basestring):
             instream = StringIO(instream)
