@@ -167,7 +167,7 @@ class ktokenizer:
                     if self.debug >= 2:
                         print "shlex: I see EOF in quotes state"
                     # XXX what error should be raised here?
-                    raise KarelException("Hay un comentario que no termina")
+                    raise KarelException("Hay un comentario de varias lineas que no termina")
                 if nextchar == self.state:
                     self.token = ''
                     self.state = ' '
