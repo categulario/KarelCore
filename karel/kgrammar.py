@@ -315,6 +315,13 @@ class kgrammar:
                 raise KarelException("Se esperaba 'fin' para concluir el bloque, encontré '%s'"%self.token_actual)
         elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
             self.avanza_token()
+            if self.token_actual == '(':
+                self.avanza_token()
+                self.expresion_entera()
+                if self.token_actual == ')':
+                    self.avanza_token()
+                else:
+                    raise KarelException("Se esperaba ')'")
         else:
             raise KarelException("Se esperaba un procedimiento, '%s' no es válido"%self.token_actual)
 
@@ -494,6 +501,8 @@ class kgrammar:
         elif self.token_actual == 'izquierda-bloqueada':
             self.avanza_token()
         elif self.token_actual == 'junto-a-zumbador':
+            self.avanza_token()
+        elif self.token_actual == 'no-junto-a-zumbador':
             self.avanza_token()
         elif self.token_actual == 'algun-zumbador-en-la-mochila':
             self.avanza_token()
