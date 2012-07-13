@@ -3,9 +3,10 @@ iniciar-programa
     define-nueva-instruccion media-vuelta como inicio
         gira-izquierda;
         gira-izquierda;
+        cosa(8); #Esto debe marcar un error
     fin;
     /Pongo un comentario de varias lineas/
-    define-nueva-instruccion cosa(t, q, w) como inicio
+    define-nueva-instruccion cosa(t, q) como inicio
         gira-izquierda;
     fin;
     define-nueva-instruccion come-columna como inicio
@@ -38,6 +39,7 @@ iniciar-programa
         si no si-es-cero(m) entonces inicio
             apagate;
         fin;
+        repite sucede(n) veces gira-izquierda;
     fin;
     inicia-ejecucion
         come-columna;
@@ -49,7 +51,7 @@ iniciar-programa
                 come-columna;
             fin
             sino inicio
-            apagate;
+                apagate;
             fin;
         fin;
         apagate;

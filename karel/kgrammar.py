@@ -28,7 +28,7 @@ class kgrammar:
             "avanza",
             "coge-zumbador",
             "deja-zumbador",
-            "sal-de-funcion",
+            "sal-de-instruccion",
             "inicio",
             "fin",
             "precede",
@@ -59,8 +59,8 @@ class kgrammar:
             "no-orientado-al-sur",
             "orientado-al-oeste",
             "no-orientado-al-oeste",
-            "verdadero",
-            "falso"
+            "verdadero", #Reservadas para futuros usos
+            "falso" #reservadas para futuros usos
         ]
         self.debug = debug
         self.tokenizador = ktokenizer(flujo, archivo)
@@ -106,18 +106,17 @@ class kgrammar:
                 self.declaracion_de_prototipo()
             else:
                 #Se trata de una declaracion de enlace
-                #TODO averiguar que cosa es esa
                 self.declaracion_de_enlace()
         #Sigue el bloque con la lÃ³gica del programa
         if self.token_actual == 'inicia-ejecucion':
             self.avanza_token()
-            self.expresion_general()
+            self.expresion_general([])
             if self.token_actual != 'termina-ejecucion':
                 raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lógico del programa, encontré '%s'"%self.token_actual)
             else:
                 self.avanza_token()
 
-    def clausula_atomica(self):
+    def clausula_atomica(self, lista_variables):
         """
         Define una clausila atomica
         {
@@ -129,13 +128,13 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "clausula_atomica()"
+            print "debug:", "clausula_atomica([])"
 
         if self.token_actual == 'si-es-cero':
             self.avanza_token()
             if self.token_actual == '(':
                 self.avanza_token()
-                self.expresion_entera()
+                self.expresion_entera(lista_variables)
                 if self.token_actual == ')':
                     self.avanza_token()
                 else:
@@ -144,7 +143,7 @@ class kgrammar:
                 raise KarelException("Se esperaba '('")
         elif self.token_actual == '(':
             self.avanza_token()
-            self.termino()
+            self.termino(lista_variables)
             if self.token_actual == ')':
                 avanza_token()
             else:
@@ -152,7 +151,7 @@ class kgrammar:
         else:
             self.funcion_booleana()
 
-    def clausula_no(self):
+    def clausula_no(self, lista_variables):
         """
         Define una clausula de negacion
         {
@@ -160,14 +159,14 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "clausula_no()"
+            print "debug:", "clausula_no([])"
         if self.token_actual == 'no':
             self.avanza_token()
-            self.clausula_atomica()
+            self.clausula_atomica(lista_variables)
         else:
-            self.clausula_atomica()
+            self.clausula_atomica(lista_variables)
 
-    def clausula_y(self):
+    def clausula_y(self, lista_variables):
         """
         Define una clausula conjuntiva
         {
@@ -175,12 +174,12 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "clausula_y()"
-        self.clausula_no()
+            print "debug:", "clausula_y([])"
+        self.clausula_no(lista_variables)
 
         while self.token_actual == 'y':
             self.avanza_token()
-            self.clausula_no()
+            self.clausula_no(lista_variables)
 
     def declaracion_de_procedimiento(self):
         """
@@ -248,7 +247,9 @@ class kgrammar:
             #Hay que verificar que se defina como se planeó
             if len(self.prototipo_funciones[nombre_funcion]) != len(self.funciones[nombre_funcion]):
                 raise KarelException("La función '%s' no está definida como se planeó en el prototipo, verifica el número de variables"%nombre_funcion)
-        self.expresion()
+
+        self.expresion(self.funciones[nombre_funcion]) #Le mandamos las variables existentes
+
         while self.token_actual == ';':
             self.avanza_token()
 
@@ -318,7 +319,7 @@ class kgrammar:
         if self.debug:
             print "debug:", "declaracion_de_enlace()"
 
-    def expresion(self):
+    def expresion(self, lista_variables):
         """
         Define una expresion
         {
@@ -339,9 +340,11 @@ class kgrammar:
                        }{
 
         }
+        Recibe para comprobar una lista con las variables válidas en
+        este contexto
         """
         if self.debug:
-            print "debug:", "expresion()"
+            print "debug:", "expresion([])"
 
         if self.token_actual == 'apagate':
             self.avanza_token()
@@ -356,31 +359,36 @@ class kgrammar:
         elif self.token_actual == 'sal-de-instruccion':
             self.avanza_token()
         elif self.token_actual == 'si':
-            self.expresion_si()
+            self.expresion_si(lista_variables)
         elif self.token_actual == 'mientras':
-            self.expresion_mientras()
+            self.expresion_mientras(lista_variables)
         elif self.token_actual == 'repite' or self.token_actual == 'repetir':
-            self.expresion_repite()
+            self.expresion_repite(lista_variables)
         elif self.token_actual == 'inicio':
             self.avanza_token()
-            self.expresion_general()
+            self.expresion_general(lista_variables)
             if self.token_actual == 'fin':
                 self.avanza_token()
             else:
                 raise KarelException("Se esperaba 'fin' para concluir el bloque, encontré '%s'"%self.token_actual)
         elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
-            self.avanza_token()
-            if self.token_actual == '(':
+            #Se trata de una instrucción creada por el usuario
+            if self.prototipo_funciones.has_key(self.token_actual) or self.funciones.has_key(self.token_actual):
+                nombre_funcion = self.token_actual
                 self.avanza_token()
-                self.expresion_entera()
-                if self.token_actual == ')':
+                if self.token_actual == '(':
                     self.avanza_token()
-                else:
-                    raise KarelException("Se esperaba ')'")
+                    self.expresion_entera(lista_variables)
+                    if self.token_actual == ')':
+                        self.avanza_token()
+                    else:
+                        raise KarelException("Se esperaba ')'")
+            else:
+                raise KarelException("La instrucción '%s' no ha sido previamente definida, pero es utilizada"%self.token_actual)
         else:
             raise KarelException("Se esperaba un procedimiento, '%s' no es válido"%self.token_actual)
 
-    def expresion_entera(self):
+    def expresion_entera(self, lista_variables):
         """
         Define una expresion numerica entera
         {
@@ -388,7 +396,7 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "expresion_entera()"
+            print "debug:", "expresion_entera([])"
         #En este punto hay que verificar que se trate de un numero entero
         try:
             #Intentamos convertir el numero
@@ -399,7 +407,7 @@ class kgrammar:
                 self.avanza_token()
                 if self.token_actual == '(':
                     self.avanza_token()
-                    self.expresion_entera()
+                    self.expresion_entera(lista_variables)
                     if self.token_actual == ')':
                         self.avanza_token()
                     else:
@@ -410,7 +418,7 @@ class kgrammar:
                 self.avanza_token()
                 if self.token_actual == '(':
                     self.avanza_token()
-                    self.expresion_entera()
+                    self.expresion_entera(lista_variables)
                     if self.token_actual == ')':
                         self.avanza_token()
                     else:
@@ -419,7 +427,8 @@ class kgrammar:
                     raise KarelException("Se esperaba '('")
             elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
                 #Se trata de una variable definida por el usuario
-                #TODO añadir verificacion de variables y de nombres validos
+                if self.token_actual not in lista_variables:
+                    raise KarelException("La variable '%s' no está definida en este contexto"%self.token_actual)
                 self.avanza_token()
             else:
                 raise KarelException("Se esperaba un entero, variable, sucede o predece, '%s' no es válido"%self.token_actual)
@@ -427,7 +436,7 @@ class kgrammar:
             #Si se pudo convertir, avanzamos
             self.avanza_token()
 
-    def expresion_general(self):
+    def expresion_general(self, lista_variables):
         """
         Define una expresion general
         { Expresion | ExpresionVacia }
@@ -435,16 +444,16 @@ class kgrammar:
         'inicio' y 'fin'
         """
         if self.debug:
-            print "debug:", "expresion_general()"
+            print "debug:", "expresion_general([])"
 
         while self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
-            self.expresion()
+            self.expresion(lista_variables)
             if self.token_actual != ';' and self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
                 raise KarelException("Se esperaba ';'")
             elif self.token_actual == ';':
                 self.avanza_token()
 
-    def expresion_mientras(self):
+    def expresion_mientras(self, lista_variables):
         """
         Define la expresion del bucle MIENTRAS
         {
@@ -456,14 +465,14 @@ class kgrammar:
             print "debug:", "expresion_mientras()"
         self.avanza_token()
 
-        self.termino()
+        self.termino(lista_variables)
 
         if self.token_actual != 'hacer':
             raise KarelException("Se esperaba 'hacer'")
         self.avanza_token()
-        self.expresion()
+        self.expresion(lista_variables)
 
-    def expresion_repite(self):
+    def expresion_repite(self, lista_variables):
         """
         Define la expresion del bucle REPITE
         {
@@ -475,15 +484,15 @@ class kgrammar:
             print "debug:", "expresion_repite()"
 
         self.avanza_token()
-        self.expresion_entera()
+        self.expresion_entera(lista_variables)
 
         if self.token_actual != 'veces':
             raise KarelException("Se esperaba la palabra 'veces', '%s' no es válido"%self.token_actual)
 
         self.avanza_token()
-        self.expresion()
+        self.expresion(lista_variables)
 
-    def expresion_si(self):
+    def expresion_si(self, lista_variables):
         """
         Define la expresion del condicional SI
         {
@@ -498,18 +507,18 @@ class kgrammar:
             print "debug:", "expresion_si()"
 
         self.avanza_token()
-        self.termino()
+        self.termino(lista_variables)
 
         if self.token_actual != 'entonces':
             raise KarelException("Se esperaba 'entonces'")
 
         self.avanza_token()
 
-        self.expresion()
+        self.expresion(lista_variables)
 
         if self.token_actual == 'sino':
             self.avanza_token()
-            self.expresion()
+            self.expresion(lista_variables)
 
     def funcion_booleana(self):
         """
@@ -582,7 +591,7 @@ class kgrammar:
         else:
             raise KarelException("Se esperaba una condición como 'frente-libre', %s no es una condición"%self.token_actual)
 
-    def termino(self):
+    def termino(self, lista_variables):
         """
         Define un termino
         {
@@ -591,12 +600,12 @@ class kgrammar:
         Se usan dentro de los condicionales 'si' y el bucle 'mientras'
         """
         if self.debug:
-            print "debug:", "termino()"
-        self.clausula_y()
+            print "debug:", "termino([])"
+        self.clausula_y(lista_variables)
 
         while self.token_actual == 'o':
             self.avanza_token()
-            self.clausula_y()
+            self.clausula_y(lista_variables)
 
     def verificar_sintaxis (self):
         """ Verifica que este correcta la gramatica de un programa
@@ -639,20 +648,19 @@ class kgrammar:
         return es_valido
 
 if __name__ == "__main__":
+    deb = False
     if len(sys.argv) == 1:
-        grammar = kgrammar(debug=True)
+        grammar = kgrammar(debug=deb)
     else:
         fil = sys.argv[1]
-        grammar = kgrammar(flujo=open(fil), archivo=fil, debug=True)
+        grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb)
     try:
         grammar.verificar_sintaxis()
-        print
     except KarelException, ke:
         print ke.args[0], "cerca de la línea", grammar.tokenizador.lineno
         print
         print "ERROR"
     else:
-        print
-        print "La sintaxis está correcta"
+        print "Sintaxis correcta"
     finally:
-        print ">Sintaxis Verificada"
+        print ">>Sintaxis Verificada"
