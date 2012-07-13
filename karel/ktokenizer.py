@@ -122,7 +122,6 @@ class ktokenizer:
 
             nextchar = self.instream.read(1) #Lee un caracter del bufer de entrada
             if nextchar == '\n':
-                #self.lineno = self.lineno + 1 #Una variable que lleva la cuenta de las lineas que pasan
                 self.has_lineno_change = True
             if self.debug >= 3:
                 print "shlex: in state", repr(self.state), \
@@ -171,7 +170,6 @@ class ktokenizer:
                 if nextchar == self.state:
                     self.token = ''
                     self.state = ' '
-                    #break
                 else:
                     self.token = self.token + nextchar
             elif self.state in self.escape:
@@ -179,7 +177,7 @@ class ktokenizer:
                     if self.debug >= 2:
                         print "shlex: I see EOF in escape state"
                     # XXX what error should be raised here?
-                    raise ValueError, "No escaped character"
+                    raise KarelException("Se colocó caracter de escape, pero no hay de dónde escapar =)")
                 # character may be escaped within quotes.
                 if escapedstate in self.quotes and \
                    nextchar != self.state and nextchar != escapedstate:

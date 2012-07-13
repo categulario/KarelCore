@@ -66,6 +66,11 @@ class kgrammar:
         self.tokenizador = ktokenizer(flujo, archivo)
         self.token_actual = self.tokenizador.get_token().lower()
         self.estado = True #Almacena el estado del programa, cambia si se encuentra un error
+        self.prototipo_funciones = dict()
+        self.funciones = dict()
+        # Un diccionario que tiene por llaves los nombres de las funciones
+        # y que tiene por valores listas con las variables de dichas
+        # funciones
         if self.debug:
             print "debug:", "Primer token:", self.token_actual
 
@@ -194,9 +199,12 @@ class kgrammar:
         requiere_parametros = False #Indica si la funcion a definir tiene parametros
 
         if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
-            #No esta permitido usar una palabra reservada
-            self.estado = False
             raise KarelException("Se esperaba un nombre de procedimiento vÃ¡lido, '%s' no lo es"%self.token_actual)
+
+        if self.funciones.has_key(self.token_actual):
+            raise KarelException("Ya se ha definido una funcion con el nombre '%s'"%self.token_actual)
+        else:
+            self.funciones.update({self.token_actual: []})
 
         self.avanza_token()
 
@@ -205,8 +213,18 @@ class kgrammar:
         elif self.token_actual == '(':
             self.avanza_token()
             requiere_parametros = True
-            if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
-                raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
+            while True:
+                if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
+                    raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
+                else:
+                    self.avanza_token()
+                    if self.token_actual == ')':
+                        self.tokenizador.push_token(')') #Devolvemos el token a la pila
+                        break
+                    elif self.token_actual == ',':
+                        self.avanza_token()
+                    else:
+                        raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
         else:
             raise KarelException("Se esperaba la palabra clave 'como' o un parametro")
 
@@ -237,14 +255,28 @@ class kgrammar:
         self.avanza_token()
         if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
             raise KarelException("Se esperaba un nombre de función, '%s' no es válido"%self.token_actual)
+        if self.prototipo_funciones.has_key(self.token_actual):
+            raise KarelException("Ya se ha definido una funcion con el nombre '%s'"%self.token_actual)
+        else:
+            self.prototipo_funciones.update({self.token_actual: []})
         self.avanza_token()
         if self.token_actual == ';':
             self.avanza_token();
         elif self.token_actual == '(':
-            requiere_parametros = True
             self.avanza_token()
-            if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
-                raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
+            requiere_parametros = True
+            while True:
+                if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
+                    raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
+                else:
+                    self.avanza_token()
+                    if self.token_actual == ')':
+                        self.tokenizador.push_token(')') #Devolvemos el token a la pila
+                        break
+                    elif self.token_actual == ',':
+                        self.avanza_token()
+                    else:
+                        raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
         else:
             raise KarelException("Se esperaba ';' o un parámetro")
 
@@ -563,7 +595,11 @@ class kgrammar:
             self.estado = False
 
     def es_identificador_valido(self, token):
-        """ Identifica cuando una cadena es un identificador valido """
+        """ Identifica cuando una cadena es un identificador valido,
+        osea que puede ser usado en el nombre de una variable, las
+        reglas son:
+        * Debe comenzar en una letra
+        * Sólo puede tener letras, números, '-' y '_' """
         es_valido = True
         i = 0
         for caracter in token:
@@ -591,7 +627,7 @@ if __name__ == "__main__":
     except KarelException, ke:
         print ke.args[0], "cerca de la línea", grammar.tokenizador.lineno
         print
-        print "El programa tiene errores de sintaxis"
+        print "ERROR"
     else:
         print
         print "La sintaxis está correcta"

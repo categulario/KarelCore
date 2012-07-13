@@ -1,5 +1,5 @@
 iniciar-programa
-    define-prototipo-instruccion cosa;
+    define-prototipo-instruccion cosa(k);
     define-nueva-instruccion media-vuelta como inicio
         gira-izquierda;
         gira-izquierda;
@@ -31,7 +31,7 @@ iniciar-programa
             deja-zumbador;
         fin;
     fin;
-    define-nueva-instruccion recursion(m) como inicio
+    define-nueva-instruccion recursion(m, n, p) como inicio
         si no si-es-cero(m) entonces inicio
             apagate;
         fin;
