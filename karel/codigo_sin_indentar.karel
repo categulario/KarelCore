@@ -28,6 +28,9 @@ define-nueva-instruccion recursion(m) como inicio
 si no si-es-cero(m) entonces inicio
 apagate;
 fin;fin;
+define-nueva-instruccion cosa como inicio
+recursion;
+fin;
 inicia-ejecucion
 come-columna;
 mientras frente-bloqueado y orientado-al-sur hacer inicio

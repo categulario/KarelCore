@@ -29,7 +29,7 @@ from kutil import KarelException
 if __name__ == '__main__':
     archivos = listdir("./")
     for arch in archivos:
-        if arch.endswith(".txt"):
+        if arch.endswith(".txt") or arch.endswith(".karel"):
             grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False)
             try:
                 grammar.verificar_sintaxis()
