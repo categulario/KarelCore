@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  sin título.py
+#  test_all.py
 #
 #  Copyright 2012 Developingo <a.wonderful.code@gmail.com>
 #
@@ -24,19 +24,19 @@
 
 from os import listdir
 from kgrammar import kgrammar
-
-def main():
-
-    return 0
+from kutil import KarelException
 
 if __name__ == '__main__':
-    main()
     archivos = listdir("./")
     for arch in archivos:
         if arch.endswith(".txt"):
             grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False)
             try:
                 grammar.verificar_sintaxis()
-            except:
-                print "El archivo %s tiene errores"%arch
+            except KarelException, ke:
+                print "El archivo %s tiene errores:"%arch
+                print "\t", ke[0], "en la línea", grammar.tokenizador.lineno
+                break
+    else:
+        print "Todo está bien"
 
