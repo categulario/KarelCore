@@ -1,10 +1,13 @@
 iniciar-programa
-    define-prototipo-instruccion cosa(k);
+    define-prototipo-instruccion cosa(k, r);
     define-nueva-instruccion media-vuelta como inicio
         gira-izquierda;
         gira-izquierda;
     fin;
     /Pongo un comentario de varias lineas/
+    define-nueva-instruccion cosa(t, q, w) como inicio
+        gira-izquierda;
+    fin;
     define-nueva-instruccion come-columna como inicio
         mientras junto-a-zumbador y frente-libre hacer inicio
             coge-zumbador;

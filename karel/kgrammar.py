@@ -197,6 +197,7 @@ class kgrammar:
         self.avanza_token()
 
         requiere_parametros = False #Indica si la funcion a definir tiene parametros
+        nombre_funcion = ''
 
         if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
             raise KarelException("Se esperaba un nombre de procedimiento vÃ¡lido, '%s' no lo es"%self.token_actual)
@@ -205,6 +206,7 @@ class kgrammar:
             raise KarelException("Ya se ha definido una funcion con el nombre '%s'"%self.token_actual)
         else:
             self.funciones.update({self.token_actual: []})
+            nombre_funcion = self.token_actual
 
         self.avanza_token()
 
@@ -217,7 +219,12 @@ class kgrammar:
                 if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
                     raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
                 else:
-                    self.avanza_token()
+                    if self.token_actual in self.funciones[nombre_funcion]:
+                        raise KarelException("La funcion '%s' ya tiene un parámetro con el nombre '%s'"%(nombre_funcion, self.token_actual))
+                    else:
+                        self.funciones[nombre_funcion].append(self.token_actual)
+                        self.avanza_token()
+
                     if self.token_actual == ')':
                         self.tokenizador.push_token(')') #Devolvemos el token a la pila
                         break
@@ -236,6 +243,11 @@ class kgrammar:
             if self.token_actual != 'como':
                 raise KarelException("se esperaba la palabra clave 'como'")
             self.avanza_token()
+
+        if self.prototipo_funciones.has_key(nombre_funcion):
+            #Hay que verificar que se defina como se planeó
+            if len(self.prototipo_funciones[nombre_funcion]) != len(self.funciones[nombre_funcion]):
+                raise KarelException("La función '%s' no está definida como se planeó en el prototipo, verifica el número de variables"%nombre_funcion)
         self.expresion()
         while self.token_actual == ';':
             self.avanza_token()
@@ -251,15 +263,21 @@ class kgrammar:
         """
         if self.debug:
             print "debug:", "declaracion_de_prototipo()"
+
         requiere_parametros = False
+        nombre_funcion = ''
         self.avanza_token()
+
         if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
             raise KarelException("Se esperaba un nombre de función, '%s' no es válido"%self.token_actual)
         if self.prototipo_funciones.has_key(self.token_actual):
-            raise KarelException("Ya se ha definido una funcion con el nombre '%s'"%self.token_actual)
+            raise KarelException("Ya se ha definido un prototipo de funcion con el nombre '%s'"%self.token_actual)
         else:
             self.prototipo_funciones.update({self.token_actual: []})
+            nombre_funcion = self.token_actual
+
         self.avanza_token()
+
         if self.token_actual == ';':
             self.avanza_token();
         elif self.token_actual == '(':
@@ -269,7 +287,12 @@ class kgrammar:
                 if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
                     raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
                 else:
-                    self.avanza_token()
+                    if self.token_actual in self.prototipo_funciones[nombre_funcion]:
+                        raise KarelException("El prototipo de función '%s' ya tiene un parámetro con el nombre '%s'"%(nombre_funcion, self.token_actual))
+                    else:
+                        self.prototipo_funciones[nombre_funcion].append(self.token_actual)
+                        self.avanza_token()
+
                     if self.token_actual == ')':
                         self.tokenizador.push_token(')') #Devolvemos el token a la pila
                         break
