@@ -107,7 +107,11 @@ class kgrammar:
             else:
                 #Se trata de una declaracion de enlace
                 self.declaracion_de_enlace()
-        #Sigue el bloque con la lÃ³gica del programa
+        #Toca verificar que todos los prototipos se hayan definido
+        for funcion in self.prototipo_funciones.keys():
+            if not self.funciones.has_key(funcion):
+                raise KarelException("La instrucción '%s' tiene prototipo pero no fue definida"%funcion)
+        #Sigue el bloque con la lógica del programa
         if self.token_actual == 'inicia-ejecucion':
             self.avanza_token()
             self.expresion_general([])
