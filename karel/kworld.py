@@ -56,7 +56,7 @@ class kworld:
             }
 
     def agrega_pared (self, coordenadas, posicion):
-        """ Agrega una pared al mundo, es que está permitido, el
+        """ Agrega una pared al mundo, si es que está permitido, el
         atributo 'coordenadas' es una tupla con la fila y columna de la
         casilla afectada, posicion es una cadena que indica si se pone
         arriba, abajo, a la izquierda o a la derecha. """
@@ -80,6 +80,58 @@ class kworld:
                         'paredes': set([self.contrario(posicion)])
                     }
                 })
+
+    def avance_valido (self, posicion, direccion):
+        """ Determina si puede karel avanzar desde 'posicion' en la
+        'direccion' determinada """
+        #TODO determinar si puede ser reemplazado por puede_avanzar()
+        #Determino primero si está en los bordes
+        if direccion == 'norte':
+            if posicion[0] == self.mundo['dimensiones']['filas']:
+                return False
+        if direccion == 'sur':
+            if posicion[0] == 1:
+                return False
+        if direccion == 'este':
+            if posicion[1] == self.mundo['dimensiones']['columnas']:
+                return False
+        if direccion == 'oeste':
+            if posicion[1] == 1:
+                return False
+        #Ya excluimos los bordes, revisamos las paredes
+        if not self.mundo['casillas'].has_key(posicion):
+            return True #No hay un registro para esta casilla, no hay paredes
+        else:
+            if direccion in self.mundo['casillas'][posicion]['paredes']:
+                return False
+            else:
+                return True
+
+    def puede_avanzar (self):
+        """ Determina si karel puede avanzar en la casilla en la que está"""
+        #Determino primero si está en los bordes
+        direccion = self.mundo['karel']['orientacion']
+        posicion = self.mundo['karel']['posicion']
+        if direccion == 'norte':
+            if posicion[0] == self.mundo['dimensiones']['filas']:
+                return False
+        if direccion == 'sur':
+            if posicion[0] == 1:
+                return False
+        if direccion == 'este':
+            if posicion[1] == self.mundo['dimensiones']['columnas']:
+                return False
+        if direccion == 'oeste':
+            if posicion[1] == 1:
+                return False
+        #Ya excluimos los bordes, revisamos las paredes
+        if not self.mundo['casillas'].has_key(posicion):
+            return True #No hay un registro para esta casilla, no hay paredes
+        else:
+            if direccion in self.mundo['casillas'][posicion]['paredes']:
+                return False
+            else:
+                return True
 
     def obten_casilla (self, casilla, direccion):
         """ Obtiene una casilla contigua dada una casilla de inicio y
@@ -125,6 +177,9 @@ if __name__ == '__main__':
         }
     } #Representa la estructura de un mundo consistente
     mundo = kworld(casillas = casillas_prueba)
-    mundo.agrega_pared((8,8), 'norte')
+    mundo.agrega_pared((8, 8), 'norte')
+    mundo.agrega_pared((1, 1), 'norte')
+    #mundo.avance_valido()
+    print mundo.puede_avanzar()
     pprint(casillas_prueba)
 
