@@ -41,7 +41,10 @@ class kworld:
             print "Lectura de archivo no implementada"
         else:
             self.mundo = {
-                'karel': karel_pos,
+                'karel': {
+                    'posicion': karel_pos,
+                    'orientacion': orientacion
+                },
                 'casillas': {
                     (1, 1) : {
                         'zumbadores': 0,
