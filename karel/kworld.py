@@ -79,6 +79,19 @@ class kworld:
                     }
                 })
 
+    def agrega_zumbadores (self, posicion, cantidad):
+        """ Agrega zumbadores al mundo en la posicion dada """
+        if 0<posicion[0]<self.mundo['dimensiones']['filas']+1 and 0<posicion[1]<self.mundo['dimensiones']['columnas']+1:
+            try:
+                self.mundo['casillas'][posicion]['zumbadores'] = cantidad
+            except KeyError:
+                self.mundo['casillas'].update({
+                    posicion: {
+                        'zumbadores': cantidad,
+                        'paredes': set()
+                    }
+                })
+
     def avanza (self, test=False):
         """ Determina si puede karel avanzar desde la posición en la que
         se encuentra, de ser posible avanza. Si el parámetro test es
@@ -218,6 +231,7 @@ if __name__ == '__main__':
     } #Representa la estructura de un mundo consistente
     mundo = kworld(casillas = casillas_prueba, mochila=1)
     mundo.agrega_pared((8, 8), 'norte')
+    mundo.agrega_pared((5, 5), 'oeste')
     #mundo.agrega_pared((1, 1), 'norte')
     #mundo.avance_valido()
     print mundo.avanza()
@@ -227,6 +241,7 @@ if __name__ == '__main__':
     #print mundo.coge_zumbador()
     print mundo.deja_zumbador()
     mundo.gira_izquierda()
+    mundo.agrega_zumbadores((5, 5), 50)
 
     pprint(mundo.mundo)
 
