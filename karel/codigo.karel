@@ -11,7 +11,7 @@ iniciar-programa
     fin;
     define-prototipo-instruccion azul;
     define-nueva-instruccion come-columna como inicio
-        mientras junto-a-zumbador y frente-libre hacer inicio
+        mientras junto-a-zumbador y frente-libre o (no junto-a-zumbador y izquierda-bloqueada) hacer inicio
             coge-zumbador;
             mientras junto-a-zumbador hacer inicio
                 coge-zumbador;
