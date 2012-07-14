@@ -699,7 +699,7 @@ class kgrammar:
 
 if __name__ == "__main__":
     deb = True
-    print "<xml>"
+    print "<xml>" #Mi grandiosa idea de el registro XML, Ajua!!
     if len(sys.argv) == 1:
         grammar = kgrammar(debug=deb)
     else:
