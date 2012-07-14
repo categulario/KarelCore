@@ -155,7 +155,7 @@ class kgrammar:
             self.avanza_token()
             self.termino(lista_variables)
             if self.token_actual == ')':
-                avanza_token()
+                self.avanza_token()
             else:
                 raise KarelException("Se esperaba ')'")
         else:
