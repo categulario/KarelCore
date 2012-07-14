@@ -5,6 +5,7 @@ Define la gramatica de Karel
 
 from ktokenizer import ktokenizer
 from kutil import KarelException
+from kutil import xml_prepare #TODO quitar esto, es para debug
 import sys
 
 class kgrammar:
@@ -72,13 +73,14 @@ class kgrammar:
         # y que tiene por valores listas con las variables de dichas
         # funciones
         if self.debug:
-            print "debug:", "Primer token:", self.token_actual
+            print "<avanza_token new_token='%s' line='%d' />"%(self.token_actual, self.tokenizador.lineno)
 
     def avanza_token (self):
         """ Avanza un token en el archivo """
         siguiente_token = self.tokenizador.get_token().lower()
         if self.debug:
-            print "debug:", "avanza_token()", "'"+siguiente_token+"'"
+            print "<avanza_token new_token='%s' line='%d' />"%(siguiente_token, self.tokenizador.lineno)
+
         if siguiente_token:
             self.token_actual = siguiente_token
             return True
@@ -98,7 +100,8 @@ class kgrammar:
         y finalizar-programa
         """
         if self.debug:
-            print "debug:", "bloque()"
+            print "<bloque>"
+
         while self.token_actual == 'define-nueva-instruccion' or self.token_actual == 'define-prototipo-instruccion' or self.token_actual == 'externo':
             if self.token_actual == 'define-nueva-instruccion':
                 self.declaracion_de_procedimiento()
@@ -120,6 +123,9 @@ class kgrammar:
             else:
                 self.avanza_token()
 
+        if self.debug:
+            print "</bloque>"
+
     def clausula_atomica(self, lista_variables):
         """
         Define una clausila atomica
@@ -132,7 +138,7 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "clausula_atomica([])"
+            print "<clausula_atomica params='%s'>"%xml_prepare(lista_variables)
 
         if self.token_actual == 'si-es-cero':
             self.avanza_token()
@@ -155,6 +161,9 @@ class kgrammar:
         else:
             self.funcion_booleana()
 
+        if self.debug:
+            print "</clausula_atomica>"
+
     def clausula_no(self, lista_variables):
         """
         Define una clausula de negacion
@@ -163,12 +172,16 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "clausula_no([])"
+            print "<clausula_no params='%s'>"%xml_prepare(lista_variables)
+
         if self.token_actual == 'no':
             self.avanza_token()
             self.clausula_atomica(lista_variables)
         else:
             self.clausula_atomica(lista_variables)
+
+        if self.debug:
+            print "</clausula_no>"
 
     def clausula_y(self, lista_variables):
         """
@@ -178,12 +191,16 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "clausula_y([])"
+            print "<clausula_y params='%s'>"%xml_prepare(lista_variables)
+
         self.clausula_no(lista_variables)
 
         while self.token_actual == 'y':
             self.avanza_token()
             self.clausula_no(lista_variables)
+
+        if self.debug:
+            print "</clausula_y>"
 
     def declaracion_de_procedimiento(self):
         """
@@ -196,7 +213,8 @@ class kgrammar:
         de Karel, como por ejemplo gira-derecha
         """
         if self.debug:
-            print "debug:", "declaracion_de_procedimiento()"
+            print "<declaracion_de_procedimiento>"
+
         self.avanza_token()
 
         requiere_parametros = False #Indica si la funcion a definir tiene parametros
@@ -257,6 +275,9 @@ class kgrammar:
         while self.token_actual == ';':
             self.avanza_token()
 
+        if self.debug:
+            print "</declaracion_de_procedimiento>"
+
     def declaracion_de_prototipo(self):
         """
         Define una declaracion de prototipo
@@ -267,7 +288,7 @@ class kgrammar:
         para poderse utilizar dentro de una función declarada antes.
         """
         if self.debug:
-            print "debug:", "declaracion_de_prototipo()"
+            print "<declaracion_de_prototipo>"
 
         requiere_parametros = False
         nombre_funcion = ''
@@ -317,11 +338,14 @@ class kgrammar:
                 raise KarelException("Se esperaba ';' o una variable")
             self.avanza_token()
 
+        if self.debug:
+            print "</declaracion_de_prototipo>"
+
     def declaracion_de_enlace (self):
         """ Se utilizarÃ¡ para tomar funciones de librerÃ­as externas,
         aun no implementado"""
         if self.debug:
-            print "debug:", "declaracion_de_enlace()"
+            print "<declaracion_de_enlace/>"
 
     def expresion(self, lista_variables):
         """
@@ -348,7 +372,7 @@ class kgrammar:
         este contexto
         """
         if self.debug:
-            print "debug:", "expresion([])"
+            print "<expresion params='%s'>"%xml_prepare(lista_variables)
 
         if self.token_actual == 'apagate':
             self.avanza_token()
@@ -392,6 +416,9 @@ class kgrammar:
         else:
             raise KarelException("Se esperaba un procedimiento, '%s' no es válido"%self.token_actual)
 
+        if self.debug:
+            print "</expresion>"
+
     def expresion_entera(self, lista_variables):
         """
         Define una expresion numerica entera
@@ -400,7 +427,7 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "expresion_entera([])"
+            print "<expresion_entera params='%s'>"%xml_prepare(lista_variables)
         #En este punto hay que verificar que se trate de un numero entero
         try:
             #Intentamos convertir el numero
@@ -440,15 +467,18 @@ class kgrammar:
             #Si se pudo convertir, avanzamos
             self.avanza_token()
 
+        if self.debug:
+            print "</expresion_entera>"
+
     def expresion_general(self, lista_variables):
         """
         Define una expresion general
         { Expresion | ExpresionVacia }
         Generalmente se trata de una expresión dentro de las etiquetas
-        'inicio' y 'fin'
+        'inicio' y 'fin' o entre 'inicia-ejecucion' y 'termina-ejecucion'
         """
         if self.debug:
-            print "debug:", "expresion_general([])"
+            print "<expresion_general params='%s'>"%xml_prepare(lista_variables)
 
         while self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
             self.expresion(lista_variables)
@@ -456,6 +486,9 @@ class kgrammar:
                 raise KarelException("Se esperaba ';'")
             elif self.token_actual == ';':
                 self.avanza_token()
+
+        if self.debug:
+            print "</expresion_general>"
 
     def expresion_mientras(self, lista_variables):
         """
@@ -466,7 +499,7 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "expresion_mientras()"
+            print "<expresion_mientras params='%s'>"%xml_prepare(lista_variables)
         self.avanza_token()
 
         self.termino(lista_variables)
@@ -475,6 +508,9 @@ class kgrammar:
             raise KarelException("Se esperaba 'hacer'")
         self.avanza_token()
         self.expresion(lista_variables)
+
+        if self.debug:
+            print "</expresion_mientras>"
 
     def expresion_repite(self, lista_variables):
         """
@@ -485,7 +521,7 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "expresion_repite()"
+            print "<expresion_repite params='%s'>"%xml_prepare(lista_variables)
 
         self.avanza_token()
         self.expresion_entera(lista_variables)
@@ -495,6 +531,9 @@ class kgrammar:
 
         self.avanza_token()
         self.expresion(lista_variables)
+
+        if self.debug:
+            print "</expresion_repite>"
 
     def expresion_si(self, lista_variables):
         """
@@ -508,7 +547,7 @@ class kgrammar:
         }
         """
         if self.debug:
-            print "debug:", "expresion_si()"
+            print "<expresion_si params='%s'>"%xml_prepare(lista_variables)
 
         self.avanza_token()
         self.termino(lista_variables)
@@ -523,6 +562,9 @@ class kgrammar:
         if self.token_actual == 'sino':
             self.avanza_token()
             self.expresion(lista_variables)
+
+        if self.debug:
+            print "</expresion_si>"
 
     def funcion_booleana(self):
         """
@@ -554,7 +596,7 @@ class kgrammar:
         Son las posibles funciones booleanas para Karel
         """
         if self.debug:
-            print "debug:", "funcion_booleana()"
+            print "<funcion_booleana>"
 
         if self.token_actual == 'frente-libre':
             self.avanza_token()
@@ -595,6 +637,9 @@ class kgrammar:
         else:
             raise KarelException("Se esperaba una condición como 'frente-libre', %s no es una condición"%self.token_actual)
 
+        if self.debug:
+            print "</funcion_booleana>"
+
     def termino(self, lista_variables):
         """
         Define un termino
@@ -604,19 +649,20 @@ class kgrammar:
         Se usan dentro de los condicionales 'si' y el bucle 'mientras'
         """
         if self.debug:
-            print "debug:", "termino([])"
+            print "<termino params='%s'>"%xml_prepare(lista_variables)
+
         self.clausula_y(lista_variables)
 
         while self.token_actual == 'o':
             self.avanza_token()
             self.clausula_y(lista_variables)
 
+        if self.debug:
+            print "</termino>"
+
     def verificar_sintaxis (self):
         """ Verifica que este correcta la gramatica de un programa
         en karel """
-        if self.debug:
-            print "debug:", "verificando la gramática"
-
         if self.token_actual == 'iniciar-programa':
             if self.avanza_token():
                 self.bloque()
@@ -652,7 +698,8 @@ class kgrammar:
         return es_valido
 
 if __name__ == "__main__":
-    deb = False
+    deb = True
+    print "<xml>"
     if len(sys.argv) == 1:
         grammar = kgrammar(debug=deb)
     else:
@@ -661,10 +708,9 @@ if __name__ == "__main__":
     try:
         grammar.verificar_sintaxis()
     except KarelException, ke:
-        print ke.args[0], "cerca de la línea", grammar.tokenizador.lineno
+        print ke.args[0], "en la línea", grammar.tokenizador.lineno
         print
-        print "ERROR"
+        print "<syntax status='bad'/>"
     else:
-        print "Sintaxis correcta"
-    finally:
-        print ">>Sintaxis Verificada"
+        print "<syntax status='good'/>"
+    print "</xml>"
