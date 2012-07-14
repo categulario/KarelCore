@@ -25,7 +25,7 @@
 class kworld:
     """ Representa el mundo de Karel """
 
-    def __init__ (self, filas=100, columnas=100, karel_pos=(1,1), orientacion='norte', archivo=None):
+    def __init__ (self, filas=100, columnas=100, karel_pos=(1,1), orientacion='norte', mochila=0,archivo=None):
         """ Inicializa el mundo, con Karel en la esquina 1,1 del mundo
         orientado al norte.
 
@@ -44,7 +44,7 @@ class kworld:
                 'karel': {
                     'posicion': karel_pos,
                     'orientacion': orientacion,
-                    'mochila': 15 #Zumbadores en la mochila
+                    'mochila': mochila #Zumbadores en la mochila
                 },
                 'casillas': {
                     (1, 1) : {
