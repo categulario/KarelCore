@@ -5,6 +5,7 @@ Se agradece la colaboración en este proyecto a:
 * Carlos Castro
 * Karla Angélica Hernández Lima
 * Mary Carmen Arellano
+* Aleida
 * Chuzpa
 
 por haber participado en alguna parte del proceso.
