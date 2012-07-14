@@ -3,7 +3,7 @@
 #
 #  mundo.py
 #
-#  Copyright 2012 Abraham Toriz Cruz <abraham@botero-dev>
+#  Copyright 2012 Abraham Toriz Cruz <a.wonderful.code@gmail.com>
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@
 #  MA 02110-1301, USA.
 #
 #
-
-from pprint import pprint
 
 class kworld:
     """ Representa el mundo de Karel """
@@ -72,43 +70,19 @@ class kworld:
                     }
                 })
             try:
-                self.mundo['casillas'][self.obten_casilla(coordenadas, posicion)]['paredes'].add(self.contrario(posicion))
+                self.mundo['casillas'][self.obten_casilla_avance(coordenadas, posicion)]['paredes'].add(self.contrario(posicion))
             except KeyError:
                 self.mundo['casillas'].update({
-                    self.obten_casilla(coordenadas, posicion): {
+                    self.obten_casilla_avance(coordenadas, posicion): {
                         'zumbadores': 0,
                         'paredes': set([self.contrario(posicion)])
                     }
                 })
 
-    def avance_valido (self, posicion, direccion):
+    def avanza (self):
         """ Determina si puede karel avanzar desde 'posicion' en la
         'direccion' determinada """
         #TODO determinar si puede ser reemplazado por puede_avanzar()
-        #Determino primero si está en los bordes
-        if direccion == 'norte':
-            if posicion[0] == self.mundo['dimensiones']['filas']:
-                return False
-        if direccion == 'sur':
-            if posicion[0] == 1:
-                return False
-        if direccion == 'este':
-            if posicion[1] == self.mundo['dimensiones']['columnas']:
-                return False
-        if direccion == 'oeste':
-            if posicion[1] == 1:
-                return False
-        #Ya excluimos los bordes, revisamos las paredes
-        if not self.mundo['casillas'].has_key(posicion):
-            return True #No hay un registro para esta casilla, no hay paredes
-        else:
-            if direccion in self.mundo['casillas'][posicion]['paredes']:
-                return False
-            else:
-                return True
-
-    def puede_avanzar (self):
-        """ Determina si karel puede avanzar en la casilla en la que está"""
         #Determino primero si está en los bordes
         direccion = self.mundo['karel']['orientacion']
         posicion = self.mundo['karel']['posicion']
@@ -126,14 +100,25 @@ class kworld:
                 return False
         #Ya excluimos los bordes, revisamos las paredes
         if not self.mundo['casillas'].has_key(posicion):
+            self.mundo['karel']['posicion'] = self.obten_casilla_avance(posicion, direccion)
             return True #No hay un registro para esta casilla, no hay paredes
         else:
             if direccion in self.mundo['casillas'][posicion]['paredes']:
                 return False
             else:
+                self.mundo['karel']['posicion'] = self.obten_casilla_avance(posicion, direccion)
                 return True
 
-    def obten_casilla (self, casilla, direccion):
+    def gira_izquierda (self):
+        """ Function doc """
+        self.mundo['karel']['orientacion'] = self.rotado(self.mundo['karel']['orientacion'])
+
+    def coge_zumbador (self):
+        """ Determina si Karel puede coger un zumbador  """
+        #TODO implementar
+        pass
+
+    def obten_casilla_avance (self, casilla, direccion):
         """ Obtiene una casilla contigua dada una casilla de inicio y
         una direccion de avance"""
         if direccion == 'norte':
@@ -156,8 +141,22 @@ class kworld:
         }
         return puntos[cardinal]
 
+    def rotado (self, cardinal):
+        """ Obtiene la orientación resultado de un gira-izquierda en
+        Karel """
+        puntos = {
+            'norte': 'oeste',
+            'oeste': 'sur',
+            'sur': 'este',
+            'este': 'norte'
+        }
+        return puntos[cardinal]
+
+
 
 if __name__ == '__main__':
+    #Pruebas
+    from pprint import pprint
     casillas_prueba = {
         (1, 1) : {
             'zumbadores': 0,
@@ -178,8 +177,10 @@ if __name__ == '__main__':
     } #Representa la estructura de un mundo consistente
     mundo = kworld(casillas = casillas_prueba)
     mundo.agrega_pared((8, 8), 'norte')
-    mundo.agrega_pared((1, 1), 'norte')
+    #mundo.agrega_pared((1, 1), 'norte')
     #mundo.avance_valido()
-    print mundo.puede_avanzar()
-    pprint(casillas_prueba)
+    print mundo.avanza()
+    mundo.gira_izquierda()
+
+    pprint(mundo.mundo)
 
