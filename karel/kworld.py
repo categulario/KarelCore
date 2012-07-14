@@ -126,7 +126,11 @@ class kworld:
         if not self.mundo['casillas'].has_key(posicion):
             return False
         else:
-            if self.mundo['casillas'][posicion]['zumbadores']>0:
+            if self.mundo['casillas'][posicion]['zumbadores'] == 'inf':
+                if not test:
+                    self.mundo['karel']['mochila'] += 1
+                return True
+            elif self.mundo['casillas'][posicion]['zumbadores']>0:
                 if not test:
                     self.mundo['karel']['mochila'] += 1
                     self.mundo['casillas'][posicion]['zumbadores'] -= 1
