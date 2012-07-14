@@ -7,6 +7,16 @@ El objetivo de este proyecto es ofrecer el lenguaje ''Karel'' orientado al apren
 
 Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos cambios en la sintaxis pueden haber sido influenciados por la sintaxis de Python, sin embargo cualquier código en la sintaxis original de Karel será reconocido (Excepto por los comentarios de una sola línea con `//`).
 
+Necesito ayuda!
+---------------
+
+Si conoces Karel el robot y tienes códigos escritos en PASCAL (el pascal de Karel) puedes hacer dos cosas por mi:
+
+* Probar que los codigos sean correctamente reconocidos por el analizador sintáctico.
+* Hecho lo anterior, poner un error de sintaxis en los códigos y ver si el analizador lo reconoce.
+
+Cualquier irregularidad me avisan a a.wonderful.code@gmail.com
+
 Testing
 -------
 
@@ -36,7 +46,7 @@ Algunas buenas ideas por implementar en este proyecto
 
 * Implementar la GUI del IDE
 * Poner una sección con un tutorial de Karel a modo de 'misiones'
-* Hay un error al verificar puntos y comas en expresiones que solo tienen una instrucción
+* Terminar el soporte para varias variables en las funciones
 
 Notas
 -----
@@ -46,4 +56,5 @@ Notas
 * Se pueden hacer comentarios en una línea usando `#`, los comentarios de varias lineas se hacen con `/`, `"` y `'`
 * Estoy pensando seriamente en eliminar la necesidad de `;` después de cada instrucción, en un arranque de locura podría hacerlo.
 * Los procedimientos tienen soporte para varias variables, quién sabe, con suerte esto abre las puertas a mas problemas.
-* También en un delirio de locura podría incluir las variables `verdadero` y `falso`, actualmente son palabras reservadas.
+* También en un delirio de locura podría incluir las variables `verdadero` y `falso`, actualmente ya son palabras reservadas.
+

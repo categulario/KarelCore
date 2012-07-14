@@ -4,11 +4,12 @@ iniciar-programa
         gira-izquierda;
         gira-izquierda;
         cosa(8); #Esto debe marcar un error
-    fin
+    fin;
     /Pongo un comentario de varias lineas/
     define-nueva-instruccion cosa(t, q) como inicio
         gira-izquierda;
-    fin
+    fin;
+    define-prototipo-instruccion azul;
     define-nueva-instruccion come-columna como inicio
         mientras junto-a-zumbador y frente-libre hacer inicio
             coge-zumbador;
@@ -22,7 +23,7 @@ iniciar-programa
             deja-zumbador;
         fin;
         repite 452 veces inicio
-            avanza
+            avanza;
         fin;
         mientras junto-a-zumbador hacer inicio
             coge-zumbador;
@@ -33,8 +34,9 @@ iniciar-programa
         fin;
         mientras algun-zumbador-en-la-mochila hacer inicio
             deja-zumbador;
-        fin
-    fin
+        fin;
+    fin;
+    define-nueva-instruccion azul como avanza;
     define-nueva-instruccion recursion(m, n, p) como inicio
         si no si-es-cero(m) entonces inicio
             apagate;

@@ -59,392 +59,408 @@
           </expresion>
           <avanza_token new_token='fin' line='11' />
         </expresion_general>
-        <avanza_token new_token='define-nueva-instruccion' line='12' />
+        <avanza_token new_token='define-prototipo-instruccion' line='12' />
       </expresion>
     </declaracion_de_procedimiento>
+    <declaracion_de_prototipo>
+      <avanza_token new_token='azul' line='12' />
+      <avanza_token new_token=';' line='12' />
+      <avanza_token new_token='define-nueva-instruccion' line='13' />
+    </declaracion_de_prototipo>
     <declaracion_de_procedimiento>
-      <avanza_token new_token='come-columna' line='12' />
-      <avanza_token new_token='como' line='12' />
-      <avanza_token new_token='inicio' line='12' />
+      <avanza_token new_token='come-columna' line='13' />
+      <avanza_token new_token='como' line='13' />
+      <avanza_token new_token='inicio' line='13' />
       <expresion params=''>
-        <avanza_token new_token='mientras' line='13' />
+        <avanza_token new_token='mientras' line='14' />
         <expresion_general params=''>
           <expresion params=''>
             <expresion_mientras params=''>
-              <avanza_token new_token='junto-a-zumbador' line='13' />
+              <avanza_token new_token='junto-a-zumbador' line='14' />
               <termino params=''>
                 <clausula_y params=''>
                   <clausula_no params=''>
                     <clausula_atomica params=''>
                       <funcion_booleana>
-                        <avanza_token new_token='y' line='13' />
+                        <avanza_token new_token='y' line='14' />
                       </funcion_booleana>
                     </clausula_atomica>
                   </clausula_no>
-                  <avanza_token new_token='frente-libre' line='13' />
+                  <avanza_token new_token='frente-libre' line='14' />
                   <clausula_no params=''>
                     <clausula_atomica params=''>
                       <funcion_booleana>
-                        <avanza_token new_token='hacer' line='13' />
+                        <avanza_token new_token='hacer' line='14' />
                       </funcion_booleana>
                     </clausula_atomica>
                   </clausula_no>
                 </clausula_y>
               </termino>
-              <avanza_token new_token='inicio' line='13' />
+              <avanza_token new_token='inicio' line='14' />
               <expresion params=''>
-                <avanza_token new_token='coge-zumbador' line='14' />
+                <avanza_token new_token='coge-zumbador' line='15' />
                 <expresion_general params=''>
                   <expresion params=''>
-                    <avanza_token new_token=';' line='14' />
+                    <avanza_token new_token=';' line='15' />
                   </expresion>
-                  <avanza_token new_token='mientras' line='15' />
+                  <avanza_token new_token='mientras' line='16' />
                   <expresion params=''>
                     <expresion_mientras params=''>
-                      <avanza_token new_token='junto-a-zumbador' line='15' />
+                      <avanza_token new_token='junto-a-zumbador' line='16' />
                       <termino params=''>
                         <clausula_y params=''>
                           <clausula_no params=''>
                             <clausula_atomica params=''>
                               <funcion_booleana>
-                                <avanza_token new_token='hacer' line='15' />
+                                <avanza_token new_token='hacer' line='16' />
                               </funcion_booleana>
                             </clausula_atomica>
                           </clausula_no>
                         </clausula_y>
                       </termino>
-                      <avanza_token new_token='inicio' line='15' />
+                      <avanza_token new_token='inicio' line='16' />
                       <expresion params=''>
-                        <avanza_token new_token='coge-zumbador' line='16' />
+                        <avanza_token new_token='coge-zumbador' line='17' />
                         <expresion_general params=''>
                           <expresion params=''>
-                            <avanza_token new_token=';' line='16' />
+                            <avanza_token new_token=';' line='17' />
                           </expresion>
-                          <avanza_token new_token='fin' line='17' />
+                          <avanza_token new_token='fin' line='18' />
                         </expresion_general>
-                        <avanza_token new_token=';' line='17' />
+                        <avanza_token new_token=';' line='18' />
                       </expresion>
                     </expresion_mientras>
                   </expresion>
-                  <avanza_token new_token='avanza' line='19' />
+                  <avanza_token new_token='avanza' line='20' />
                   <expresion params=''>
-                    <avanza_token new_token=';' line='19' />
+                    <avanza_token new_token=';' line='20' />
                   </expresion>
-                  <avanza_token new_token='fin' line='20' />
+                  <avanza_token new_token='fin' line='21' />
                 </expresion_general>
-                <avanza_token new_token=';' line='20' />
+                <avanza_token new_token=';' line='21' />
               </expresion>
             </expresion_mientras>
           </expresion>
-          <avanza_token new_token='repetir' line='21' />
+          <avanza_token new_token='repetir' line='22' />
           <expresion params=''>
             <expresion_repite params=''>
-              <avanza_token new_token='sucede' line='21' />
+              <avanza_token new_token='sucede' line='22' />
               <expresion_entera params=''>
-                <avanza_token new_token='(' line='21' />
-                <avanza_token new_token='5' line='21' />
+                <avanza_token new_token='(' line='22' />
+                <avanza_token new_token='5' line='22' />
                 <expresion_entera params=''>
-                  <avanza_token new_token=')' line='21' />
+                  <avanza_token new_token=')' line='22' />
                 </expresion_entera>
-                <avanza_token new_token='veces' line='21' />
+                <avanza_token new_token='veces' line='22' />
               </expresion_entera>
-              <avanza_token new_token='inicio' line='21' />
+              <avanza_token new_token='inicio' line='22' />
               <expresion params=''>
-                <avanza_token new_token='deja-zumbador' line='22' />
+                <avanza_token new_token='deja-zumbador' line='23' />
                 <expresion_general params=''>
                   <expresion params=''>
-                    <avanza_token new_token=';' line='22' />
+                    <avanza_token new_token=';' line='23' />
                   </expresion>
-                  <avanza_token new_token='fin' line='23' />
+                  <avanza_token new_token='fin' line='24' />
                 </expresion_general>
-                <avanza_token new_token=';' line='23' />
+                <avanza_token new_token=';' line='24' />
               </expresion>
             </expresion_repite>
           </expresion>
-          <avanza_token new_token='repite' line='24' />
+          <avanza_token new_token='repite' line='25' />
           <expresion params=''>
             <expresion_repite params=''>
-              <avanza_token new_token='452' line='24' />
+              <avanza_token new_token='452' line='25' />
               <expresion_entera params=''>
-                <avanza_token new_token='veces' line='24' />
+                <avanza_token new_token='veces' line='25' />
               </expresion_entera>
-              <avanza_token new_token='inicio' line='24' />
+              <avanza_token new_token='inicio' line='25' />
               <expresion params=''>
-                <avanza_token new_token='avanza' line='25' />
+                <avanza_token new_token='avanza' line='26' />
                 <expresion_general params=''>
                   <expresion params=''>
-                    <avanza_token new_token='fin' line='26' />
+                    <avanza_token new_token=';' line='26' />
                   </expresion>
+                  <avanza_token new_token='fin' line='27' />
                 </expresion_general>
-                <avanza_token new_token=';' line='26' />
+                <avanza_token new_token=';' line='27' />
               </expresion>
             </expresion_repite>
           </expresion>
-          <avanza_token new_token='mientras' line='27' />
+          <avanza_token new_token='mientras' line='28' />
           <expresion params=''>
             <expresion_mientras params=''>
-              <avanza_token new_token='junto-a-zumbador' line='27' />
+              <avanza_token new_token='junto-a-zumbador' line='28' />
               <termino params=''>
                 <clausula_y params=''>
                   <clausula_no params=''>
                     <clausula_atomica params=''>
                       <funcion_booleana>
-                        <avanza_token new_token='hacer' line='27' />
+                        <avanza_token new_token='hacer' line='28' />
                       </funcion_booleana>
                     </clausula_atomica>
                   </clausula_no>
                 </clausula_y>
               </termino>
-              <avanza_token new_token='inicio' line='27' />
+              <avanza_token new_token='inicio' line='28' />
               <expresion params=''>
-                <avanza_token new_token='coge-zumbador' line='28' />
+                <avanza_token new_token='coge-zumbador' line='29' />
                 <expresion_general params=''>
                   <expresion params=''>
-                    <avanza_token new_token=';' line='28' />
+                    <avanza_token new_token=';' line='29' />
                   </expresion>
-                  <avanza_token new_token='fin' line='29' />
+                  <avanza_token new_token='fin' line='30' />
                 </expresion_general>
-                <avanza_token new_token=';' line='29' />
+                <avanza_token new_token=';' line='30' />
               </expresion>
             </expresion_mientras>
           </expresion>
-          <avanza_token new_token='media-vuelta' line='30' />
+          <avanza_token new_token='media-vuelta' line='31' />
           <expresion params=''>
-            <avanza_token new_token=';' line='30' />
+            <avanza_token new_token=';' line='31' />
           </expresion>
-          <avanza_token new_token='mientras' line='31' />
+          <avanza_token new_token='mientras' line='32' />
           <expresion params=''>
             <expresion_mientras params=''>
-              <avanza_token new_token='frente-libre' line='31' />
+              <avanza_token new_token='frente-libre' line='32' />
               <termino params=''>
                 <clausula_y params=''>
                   <clausula_no params=''>
                     <clausula_atomica params=''>
                       <funcion_booleana>
-                        <avanza_token new_token='hacer' line='31' />
+                        <avanza_token new_token='hacer' line='32' />
                       </funcion_booleana>
                     </clausula_atomica>
                   </clausula_no>
                 </clausula_y>
               </termino>
-              <avanza_token new_token='inicio' line='31' />
+              <avanza_token new_token='inicio' line='32' />
               <expresion params=''>
-                <avanza_token new_token='avanza' line='32' />
+                <avanza_token new_token='avanza' line='33' />
                 <expresion_general params=''>
                   <expresion params=''>
-                    <avanza_token new_token=';' line='32' />
+                    <avanza_token new_token=';' line='33' />
                   </expresion>
-                  <avanza_token new_token='fin' line='33' />
+                  <avanza_token new_token='fin' line='34' />
                 </expresion_general>
-                <avanza_token new_token=';' line='33' />
+                <avanza_token new_token=';' line='34' />
               </expresion>
             </expresion_mientras>
           </expresion>
-          <avanza_token new_token='mientras' line='34' />
+          <avanza_token new_token='mientras' line='35' />
           <expresion params=''>
             <expresion_mientras params=''>
-              <avanza_token new_token='algun-zumbador-en-la-mochila' line='34' />
+              <avanza_token new_token='algun-zumbador-en-la-mochila' line='35' />
               <termino params=''>
                 <clausula_y params=''>
                   <clausula_no params=''>
                     <clausula_atomica params=''>
                       <funcion_booleana>
-                        <avanza_token new_token='hacer' line='34' />
+                        <avanza_token new_token='hacer' line='35' />
                       </funcion_booleana>
                     </clausula_atomica>
                   </clausula_no>
                 </clausula_y>
               </termino>
-              <avanza_token new_token='inicio' line='34' />
+              <avanza_token new_token='inicio' line='35' />
               <expresion params=''>
-                <avanza_token new_token='deja-zumbador' line='35' />
+                <avanza_token new_token='deja-zumbador' line='36' />
                 <expresion_general params=''>
                   <expresion params=''>
-                    <avanza_token new_token=';' line='35' />
+                    <avanza_token new_token=';' line='36' />
                   </expresion>
-                  <avanza_token new_token='fin' line='36' />
+                  <avanza_token new_token='fin' line='37' />
                 </expresion_general>
-                <avanza_token new_token='fin' line='37' />
+                <avanza_token new_token=';' line='37' />
               </expresion>
             </expresion_mientras>
           </expresion>
+          <avanza_token new_token='fin' line='38' />
         </expresion_general>
-        <avanza_token new_token='define-nueva-instruccion' line='38' />
+        <avanza_token new_token='define-nueva-instruccion' line='39' />
       </expresion>
     </declaracion_de_procedimiento>
     <declaracion_de_procedimiento>
-      <avanza_token new_token='recursion' line='38' />
-      <avanza_token new_token='(' line='38' />
-      <avanza_token new_token='m' line='38' />
-      <avanza_token new_token=',' line='38' />
-      <avanza_token new_token='n' line='38' />
-      <avanza_token new_token=',' line='38' />
-      <avanza_token new_token='p' line='38' />
-      <avanza_token new_token=')' line='38' />
-      <avanza_token new_token=')' line='38' />
-      <avanza_token new_token='como' line='38' />
-      <avanza_token new_token='inicio' line='38' />
+      <avanza_token new_token='azul' line='39' />
+      <avanza_token new_token='como' line='39' />
+      <avanza_token new_token='avanza' line='39' />
+      <expresion params=''>
+        <avanza_token new_token='define-nueva-instruccion' line='40' />
+      </expresion>
+    </declaracion_de_procedimiento>
+    <declaracion_de_procedimiento>
+      <avanza_token new_token='recursion' line='40' />
+      <avanza_token new_token='(' line='40' />
+      <avanza_token new_token='m' line='40' />
+      <avanza_token new_token=',' line='40' />
+      <avanza_token new_token='n' line='40' />
+      <avanza_token new_token=',' line='40' />
+      <avanza_token new_token='p' line='40' />
+      <avanza_token new_token=')' line='40' />
+      <avanza_token new_token=')' line='40' />
+      <avanza_token new_token='como' line='40' />
+      <avanza_token new_token='inicio' line='40' />
       <expresion params='m n p'>
-        <avanza_token new_token='si' line='39' />
+        <avanza_token new_token='si' line='41' />
         <expresion_general params='m n p'>
           <expresion params='m n p'>
             <expresion_si params='m n p'>
-              <avanza_token new_token='no' line='39' />
+              <avanza_token new_token='no' line='41' />
               <termino params='m n p'>
                 <clausula_y params='m n p'>
                   <clausula_no params='m n p'>
-                    <avanza_token new_token='si-es-cero' line='39' />
+                    <avanza_token new_token='si-es-cero' line='41' />
                     <clausula_atomica params='m n p'>
-                      <avanza_token new_token='(' line='39' />
-                      <avanza_token new_token='m' line='39' />
+                      <avanza_token new_token='(' line='41' />
+                      <avanza_token new_token='m' line='41' />
                       <expresion_entera params='m n p'>
-                        <avanza_token new_token=')' line='39' />
+                        <avanza_token new_token=')' line='41' />
                       </expresion_entera>
-                      <avanza_token new_token='entonces' line='39' />
+                      <avanza_token new_token='entonces' line='41' />
                     </clausula_atomica>
                   </clausula_no>
                 </clausula_y>
               </termino>
-              <avanza_token new_token='inicio' line='39' />
+              <avanza_token new_token='inicio' line='41' />
               <expresion params='m n p'>
-                <avanza_token new_token='apagate' line='40' />
+                <avanza_token new_token='apagate' line='42' />
                 <expresion_general params='m n p'>
                   <expresion params='m n p'>
-                    <avanza_token new_token=';' line='40' />
+                    <avanza_token new_token=';' line='42' />
                   </expresion>
-                  <avanza_token new_token='fin' line='41' />
+                  <avanza_token new_token='fin' line='43' />
                 </expresion_general>
-                <avanza_token new_token=';' line='41' />
+                <avanza_token new_token=';' line='43' />
               </expresion>
             </expresion_si>
           </expresion>
-          <avanza_token new_token='repite' line='42' />
+          <avanza_token new_token='repite' line='44' />
           <expresion params='m n p'>
             <expresion_repite params='m n p'>
-              <avanza_token new_token='sucede' line='42' />
+              <avanza_token new_token='sucede' line='44' />
               <expresion_entera params='m n p'>
-                <avanza_token new_token='(' line='42' />
-                <avanza_token new_token='n' line='42' />
+                <avanza_token new_token='(' line='44' />
+                <avanza_token new_token='n' line='44' />
                 <expresion_entera params='m n p'>
-                  <avanza_token new_token=')' line='42' />
+                  <avanza_token new_token=')' line='44' />
                 </expresion_entera>
-                <avanza_token new_token='veces' line='42' />
+                <avanza_token new_token='veces' line='44' />
               </expresion_entera>
-              <avanza_token new_token='gira-izquierda' line='42' />
+              <avanza_token new_token='gira-izquierda' line='44' />
               <expresion params='m n p'>
-                <avanza_token new_token=';' line='42' />
+                <avanza_token new_token=';' line='44' />
               </expresion>
             </expresion_repite>
           </expresion>
-          <avanza_token new_token='fin' line='43' />
+          <avanza_token new_token='fin' line='45' />
         </expresion_general>
-        <avanza_token new_token=';' line='43' />
-      </expresion>
-      <avanza_token new_token='inicia-ejecucion' line='44' />
-    </declaracion_de_procedimiento>
-    <avanza_token new_token='come-columna' line='45' />
-    <expresion_general params=''>
-      <expresion params=''>
         <avanza_token new_token=';' line='45' />
       </expresion>
-      <avanza_token new_token='mientras' line='46' />
+      <avanza_token new_token='inicia-ejecucion' line='46' />
+      yea!
+    </declaracion_de_procedimiento>
+    <avanza_token new_token='come-columna' line='47' />
+    <expresion_general params=''>
+      <expresion params=''>
+        <avanza_token new_token=';' line='47' />
+      </expresion>
+      <avanza_token new_token='mientras' line='48' />
       <expresion params=''>
         <expresion_mientras params=''>
-          <avanza_token new_token='frente-bloqueado' line='46' />
+          <avanza_token new_token='frente-bloqueado' line='48' />
           <termino params=''>
             <clausula_y params=''>
               <clausula_no params=''>
                 <clausula_atomica params=''>
                   <funcion_booleana>
-                    <avanza_token new_token='y' line='46' />
+                    <avanza_token new_token='y' line='48' />
                   </funcion_booleana>
                 </clausula_atomica>
               </clausula_no>
-              <avanza_token new_token='orientado-al-sur' line='46' />
+              <avanza_token new_token='orientado-al-sur' line='48' />
               <clausula_no params=''>
                 <clausula_atomica params=''>
                   <funcion_booleana>
-                    <avanza_token new_token='hacer' line='46' />
+                    <avanza_token new_token='hacer' line='48' />
                   </funcion_booleana>
                 </clausula_atomica>
               </clausula_no>
             </clausula_y>
           </termino>
-          <avanza_token new_token='inicio' line='46' />
+          <avanza_token new_token='inicio' line='48' />
           <expresion params=''>
-            <avanza_token new_token='gira-izquierda' line='47' />
+            <avanza_token new_token='gira-izquierda' line='49' />
             <expresion_general params=''>
               <expresion params=''>
-                <avanza_token new_token=';' line='47' />
+                <avanza_token new_token=';' line='49' />
               </expresion>
-              <avanza_token new_token='si' line='48' />
+              <avanza_token new_token='si' line='50' />
               <expresion params=''>
                 <expresion_si params=''>
-                  <avanza_token new_token='frente-libre' line='48' />
+                  <avanza_token new_token='frente-libre' line='50' />
                   <termino params=''>
                     <clausula_y params=''>
                       <clausula_no params=''>
                         <clausula_atomica params=''>
                           <funcion_booleana>
-                            <avanza_token new_token='y' line='48' />
+                            <avanza_token new_token='y' line='50' />
                           </funcion_booleana>
                         </clausula_atomica>
                       </clausula_no>
-                      <avanza_token new_token='junto-a-zumbador' line='48' />
+                      <avanza_token new_token='junto-a-zumbador' line='50' />
                       <clausula_no params=''>
                         <clausula_atomica params=''>
                           <funcion_booleana>
-                            <avanza_token new_token='entonces' line='48' />
+                            <avanza_token new_token='entonces' line='50' />
                           </funcion_booleana>
                         </clausula_atomica>
                       </clausula_no>
                     </clausula_y>
                   </termino>
-                  <avanza_token new_token='inicio' line='48' />
+                  <avanza_token new_token='inicio' line='50' />
                   <expresion params=''>
-                    <avanza_token new_token='avanza' line='49' />
+                    <avanza_token new_token='avanza' line='51' />
                     <expresion_general params=''>
-                      <expresion params=''>
-                        <avanza_token new_token=';' line='49' />
-                      </expresion>
-                      <avanza_token new_token='gira-izquierda' line='50' />
-                      <expresion params=''>
-                        <avanza_token new_token=';' line='50' />
-                      </expresion>
-                      <avanza_token new_token='come-columna' line='51' />
                       <expresion params=''>
                         <avanza_token new_token=';' line='51' />
                       </expresion>
-                      <avanza_token new_token='fin' line='52' />
+                      <avanza_token new_token='gira-izquierda' line='52' />
+                      <expresion params=''>
+                        <avanza_token new_token=';' line='52' />
+                      </expresion>
+                      <avanza_token new_token='come-columna' line='53' />
+                      <expresion params=''>
+                        <avanza_token new_token=';' line='53' />
+                      </expresion>
+                      <avanza_token new_token='fin' line='54' />
                     </expresion_general>
-                    <avanza_token new_token='sino' line='53' />
+                    <avanza_token new_token='sino' line='55' />
                   </expresion>
-                  <avanza_token new_token='inicio' line='53' />
+                  <avanza_token new_token='inicio' line='55' />
                   <expresion params=''>
-                    <avanza_token new_token='apagate' line='54' />
+                    <avanza_token new_token='apagate' line='56' />
                     <expresion_general params=''>
                       <expresion params=''>
-                        <avanza_token new_token=';' line='54' />
+                        <avanza_token new_token=';' line='56' />
                       </expresion>
-                      <avanza_token new_token='fin' line='55' />
+                      <avanza_token new_token='fin' line='57' />
                     </expresion_general>
-                    <avanza_token new_token=';' line='55' />
+                    <avanza_token new_token=';' line='57' />
                   </expresion>
                 </expresion_si>
               </expresion>
-              <avanza_token new_token='fin' line='56' />
+              <avanza_token new_token='fin' line='58' />
             </expresion_general>
-            <avanza_token new_token=';' line='56' />
+            <avanza_token new_token=';' line='58' />
           </expresion>
         </expresion_mientras>
       </expresion>
-      <avanza_token new_token='apagate' line='57' />
+      <avanza_token new_token='apagate' line='59' />
       <expresion params=''>
-        <avanza_token new_token=';' line='57' />
+        <avanza_token new_token=';' line='59' />
       </expresion>
-      <avanza_token new_token='termina-ejecucion' line='58' />
+      <avanza_token new_token='termina-ejecucion' line='60' />
     </expresion_general>
-    <avanza_token new_token='finalizar-programa' line='59' />
+    <avanza_token new_token='finalizar-programa' line='61' />
   </bloque>
   <syntax status='good' />
 </xml>

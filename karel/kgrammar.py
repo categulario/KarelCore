@@ -272,7 +272,9 @@ class kgrammar:
 
         self.expresion(self.funciones[nombre_funcion]) #Le mandamos las variables existentes
 
-        while self.token_actual == ';':
+        if self.token_actual != ';':
+            raise KarelException("Se esperaba ';'")
+        else:
             self.avanza_token()
 
         if self.debug:
@@ -335,7 +337,7 @@ class kgrammar:
                 raise KarelException("Se esperaba ')'")
             self.avanza_token()
             if self.token_actual != ';':
-                raise KarelException("Se esperaba ';' o una variable")
+                raise KarelException("Se esperaba ';'")
             self.avanza_token()
 
         if self.debug:
@@ -486,6 +488,10 @@ class kgrammar:
                 raise KarelException("Se esperaba ';'")
             elif self.token_actual == ';':
                 self.avanza_token()
+            elif self.token_actual == 'fin':
+                raise KarelException("Se esperaba ';'")
+            elif self.token_actual == 'termina-ejecucion':
+                raise KarelException("Se esperaba ';'")
 
         if self.debug:
             print "</expresion_general>"
