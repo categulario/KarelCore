@@ -704,8 +704,9 @@ class kgrammar:
         return es_valido
 
 if __name__ == "__main__":
-    deb = True
-    print "<xml>" #Mi grandiosa idea de el registro XML, Ajua!!
+    deb = False
+    if deb:
+        print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
     if len(sys.argv) == 1:
         grammar = kgrammar(debug=deb)
     else:
@@ -719,4 +720,5 @@ if __name__ == "__main__":
         print "<syntax status='bad'/>"
     else:
         print "<syntax status='good'/>"
-    print "</xml>"
+    if deb:
+        print "</xml>"
