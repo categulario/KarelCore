@@ -46,4 +46,4 @@ Notas
 * Se pueden hacer comentarios en una línea usando `#`, los comentarios de varias lineas se hacen con `/`, `"` y `'`
 * Estoy pensando seriamente en eliminar la necesidad de `;` después de cada instrucción, en un arranque de locura podría hacerlo.
 * Los procedimientos tienen soporte para varias variables, quién sabe, con suerte esto abre las puertas a mas problemas.
-* También en un delirio de locura podría incluir las variables `verdadero` y `falso`.
+* También en un delirio de locura podría incluir las variables `verdadero` y `falso`, actualmente son palabras reservadas.
