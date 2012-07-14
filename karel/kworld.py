@@ -79,9 +79,10 @@ class kworld:
                     }
                 })
 
-    def avanza (self):
-        """ Determina si puede karel avanzar desde 'posicion' en la
-        'direccion' determinada """
+    def avanza (self, test=False):
+        """ Determina si puede karel avanzar desde la posición en la que
+        se encuentra, de ser posible avanza. Si el parámetro test es
+        verdadero solo ensaya. """
         #TODO determinar si puede ser reemplazado por puede_avanzar()
         #Determino primero si está en los bordes
         direccion = self.mundo['karel']['orientacion']
@@ -100,23 +101,59 @@ class kworld:
                 return False
         #Ya excluimos los bordes, revisamos las paredes
         if not self.mundo['casillas'].has_key(posicion):
-            self.mundo['karel']['posicion'] = self.obten_casilla_avance(posicion, direccion)
+            if not test:
+                self.mundo['karel']['posicion'] = self.obten_casilla_avance(posicion, direccion)
             return True #No hay un registro para esta casilla, no hay paredes
         else:
             if direccion in self.mundo['casillas'][posicion]['paredes']:
                 return False
             else:
-                self.mundo['karel']['posicion'] = self.obten_casilla_avance(posicion, direccion)
+                if not test:
+                    self.mundo['karel']['posicion'] = self.obten_casilla_avance(posicion, direccion)
                 return True
 
-    def gira_izquierda (self):
-        """ Function doc """
-        self.mundo['karel']['orientacion'] = self.rotado(self.mundo['karel']['orientacion'])
+    def gira_izquierda (self, test=False):
+        """ Gira a Karel 90° a la izquierda, obteniendo una nueva
+        orientación. Si el parámetro test es verdadero solo ensaya"""
+        if not test:
+            self.mundo['karel']['orientacion'] = self.rotado(self.mundo['karel']['orientacion'])
 
-    def coge_zumbador (self):
-        """ Determina si Karel puede coger un zumbador  """
-        #TODO implementar
-        pass
+    def coge_zumbador (self, test=False):
+        """ Determina si Karel puede coger un zumbador, si es posible lo
+        toma, devuelve Falso si no lo logra. Si el parámetro test es
+        verdadero solo ensaya. """
+        posicion = self.mundo['karel']['posicion']
+        if not self.mundo['casillas'].has_key(posicion):
+            return False
+        else:
+            if self.mundo['casillas'][posicion]['zumbadores']>0:
+                if not test:
+                    self.mundo['karel']['mochila'] += 1
+                    self.mundo['casillas'][posicion]['zumbadores'] -= 1
+                return True
+            else:
+                return False
+
+    def deja_zumbador (self, test=False):
+        """ Determina si Karel puede dejar un zumbador en la casilla
+        actual, si es posible lo deja. Si el parámetro test es verdadero
+        solo ensaya  """
+        posicion = self.mundo['karel']['posicion']
+        if self.mundo['karel']['mochila'] > 0:
+            if not test:
+                self.mundo['karel']['mochila'] -= 1
+                try:
+                    self.mundo['casillas'][posicion]['zumbadores'] += 1
+                except KeyError:
+                    self.mundo['casillas'].update({
+                        posicion: {
+                            'zumbadores': 1,
+                            'paredes': set()
+                        }
+                    })
+            return True
+        else:
+            return False
 
     def obten_casilla_avance (self, casilla, direccion):
         """ Obtiene una casilla contigua dada una casilla de inicio y
@@ -175,11 +212,16 @@ if __name__ == '__main__':
             'paredes': set()
         }
     } #Representa la estructura de un mundo consistente
-    mundo = kworld(casillas = casillas_prueba)
+    mundo = kworld(casillas = casillas_prueba, mochila=1)
     mundo.agrega_pared((8, 8), 'norte')
     #mundo.agrega_pared((1, 1), 'norte')
     #mundo.avance_valido()
     print mundo.avanza()
+    print mundo.avanza()
+    print mundo.avanza()
+    print mundo.avanza()
+    #print mundo.coge_zumbador()
+    print mundo.deja_zumbador()
     mundo.gira_izquierda()
 
     pprint(mundo.mundo)
