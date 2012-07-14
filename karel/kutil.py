@@ -8,7 +8,8 @@ class KarelException(Exception):
     pass
 
 def xml_prepare(lista):
-    """ prepara una lista para ser mostrada por sus parametros """
+    """ prepara una lista para ser mostrada por sus parametros en un
+    atributo de etiqueta XML"""
     s = ""
     for i in lista:
         s += str(i)+" "
