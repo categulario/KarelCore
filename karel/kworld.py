@@ -23,13 +23,18 @@
 #  
 
 class kworld:
-	""" Representa el mundo de Karel """
-	
-	def __init__ (self):
-		""" Inicializa el mundo, con Karel en la esquina 1,1 del mundo
-		orientado al norte """
-		pass
+    """ Representa el mundo de Karel """
+    
+    def __init__ (self, filas=100, columnas=100, Karel=(1,1), orientacion='norte', archivo=None):
+        """ Inicializa el mundo, con Karel en la esquina 1,1 del mundo
+        orientado al norte """
+        #TODO habilitar lectura y escritura desde archivo
+        if archivo is not None:
+            print "Lectura de archivo no implementada"
+        else:
+            pass
+        
 
 if __name__ == '__main__':
-	print "Este es el mundo!"
+    mundo = kworld()
 
