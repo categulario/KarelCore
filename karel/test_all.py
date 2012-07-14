@@ -36,7 +36,6 @@ if __name__ == '__main__':
             except KarelException, ke:
                 print "El archivo %s tiene errores:"%arch
                 print "\t", ke[0], "en la línea", grammar.tokenizador.lineno
-                break
     else:
         print "Todo está bien"
 

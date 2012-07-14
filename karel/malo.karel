@@ -13,14 +13,14 @@ iniciar-programa
         fin;
         mientras junto-a-zumbador hacer inicio
             coge-zumbador;
-        fin;
+        fin
         media-vuelta;
         mientras frente-libre hacer inicio
             avanza;
         fin;
         mientras algun-zumbador-en-la-mochila hacer inicio
             deja-zumbador;
-        fin
+        fin;
     fin;
     inicia-ejecucion
         come-columna;
