@@ -43,7 +43,8 @@ class kworld:
             self.mundo = {
                 'karel': {
                     'posicion': karel_pos,
-                    'orientacion': orientacion
+                    'orientacion': orientacion,
+                    'mochila': 15 #Zumbadores en la mochila
                 },
                 'casillas': {
                     (1, 1) : {
