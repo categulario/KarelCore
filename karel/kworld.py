@@ -22,10 +22,12 @@
 #
 #
 
+from pprint import pprint
+
 class kworld:
     """ Representa el mundo de Karel """
 
-    def __init__ (self, filas=100, columnas=100, karel_pos=(1,1), orientacion='norte', mochila=0,archivo=None):
+    def __init__ (self, filas=100, columnas=100, karel_pos=(1,1), orientacion='norte', mochila=0, casillas=dict(), archivo=None):
         """ Inicializa el mundo, con Karel en la esquina 1,1 del mundo
         orientado al norte.
 
@@ -46,23 +48,83 @@ class kworld:
                     'orientacion': orientacion,
                     'mochila': mochila #Zumbadores en la mochila
                 },
-                'casillas': {
-                    (1, 1) : {
-                        'zumbadores': 0,
-                        'paredes': ['derecha']
-                    },
-                    (1, 2): {
-                        'zumbadores': 0,
-                        'paredes': ['izquierda']
-                    },
-                    (5, 5): {
-                        'zumbadores': 'inf',
-                        'paredes': []
-                    }
-                }
+                'dimensiones': {
+                    'filas': filas,
+                    'columnas': columnas
+                },
+                'casillas': casillas
             }
+
+    def agrega_pared (self, coordenadas, posicion):
+        """ Agrega una pared al mundo, es que está permitido, el
+        atributo 'coordenadas' es una tupla con la fila y columna de la
+        casilla afectada, posicion es una cadena que indica si se pone
+        arriba, abajo, a la izquierda o a la derecha. """
+        if 0<coordenadas[0]<self.mundo['dimensiones']['filas']+1 and 0<coordenadas[1]<self.mundo['dimensiones']['columnas']+1:
+            #Los dats de las coordenadas son validos
+            try:
+                self.mundo['casillas'][coordenadas]['paredes'].add(posicion)
+            except KeyError:
+                self.mundo['casillas'].update({
+                    coordenadas: {
+                        'zumbadores': 0,
+                        'paredes': set([posicion])
+                    }
+                })
+            try:
+                self.mundo['casillas'][self.obten_casilla(coordenadas, posicion)]['paredes'].add(self.contrario(posicion))
+            except KeyError:
+                self.mundo['casillas'].update({
+                    self.obten_casilla(coordenadas, posicion): {
+                        'zumbadores': 0,
+                        'paredes': set([self.contrario(posicion)])
+                    }
+                })
+
+    def obten_casilla (self, casilla, direccion):
+        """ Obtiene una casilla contigua dada una casilla de inicio y
+        una direccion de avance"""
+        if direccion == 'norte':
+            return (casilla[0]+1, casilla[1])
+        elif direccion == 'sur':
+            return (casilla[0]-1, casilla[1])
+        elif direccion == 'este':
+            return (casilla[0], casilla[1]+1)
+        elif direccion == 'oeste':
+            return (casilla[0], casilla[1]-1)
+
+    def contrario (self, cardinal):
+        """ Suena ridículo, pero obtiene el punto cardinal contrario al
+        dado. """
+        puntos = {
+            'norte': 'sur',
+            'sur': 'norte',
+            'este': 'oeste',
+            'oeste': 'este'
+        }
+        return puntos[cardinal]
 
 
 if __name__ == '__main__':
-    mundo = kworld()
+    casillas_prueba = {
+        (1, 1) : {
+            'zumbadores': 0,
+            'paredes': set(['este'])
+        },
+        (1, 2): {
+            'zumbadores': 0,
+            'paredes': set(['oeste'])
+        },
+        (5, 5): {
+            'zumbadores': 'inf',
+            'paredes': set()
+        },
+        (2, 1): {
+            'zumbadores': 2,
+            'paredes': set()
+        }
+    } #Representa la estructura de un mundo consistente
+    mundo = kworld(casillas = casillas_prueba)
+    mundo.agrega_pared((8,8), 'norte')
+    pprint(casillas_prueba)
 
