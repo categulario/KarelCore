@@ -20,7 +20,7 @@ iniciar-programa
         fin;
         mientras algun-zumbador-en-la-mochila hacer inicio
             deja-zumbador;
-        fin;
+        fin
     fin;
     inicia-ejecucion
         come-columna;
@@ -32,7 +32,7 @@ iniciar-programa
                 come-columna;
             fin
             sino inicio
-            apagate;
+                apagate;
             fin;
         fin;
         apagate;
