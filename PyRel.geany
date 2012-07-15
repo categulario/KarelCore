@@ -24,12 +24,8 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=4
-FILE_NAME_0=10398;Python;0;0;0;1;0;%2Fhome%2Ffacmate1%2FGitHub%2FPyRel%2Fkarel%2Fkgrammar.py;0;4
-FILE_NAME_1=1398;None;0;16;0;1;0;%2Fhome%2Ffacmate1%2FGitHub%2FPyRel%2Fkarel%2Fcodigo.karel;0;4
-FILE_NAME_2=16197;XML;0;0;0;1;0;%2Fhome%2Ffacmate1%2FGitHub%2FPyRel%2Fkarel%2Flog.xml;0;4
-FILE_NAME_3=1081;Python;0;0;0;1;0;%2Fhome%2Ffacmate1%2FEscritorio%2Ffib.py;0;4
-FILE_NAME_4=987;Markdown;0;16;0;1;0;%2Fhome%2Ffacmate1%2FGitHub%2FPyRel%2FREADME.md;0;4
+current_page=0
+FILE_NAME_0=10797;Python;0;16;0;1;0;%2Fhome%2Ffacmate1%2FGitHub%2FPyRel%2Fkarel%2Fkworld.py;0;4
 
 [VTE]
 last_dir=/home/facmate1
