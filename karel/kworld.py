@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  mundo.py
+#  kworld.py
 #
 #  Copyright 2012 Abraham Toriz Cruz <a.wonderful.code@gmail.com>
 #
@@ -39,8 +39,9 @@ class kworld:
         diccionario, que tiene por llaves las tuplas con la posicion que
         representan: (fila, columna) """
         #TODO habilitar lectura y escritura desde archivo
-        if archivo is not None:
-            print "Lectura de archivo no implementada"
+        self.mundo = dict()
+        if archivo is not None and isinstance(archivo, basestring):
+            self.carga_archivo(archivo)
         else:
             self.mundo = {
                 'karel': {
@@ -273,6 +274,22 @@ class kworld:
         else:
             del(self.mundo_backup)
             return True
+
+    def limpiar (self):
+        """ Limpia el mundo y lo lleva a un estado inicial """
+        self.mundo = {
+            'karel': {
+                'posicion': mundo['karel']['posicion'],
+                'orientacion': mundo['karel']['orientacion'],
+                'mochila': mundo['karel']['mochila'] #Zumbadores en la mochila
+            },
+            'dimensiones': {
+                'filas': mundo['dimensiones']['filas'],
+                'columnas': mundo['dimensiones']['columnas']
+            },
+            'casillas': dict()
+        }
+
 
 
 

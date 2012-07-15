@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  kgrammar.py
+#  krunner.py
 #
 #  Copyright 2012 Developingo <a.wonderful.code@gmail.com>
 #
@@ -22,19 +22,25 @@
 #
 #
 """
-Define la gramatica de Karel
+Clase capaz de ejecutar archivos de Karel, tomando el resultado de un
+análizis sintáctico, y un mundo.
 """
 
-from ktokenizer import ktokenizer
+from kworld import kworld
+from kgrammar import kgrammar
 from kutil import KarelException
-from kutil import xml_prepare
 import sys
 
-class kgrammar:
-    """
-    Clase que contiene y conoce la gramatica de karel
-    """
-    def __init__(self, flujo=None, archivo=None, debug=False):
+class krunner:
+    """ Ejecuta acciones de un código en el mundo de Karel """
+
+    def __init__ (self, source=(None, None), mundo=None):
+        """ Inicializa el objeto Krunner a partir de un archivo o flujo
+        de código fuente Karel y un mundo, el parámetro source  """
+        if not isinstance(mundo, kworld):
+            self.mundo = kworld(archivo = mundo)
+        else:
+            self.mundo = mundo
         self.palabras_reservadas = [
             "iniciar-programa",
             "inicia-ejecucion",
@@ -86,7 +92,7 @@ class kgrammar:
             "falso" #reservadas para futuros usos
         ]
         self.debug = debug
-        self.tokenizador = ktokenizer(flujo, archivo)
+        self.tokenizador = ktokenizer(source[0], source[1])
         self.token_actual = self.tokenizador.get_token().lower()
         self.prototipo_funciones = dict()
         self.funciones = dict()
@@ -721,7 +727,7 @@ class kgrammar:
             i += 1
         return es_valido
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     deb = False
     if deb:
         print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
@@ -740,3 +746,4 @@ if __name__ == "__main__":
         print "<syntax status='good'/>"
     if deb:
         print "</xml>"
+

@@ -34,8 +34,7 @@ class ktokenizer:
         self.quotes = '\'"/' #Comillas agrupadoras, se usaran como comentarios multi-linea
         self.escape = '\\'  #Caracter de escape
         self.escapedquotes = '"'
-        self.state = ' '
-        #El estado en que se encuentra el tokenizador
+        self.state = ' ' #El estado en que se encuentra el tokenizador
         self.pushback = deque()
         self.lineno = 1
         self.has_lineno_change = False #Indica cuando hay que cambiar de linea, usado para corregir el conteo de lineas
