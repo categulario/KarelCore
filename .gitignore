@@ -1,6 +1,5 @@
 *.py[co]
 *.log
-*.geany
 *.txt
 
 # Packages
