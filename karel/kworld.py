@@ -22,6 +22,8 @@
 #
 #
 
+import json
+
 class kworld:
     """ Representa el mundo de Karel """
 
@@ -206,6 +208,72 @@ class kworld:
         }
         return puntos[cardinal]
 
+    def exporta_mundo (self, nombrearchivo, expandir=False):
+        """ Exporta las condiciones actuales del mundo usando algun
+        lenguaje de marcado """
+        mundo = {
+            'karel': {
+                'posicion': self.mundo['karel']['posicion'],
+                'orientacion': self.mundo['karel']['orientacion'],
+                'mochila': self.mundo['karel']['mochila']
+            },
+            'dimensiones': {
+                'filas': self.mundo['dimensiones']['filas'],
+                'columnas': self.mundo['dimensiones']['columnas']
+            },
+            'casillas': []
+        }
+        for llave, valor in self.mundo['casillas'].iteritems():
+            mundo['casillas'].append({
+                'casilla': {
+                    'fila': llave[0],
+                    'columna': llave[1],
+                    'zumbadores': valor['zumbadores'],
+                    'paredes': list(valor['paredes'])
+                }
+            })
+        f = file(nombrearchivo, 'w')
+        if expandir:
+            f.write(json.dumps(mundo, indent=2))
+        else:
+            f.write(json.dumps(mundo))
+        f.close()
+
+    def carga_archivo (self, nombrearchivo):
+        """ Carga el contenido de un archivo con la configuración del
+        mundo """
+        f = file(nombrearchivo, 'r')
+        mundo = json.load(f)
+        #Lo cargamos al interior
+        self.mundo_backup = self.mundo
+        try:
+            self.mundo = {
+                'karel': {
+                    'posicion': mundo['karel']['posicion'],
+                    'orientacion': mundo['karel']['orientacion'],
+                    'mochila': mundo['karel']['mochila'] #Zumbadores en la mochila
+                },
+                'dimensiones': {
+                    'filas': mundo['dimensiones']['filas'],
+                    'columnas': mundo['dimensiones']['columnas']
+                },
+                'casillas': dict()
+            }
+            for casilla in mundo['casillas']:
+                self.mundo['casillas'].update({
+                    (casilla['fila'], casilla['columna']): {
+                        'zumbadores': casilla['zumbadores'],
+                        'paredes': set(casilla['paredes'])
+                    }
+                })
+        except KeyError:
+            self.mundo = self.mundo_backup
+            del(self.mundo_backup)
+            return False
+        else:
+            del(self.mundo_backup)
+            return True
+
 
 
 if __name__ == '__main__':
@@ -229,19 +297,23 @@ if __name__ == '__main__':
             'paredes': set()
         }
     } #Representa la estructura de un mundo consistente
-    mundo = kworld(casillas = casillas_prueba, mochila=1)
+    mundo = kworld()
+    mundo.exporta_mundo('cosa.json', True)
     mundo.agrega_pared((8, 8), 'norte')
     mundo.agrega_pared((5, 5), 'oeste')
     #mundo.agrega_pared((1, 1), 'norte')
     #mundo.avance_valido()
-    print mundo.avanza()
-    print mundo.avanza()
-    print mundo.avanza()
-    print mundo.avanza()
+    mundo.avanza()
+    mundo.avanza()
+    mundo.avanza()
+    mundo.avanza()
     #print mundo.coge_zumbador()
-    print mundo.deja_zumbador()
+    mundo.deja_zumbador()
     mundo.gira_izquierda()
     mundo.agrega_zumbadores((5, 5), 50)
 
+    #pprint(mundo.mundo)
+    mundo.exporta_mundo('mundo.json', True)
+    mundo.carga_archivo('cosa.json')
     pprint(mundo.mundo)
 
