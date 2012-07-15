@@ -5,7 +5,7 @@ Karel el robot, escrito completamente en python. Por [@Categulario](https://twit
 
 El objetivo de este proyecto es ofrecer el lenguaje ''Karel'' orientado al aprendizaje de la programación para todas las plataformas y sin requerir librerías privativas.
 
-Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos cambios en la sintaxis pueden haber sido influenciados por la sintaxis de Python, sin embargo cualquier código en la sintaxis original de Karel será reconocido (Excepto por los comentarios de una sola línea con `//`).
+Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos cambios en la sintaxis pueden haber sido influenciados por la sintaxis de Python, sin embargo cualquier código en la sintaxis original de Karel será reconocido (Excepto por los códigos con comentarios de una sola línea con `//`).
 
 Necesito ayuda!
 ---------------
@@ -57,4 +57,5 @@ Notas
 * Estoy pensando seriamente en eliminar la necesidad de `;` después de cada instrucción, en un arranque de locura podría hacerlo.
 * Los procedimientos tienen soporte para varias variables, quién sabe, con suerte esto abre las puertas a mas problemas.
 * También en un delirio de locura podría incluir las variables `verdadero` y `falso`, actualmente ya son palabras reservadas.
+* Se usará Scintilla para el editor de código y pygame para el visor del mundo, la interfaz correrá por cuenta de wxPython.
 
