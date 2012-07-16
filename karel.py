@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  __main__.py
+#  karel.py
 #
 #  Copyright 2012 Developingo <a.wonderful.code@gmail.com>
 #
@@ -22,4 +22,12 @@
 #
 #
 
-import karel
+"""
+Controlador principal de Karel el Robot
+"""
+
+import sys
+
+if __name__ == '__main__':
+    print sys.argv
+
