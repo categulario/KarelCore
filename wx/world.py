@@ -29,6 +29,8 @@ Pruebas de la interfaz gráfica de python usando pygame
 import pygame, sys
 import time
 
+carpetas = ['default', 'challenger', 'monos', 'flechas']
+
 if __name__ == "__main__":
     pygame.init()
 
@@ -36,8 +38,8 @@ if __name__ == "__main__":
     pantalla.fill((255,255,255))
     pygame.display.set_caption("Karel el robot")
 
-    bkarel = pygame.image.load('challenger/bkarel.png')
-    knorte = pygame.image.load('challenger/knorte.png')
+    bkarel = pygame.image.load(carpetas[0]+'/bkarel.png')
+    knorte = pygame.image.load(carpetas[0]+'/knorte.png')
 
     for i in xrange(20):
         for j in xrange(20):
