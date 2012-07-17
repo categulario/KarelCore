@@ -48,6 +48,7 @@ Algunas buenas ideas por implementar en este proyecto
 * Poner una sección con un tutorial de Karel a modo de 'misiones'.
 * Hacer un editor de mundos.
 * Soportar la sintaxis Java de pascal.
+* Terminar la clase `krunner.py`.
 
 Notas
 -----
