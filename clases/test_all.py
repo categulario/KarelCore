@@ -28,6 +28,7 @@ from kutil import KarelException
 
 if __name__ == '__main__':
     archivos = listdir("./")
+    err_count = 0
     for arch in archivos:
         if arch.endswith(".txt") or arch.endswith(".karel"):
             grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False)
@@ -36,6 +37,7 @@ if __name__ == '__main__':
             except KarelException, ke:
                 print "El archivo %s tiene errores:"%arch
                 print "\t", ke[0], "en la línea", grammar.tokenizador.lineno
-    else:
+                err_count += 1
+    if err_count == 0:
         print "Todo está bien"
 

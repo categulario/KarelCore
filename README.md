@@ -20,7 +20,7 @@ Cualquier irregularidad me avisan a a.wonderful.code@gmail.com
 Testing
 -------
 
-Para probar alguno de los componentes hay que ir a la carpeta `/karel` y correr el script elegido
+Para probar alguno de los componentes hay que ir a la carpeta `/clases` y correr el script elegido
 
 Ejemplo:
 
@@ -44,17 +44,17 @@ TODO
 
 Algunas buenas ideas por implementar en este proyecto
 
-* Implementar la GUI del IDE
-* Poner una sección con un tutorial de Karel a modo de 'misiones'
-* Terminar el soporte para varias variables en las funciones
+* Implementar la GUI del IDE.
+* Poner una sección con un tutorial de Karel a modo de 'misiones'.
+* Hacer un editor de mundos.
+* Soportar la sintaxis Java de pascal.
 
 Notas
 -----
 
-* Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan.
-* Trato de hacer los mensajes de error lo más comprensibles posible.
-* Se pueden hacer comentarios en una línea usando `#`, los comentarios de varias lineas se hacen con `/`, `"` y `'`
-* Estoy pensando seriamente en eliminar la necesidad de `;` después de cada instrucción, en un arranque de locura podría hacerlo.
+* Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan. (Cuando competí en la OMI no saben cuánta lata me dio esto :) )
+* Trato de hacer los mensajes de error lo más comprensibles posible, se aceptan comentarios.
+* Se pueden hacer comentarios en una línea usando `#`, los comentarios de varias lineas se hacen con `/`, `"` y `'`.
 * Los procedimientos tienen soporte para varias variables, quién sabe, con suerte esto abre las puertas a mas problemas.
 * También en un delirio de locura podría incluir las variables `verdadero` y `falso`, actualmente ya son palabras reservadas.
 * Se usará Scintilla para el editor de código y pygame para el visor del mundo, la interfaz correrá por cuenta de wxPython.

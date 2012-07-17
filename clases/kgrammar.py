@@ -427,14 +427,28 @@ class kgrammar:
             if self.prototipo_funciones.has_key(self.token_actual) or self.funciones.has_key(self.token_actual):
                 nombre_funcion = self.token_actual
                 self.avanza_token()
+                requiere_parametros = True
+                num_parametros = 0
                 if self.token_actual == '(':
-                    #Parece tratarse de una funcion
                     self.avanza_token()
-                    self.expresion_entera(lista_variables)
-                    if self.token_actual == ')':
-                        self.avanza_token()
+                    while True:
+                        self.expresion_entera(lista_variables)
+                        num_parametros += 1
+                        if self.token_actual == ')':
+                            #self.tokenizador.push_token(')') #Devolvemos el token a la pila
+                            break
+                        elif self.token_actual == ',':
+                            self.avanza_token()
+                        else:
+                            raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
+
+                    if self.prototipo_funciones.has_key(nombre_funcion):
+                        if num_parametros != len(self.prototipo_funciones[nombre_funcion]):
+                            raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
                     else:
-                        raise KarelException("Se esperaba ')'")
+                        if num_parametros != len(self.funciones[nombre_funcion]):
+                            raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
+                    self.avanza_token()
             else:
                 raise KarelException("La instrucción '%s' no ha sido previamente definida, pero es utilizada"%self.token_actual)
         else:
@@ -723,7 +737,7 @@ class kgrammar:
         return es_valido
 
 if __name__ == "__main__":
-    deb = False
+    deb = True
     if deb:
         print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
     if len(sys.argv) == 1:

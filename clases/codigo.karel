@@ -3,7 +3,7 @@ iniciar-programa
     define-nueva-instruccion media-vuelta como inicio
         gira-izquierda;
         gira-izquierda;
-        cosa(8); #Esto debe marcar un error
+        cosa(8, 9); #Esto debe marcar un error
     fin;
     /Pongo un comentario de varias lineas/
     define-nueva-instruccion cosa(t, q) como inicio
@@ -57,7 +57,7 @@ iniciar-programa
                 apagate;
             fin;
         fin;
-        paranga(3);
+        paranga;
         apagate;
     termina-ejecucion
 finalizar-programa
