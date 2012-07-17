@@ -30,12 +30,20 @@ import pygame, sys
 import time
 
 carpetas = ['default', 'challenger', 'monos', 'flechas']
+dimensiones = (400, 400)
+
+controles = [(pygame.image.load('controles/'+c[0]), c[1]) for c in [('up.png', (dimensiones[0]-65, 15)), ('down.png', (dimensiones[0]-65, 65)), ('left.png', (dimensiones[0]-100, 50)), ('right.png', (dimensiones[0]-50, 50))]]
+
+def dibujar_controles (pantalla):
+    """ Dibuja los controles de Karel """
+    for i in controles:
+        pantalla.blit(i[0], i[1])
 
 if __name__ == "__main__":
     pygame.init()
 
-    pantalla = pygame.display.set_mode((400,400), 0, 32)
-    pantalla.fill((255,255,255))
+    pantalla = pygame.display.set_mode(dimensiones, 0, 32)
+    pantalla.fill((200,200,200))
     pygame.display.set_caption("Karel el robot")
 
     bkarel = pygame.image.load(carpetas[0]+'/bkarel.png')
@@ -43,8 +51,11 @@ if __name__ == "__main__":
 
     for i in xrange(20):
         for j in xrange(20):
-            pantalla.blit(bkarel, (i*20,j*20))
-    pantalla.blit(knorte, (0, 380))
+            if i>0 and j<19:
+                pantalla.blit(bkarel, (i*20,j*20))
+    pantalla.blit(knorte, (20, 360))
+
+    dibujar_controles(pantalla)
 
     pygame.display.update() #Sin esta linea el juego no funciona
 
@@ -66,6 +77,13 @@ if __name__ == "__main__":
                     print "Flecha derecha!"
             if event.type == pygame.KEYUP:
                 pass
+            if event.type == pygame.MOUSEBUTTONUP:
+                #regions = pygame.Surface(dimensiones, 0, 32)
+                #direction = regions.get_at(event.pos)[0]
+                print event.pos
+                if dimensiones[0]-65<=event.pos[0]<=dimensiones[0]-47 and 15<=event.pos[1]<=51:
+                    print "up"
+                #print direction
 
         pygame.display.update()
 

@@ -36,6 +36,7 @@ iniciar-programa
             deja-zumbador;
         fin;
     fin;
+    define-nueva-instruccion paranga como avanza;
     define-nueva-instruccion azul como avanza;
     define-nueva-instruccion recursion(m, n, p) como inicio
         si no si-es-cero(m) entonces inicio
@@ -56,6 +57,7 @@ iniciar-programa
                 apagate;
             fin;
         fin;
+        paranga(3);
         apagate;
     termina-ejecucion
 finalizar-programa

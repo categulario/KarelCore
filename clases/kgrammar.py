@@ -365,7 +365,7 @@ class kgrammar:
             print "</declaracion_de_prototipo>"
 
     def declaracion_de_enlace (self):
-        """ Se utilizará para tomar funciones de librerías externas,
+        """ Se utilizara para tomar funciones de librerias externas,
         aun no implementado"""
         if self.debug:
             print "<declaracion_de_enlace/>"
@@ -428,6 +428,7 @@ class kgrammar:
                 nombre_funcion = self.token_actual
                 self.avanza_token()
                 if self.token_actual == '(':
+                    #Parece tratarse de una funcion
                     self.avanza_token()
                     self.expresion_entera(lista_variables)
                     if self.token_actual == ')':
