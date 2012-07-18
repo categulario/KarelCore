@@ -34,23 +34,41 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=None, archivo=None, debug=False):
+    def __init__(self, flujo=None, archivo=None, debug=False, gen_tree=False):
+        self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate']
+        self.condiciones = [
+            'frente-libre',
+            'frente-bloqueado',
+            'derecha-libre',
+            'derecha-bloqueada',
+            'izquierda-libre',
+            'izquierda-bloqueada',
+            'junto-a-zumbador',
+            'no-junto-a-zumbador',
+            'algun-zumbador-en-la-mochila',
+            'ningun-zumbador-en-la-mochila',
+            "orientado-al-norte",
+            "no-orientado-al-norte",
+            "orientado-al-este",
+            "no-orientado-al-este",
+            "orientado-al-sur",
+            "no-orientado-al-sur",
+            "orientado-al-oeste",
+            "no-orientado-al-oeste",
+            "verdadero", #Reservadas para futuros usos
+            "falso", #reservadas para futuros usos
+            "si-es-cero"
+        ]
         self.palabras_reservadas = [
             "iniciar-programa",
             "inicia-ejecucion",
             "termina-ejecucion",
             "finalizar-programa"
-            "si-es-cero",
             "no",
             "y",
             "o",
             "define-nueva-instruccion",
             "define-prototipo-instruccion",
-            "apagate",
-            "gira-izquierda",
-            "avanza",
-            "coge-zumbador",
-            "deja-zumbador",
             "sal-de-instruccion",
             "inicio",
             "fin",
@@ -63,33 +81,18 @@ class kgrammar:
             "veces",
             "si",
             "entonces",
-            "sino",
-            "frente-libre"
-            "frente-bloqueado",
-            "derecha-libre",
-            "derecha-bloqueada",
-            "izquierad-libre",
-            "izquierda-bloqueada",
-            "junto-a-zumbador",
-            "no-junto-a-zumbador",
-            "algun-zumbador-en-la-mochila",
-            "ningun-zumbador-en-la-mochila",
-            "orientado-al-norte",
-            "no-orientado-al-norte",
-            "orientado-al-este",
-            "no-orientado-al-este",
-            "orientado-al-sur",
-            "no-orientado-al-sur",
-            "orientado-al-oeste",
-            "no-orientado-al-oeste",
-            "verdadero", #Reservadas para futuros usos
-            "falso" #reservadas para futuros usos
-        ]
+            "sino"
+        ] + self.instrucciones + self.condiciones
         self.debug = debug
         self.tokenizador = ktokenizer(flujo, archivo)
         self.token_actual = self.tokenizador.get_token().lower()
         self.prototipo_funciones = dict()
         self.funciones = dict()
+        self.gen_tree = gen_tree
+        self.tree = {
+            "main": [] #Lista de instrucciones principal, declarada en 'inicia-ejecucion'
+            "funciones": dict() #Diccionario con los nombres de las funciones como llave
+        } #Indica si se debe generar un arbol con las instrucciones
         # Un diccionario que tiene por llaves los nombres de las funciones
         # y que tiene por valores listas con las variables de dichas
         # funciones

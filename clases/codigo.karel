@@ -46,7 +46,7 @@ iniciar-programa
     fin;
     inicia-ejecucion
         come-columna;
-        mientras frente-bloqueado y orientado-al-sur hacer inicio
+        mientras frente-bloqueado y orientado-al-sur o (no frente-libre y izquierda-bloqueada) hacer inicio
             gira-izquierda;
             si frente-libre y junto-a-zumbador entonces inicio
                 avanza;
