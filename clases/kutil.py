@@ -1,10 +1,10 @@
 # -*- coding: iso-8859-1 -*-
 """
-Clases y funciones Ãºtiles para Karel
+Clases y funciones utiles para Karel
 """
 
 class KarelException(Exception):
-    """ Define un error sintáctico de Karel """
+    """ Define un error sintactico de Karel """
     pass
 
 def xml_prepare(lista):
@@ -14,3 +14,9 @@ def xml_prepare(lista):
     for i in lista:
         s += str(i)+" "
     return s[:-1]
+
+class kcompiled:
+    """ Define un programa compilado de Karel """
+    def __init__(self):
+        self.funciones = dict()
+        self.main = [] #La cola principal de funciones

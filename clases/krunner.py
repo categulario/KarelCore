@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 #
 #  krunner.py
 #
@@ -29,14 +29,17 @@ análizis sintáctico, y un mundo.
 from kworld import kworld
 from kgrammar import kgrammar
 from kutil import KarelException
+from ktokenizer import ktokenizer
 import sys
 
 class krunner:
     """ Ejecuta acciones de un código en el mundo de Karel """
 
-    def __init__ (self, source=(None, None), mundo=None):
+    def __init__ (self, source=(None, None), mundo=None, debug=False):
         """ Inicializa el objeto Krunner a partir de un archivo o flujo
         de código fuente Karel y un mundo, el parámetro source  """
+        if not mundo:
+            self.mundo = kworld()
         if not isinstance(mundo, kworld):
             self.mundo = kworld(archivo = mundo)
         else:
@@ -408,7 +411,10 @@ class krunner:
         elif self.token_actual == 'gira-izquierda':
             self.avanza_token()
         elif self.token_actual == 'avanza':
-            self.avanza_token()
+            if self.mundo.avanza():
+                self.avanza_token()
+            else:
+                raise KarelException("Karel chocó con una pared!")
         elif self.token_actual == 'coge-zumbador':
             self.avanza_token()
         elif self.token_actual == 'deja-zumbador':
@@ -433,13 +439,28 @@ class krunner:
             if self.prototipo_funciones.has_key(self.token_actual) or self.funciones.has_key(self.token_actual):
                 nombre_funcion = self.token_actual
                 self.avanza_token()
+                requiere_parametros = True
+                num_parametros = 0
                 if self.token_actual == '(':
                     self.avanza_token()
-                    self.expresion_entera(lista_variables)
-                    if self.token_actual == ')':
-                        self.avanza_token()
+                    while True:
+                        self.expresion_entera(lista_variables)
+                        num_parametros += 1
+                        if self.token_actual == ')':
+                            #self.tokenizador.push_token(')') #Devolvemos el token a la pila
+                            break
+                        elif self.token_actual == ',':
+                            self.avanza_token()
+                        else:
+                            raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
+
+                    if self.prototipo_funciones.has_key(nombre_funcion):
+                        if num_parametros != len(self.prototipo_funciones[nombre_funcion]):
+                            raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
                     else:
-                        raise KarelException("Se esperaba ')'")
+                        if num_parametros != len(self.funciones[nombre_funcion]):
+                            raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
+                    self.avanza_token()
             else:
                 raise KarelException("La instrucción '%s' no ha sido previamente definida, pero es utilizada"%self.token_actual)
         else:
@@ -693,9 +714,8 @@ class krunner:
         if self.debug:
             print "</termino>"
 
-    def verificar_sintaxis (self):
-        """ Verifica que este correcta la gramatica de un programa
-        en karel """
+    def run (self):
+        """ Ejecuta el programa """
         if self.token_actual == 'iniciar-programa':
             if self.avanza_token():
                 self.bloque()
@@ -728,18 +748,20 @@ class krunner:
         return es_valido
 
 if __name__ == '__main__':
+    from pprint import pprint
     deb = False
     if deb:
         print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
     if len(sys.argv) == 1:
-        grammar = kgrammar(debug=deb)
+        runner = krunner(debug=deb)
     else:
         fil = sys.argv[1]
-        grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb)
+        runner = krunner((open(fil), fil), debug=deb)
     try:
-        grammar.verificar_sintaxis()
+        runner.run()
+        pprint(runner.mundo.mundo)
     except KarelException, ke:
-        print ke.args[0], "en la línea", grammar.tokenizador.lineno
+        print ke.args[0], "en la línea", runner.tokenizador.lineno
         print
         print "<syntax status='bad'/>"
     else:
