@@ -137,24 +137,11 @@ class kworld:
         actual, si es posible lo deja. Si el parámetro test es verdadero
         solo ensaya  """
         posicion = self.mundo['karel']['posicion']
-        if self.mundo['karel']['mochila'] == 'inf':
+        if self.algun_zumbador_en_la_mochila():
             if not test:
                 try:
                     if self.mundo['casillas'][posicion]['zumbadores'] != 'inf':
                         self.mundo['casillas'][posicion]['zumbadores'] += 1
-                except KeyError:
-                    self.mundo['casillas'].update({
-                        posicion: {
-                            'zumbadores': 1,
-                            'paredes': set()
-                        }
-                    })
-            return True
-        elif self.mundo['karel']['mochila'] > 0:
-            if not test:
-                self.mundo['karel']['mochila'] -= 1
-                try:
-                    self.mundo['casillas'][posicion]['zumbadores'] += 1
                 except KeyError:
                     self.mundo['casillas'].update({
                         posicion: {
@@ -247,6 +234,13 @@ class kworld:
                 return True
             else:
                 return False
+        else:
+            return False
+
+    def orientado_al(self, direccion):
+        """ Determina si karel esta orientado al norte """
+        if self.mundo['karel']['orientacion'] == direccion:
+            return True
         else:
             return False
 
