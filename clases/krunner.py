@@ -61,7 +61,7 @@ class krunner:
                         self.bloque(instruccion['cola'], diccionario_variables)
                 elif instruccion['estructura'] == 'mientras':
                     while self.termino_logico(instruccion['argumento']['o'], diccionario_variables):
-                        self.bloque(instruccion['cola'])
+                        self.bloque(instruccion['cola'], diccionario_variables)
                 else:
                     #print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
                     self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'], self.merge(self.arbol['funciones'][instruccion['nombre']]['params'], instruccion['argumento']))
@@ -79,6 +79,8 @@ class krunner:
                     if not self.mundo.deja_zumbador():
                         raise KarelException('Karel quizo dejar un zumbador pero su mochila estaba vacia')
                 elif instruccion == 'apagate':
+                    return
+                elif instruccion == 'sal-de-instruccion':
                     return
 
     def expresion_entera (self, valor, diccionario_variables):
@@ -203,13 +205,13 @@ if __name__ == '__main__':
             }
         })
 
-        runner = krunner(grammar.arbol, mundo)
+        runner = krunner(grammar.arbol)
         try:
             runner.run()
         except KarelException, kre:
             print 'Error:', kre.args[0]
         else:
-            print 'Ejecucion terminada'
+            print 'Ejecucion terminada OK'
         pprint(runner.mundo.mundo)
     fin = time()
     print "time: ", int((fin-inicio)*1000), "milisegundos"

@@ -17,6 +17,10 @@ Si conoces Karel el robot y tienes códigos escritos en PASCAL (el pascal de Kar
 
 Cualquier irregularidad me avisan a a.wonderful.code@gmail.com
 
+Ahora también es posible correr archivos de karel usando:
+
+`$ python krunner.py codigo.karel`
+
 Testing
 -------
 
@@ -42,14 +46,17 @@ Un ejemplo de cómo pasar un archivo como parámetro:
 TODO
 ----
 
-Algunas buenas ideas por implementar en este proyecto
+Cosas importantes por hacer:
 
+* Corregir el funcionamiento de `sal-de-instruccion` y de `apagate` en `krunner` y `kgrammar`.
+* Ajustar `ktokenizer.py` para agrupar símbolos como '++', '--', '&&', '||', '==', '//', '/\*', '\*/' etc...
 * Implementar la GUI del IDE.
-* Poner una sección con un tutorial de Karel a modo de 'misiones'.
 * Hacer un editor de mundos.
 * Soportar la sintaxis Java de pascal.
-* Terminar la clase `krunner.py`.
-* Ajustar `ktokenizer.py` para agrupar símbolos como '++', '--', '&&', '||', '==', '//', '/\*', '\*/' etc...
+
+Algunas buenas ideas por implementar en este proyecto:
+
+* Poner una sección con un tutorial de Karel a modo de 'misiones'.
 
 Notas
 -----
