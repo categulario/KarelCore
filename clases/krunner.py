@@ -45,26 +45,26 @@ class krunner:
         else:
             self.mundo = kworld() #En la 1,1 orientado al norte
 
-    def bloque (self, cola, diccionario_variables=dict()):
+    def bloque (self, cola, diccionario_variables):
         """ Ejecuta una cola de instrucciones dentro de una estructura
         mayor """
         for instruccion in cola:
             if type(instruccion) == dict:
                 #Se trata de una estructura de control o una funcion definida
                 if instruccion['estructura'] == 'si':
-                    if self.termino_logico(instruccion['argumento']['o']):
-                        self.bloque(instruccion['cola'])
+                    if self.termino_logico(instruccion['argumento']['o'], diccionario_variables):
+                        self.bloque(instruccion['cola'], diccionario_variables)
                     elif instruccion.has_key('sino-cola'):
-                        self.bloque(instruccion['sino-cola'])
+                        self.bloque(instruccion['sino-cola'], diccionario_variables)
                 elif instruccion['estructura'] == 'repite':
-                    for i in xrange(self.expresion_entera(instruccion['argumento'])):
-                        self.bloque(instruccion['cola'])
+                    for i in xrange(self.expresion_entera(instruccion['argumento'], diccionario_variables)):
+                        self.bloque(instruccion['cola'], diccionario_variables)
                 elif instruccion['estructura'] == 'mientras':
-                    while self.termino_logico(instruccion['argumento']['o']):
+                    while self.termino_logico(instruccion['argumento']['o'], diccionario_variables):
                         self.bloque(instruccion['cola'])
                 else:
                     #print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
-                    self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'])
+                    self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'], self.merge(self.arbol['funciones'][instruccion['nombre']]['params'], instruccion['argumento']))
             else:
                 #Es una instruccion predefinida de Karel
                 if instruccion == 'avanza':
@@ -81,7 +81,7 @@ class krunner:
                 elif instruccion == 'apagate':
                     return
 
-    def expresion_entera (self, valor):
+    def expresion_entera (self, valor, diccionario_variables):
         """ Obtiene el resultado de una evaluacion entera y lo devuelve
         """
         if type(valor) == dict:
@@ -94,38 +94,37 @@ class krunner:
             return valor
         else:
             #Es una variable
-            #TODO implementar
-            return 0
+            return diccionario_variables[valor]
 
-    def termino_logico (self, lista_expresiones):
+    def termino_logico (self, lista_expresiones, diccionario_variables):
         """ Obtiene el resultado de la evaluacion de un termino logico 'o'
         para el punto en que se encuentre Karel al momento de la llamada,
         recibe una lista con los terminos a evaluar
         """
         for termino in lista_expresiones:
-            if self.clausula_y(termino['y']):
+            if self.clausula_y(termino['y'], diccionario_variables):
                 return True
         else:
             return False
 
-    def clausula_y (self, lista_expresiones):
+    def clausula_y (self, lista_expresiones, diccionario_variables):
         """ Obtiene el resultado de una comparación 'y' entre terminos
         logicos """
         for termino in lista_expresiones:
-            if not self.clausula_no(termino):
+            if not self.clausula_no(termino, diccionario_variables):
                 return False #El resultado de una evaluacion 'y' es falso si uno de los terminos es falso
         else:
             return True
 
-    def clausula_no (self, termino):
+    def clausula_no (self, termino, diccionario_variables):
         """ Obtiene el resultado de una negacion 'no' o de un termino
         logico """
         if type(termino) == dict:
             #Se trata de una negacion, un 'o' o un 'si-es-cero'
             if termino.has_key('no'):
-                return not self.clausula_no(termino['no'])
+                return not self.clausula_no(termino['no'], diccionario_variables)
             elif termino.has_key('o'):
-                return self.termino_logico(termino['o'])
+                return self.termino_logico(termino['o'], diccionario_variables)
             else:
                 #Si es cero
                 if self.expresion_entera(termino['si-es-cero']) == 0:
@@ -169,7 +168,17 @@ class krunner:
         """ Ejecuta el codigo compilado de Karel en el mundo
         proporcionado, comenzando por el bloque 'main' o estructura
         principal. """
-        self.bloque(self.arbol['main'])
+        self.bloque(self.arbol['main'], dict()) #Enviamos un diccionario vacio de variables para iniciar
+
+    def merge (self, lista_llaves, lista_valores):
+        """ Combina un par de listas de la misma longitud en un
+        diccionario """
+        d = dict()
+        lista_valores.reverse()
+        for i in lista_llaves:
+            d.update({i: lista_valores.pop()})
+        return d
+
 
 if __name__ == '__main__':
     from pprint import pprint

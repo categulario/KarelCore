@@ -1,7 +1,7 @@
 iniciar-programa
     define-nueva-instruccion gira(n) como repetir n veces gira-izquierda;
     inicia-ejecucion
-        gira(8);
+        gira(3);
         apagate;
     termina-ejecucion
 finalizar-programa
