@@ -21,6 +21,8 @@ iniciar-programa
         fin;
         repetir sucede(5) veces inicio #Esto es un comentario de una linea
             deja-zumbador;
+            avanza;
+            coge-zumbador;
         fin;
         repite 452 veces inicio
             avanza;

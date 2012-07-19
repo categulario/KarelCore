@@ -259,7 +259,7 @@ class kgrammar:
             self.arbol['funciones'].update({
                 nombre_funcion : {
                     'params': [],
-                    'queue': []
+                    'cola': []
                 }
             })
 
@@ -307,7 +307,7 @@ class kgrammar:
                 raise KarelException("La función '%s' no está definida como se planeó en el prototipo, verifica el número de variables"%nombre_funcion)
 
         if self.gen_arbol:
-            self.arbol['funciones'][nombre_funcion]['queue'] = self.expresion(self.funciones[nombre_funcion])
+            self.arbol['funciones'][nombre_funcion]['cola'] = self.expresion(self.funciones[nombre_funcion])
         else:
             self.expresion(self.funciones[nombre_funcion]) #Le mandamos las variables existentes
 
@@ -428,7 +428,10 @@ class kgrammar:
         elif self.token_actual == 'mientras':
             self.expresion_mientras(lista_variables)
         elif self.token_actual == 'repite' or self.token_actual == 'repetir':
-            self.expresion_repite(lista_variables)
+            if self.gen_arbol:
+                retornar_valor = [self.expresion_repite(lista_variables)]
+            else:
+                self.expresion_repite(lista_variables)
         elif self.token_actual == 'inicio':
             self.avanza_token()
             if self.gen_arbol:
@@ -591,18 +594,32 @@ class kgrammar:
         """
         if self.debug:
             print "<expresion_repite params='%s'>"%xml_prepare(lista_variables)
+        if self.gen_arbol:
+            retornar_valor = {
+                'estructura': 'repite',
+                'argumento': None,
+                'cola': []
+            }
 
         self.avanza_token()
-        self.expresion_entera(lista_variables)
+        if self.gen_arbol:
+            retornar_valor['argumento'] = self.expresion_entera(lista_variables)
+        else:
+            self.expresion_entera(lista_variables)
 
         if self.token_actual != 'veces':
             raise KarelException("Se esperaba la palabra 'veces', '%s' no es válido"%self.token_actual)
 
         self.avanza_token()
-        self.expresion(lista_variables)
+        if self.gen_arbol:
+            retornar_valor['cola'] = self.expresion(lista_variables)
+        else:
+            self.expresion(lista_variables)
 
         if self.debug:
             print "</expresion_repite>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def expresion_si(self, lista_variables):
         """
@@ -765,7 +782,9 @@ class kgrammar:
 
 if __name__ == "__main__":
     from pprint import pprint
-    deb = True
+    from time import time
+    inicio = time()
+    deb = False
     if deb:
         print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
     if len(sys.argv) == 1:
@@ -784,3 +803,5 @@ if __name__ == "__main__":
         print "<syntax status='good'/>"
     if deb:
         print "</xml>"
+    fin = time()
+    print "time: ", fin-inicio
