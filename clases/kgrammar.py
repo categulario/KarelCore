@@ -17,7 +17,7 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  Foundation, Inc., 51 Franklin Sarbolt, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
 #
@@ -34,7 +34,7 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=None, archivo=None, debug=False, gen_tree=False):
+    def __init__(self, flujo=None, archivo=None, debug=False, gen_arbol=False):
         self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate']
         self.condiciones = [
             'frente-libre',
@@ -88,14 +88,15 @@ class kgrammar:
         self.token_actual = self.tokenizador.get_token().lower()
         self.prototipo_funciones = dict()
         self.funciones = dict()
-        self.gen_tree = gen_tree
-        self.tree = {
-            "main": [] #Lista de instrucciones principal, declarada en 'inicia-ejecucion'
+        self.gen_arbol = gen_arbol
+        self.arbol = {
+            "main": [], #Lista de instrucciones principal, declarada en 'inicia-ejecucion'
             "funciones": dict() #Diccionario con los nombres de las funciones como llave
         } #Indica si se debe generar un arbol con las instrucciones
         # Un diccionario que tiene por llaves los nombres de las funciones
         # y que tiene por valores listas con las variables de dichas
         # funciones
+        self.cur
         if self.debug:
             print "<avanza_token new_token='%s' line='%d' />"%(self.token_actual, self.tokenizador.lineno)
 
@@ -253,6 +254,14 @@ class kgrammar:
             self.funciones.update({self.token_actual: []})
             nombre_funcion = self.token_actual
 
+        if self.gen_arbol:
+            self.arbol['funciones'].update({
+                nombre_funcion : {
+                    'params': [],
+                    'queue': []
+                }
+            })
+
         self.avanza_token()
 
         if self.token_actual == 'como':
@@ -277,6 +286,8 @@ class kgrammar:
                         self.avanza_token()
                     else:
                         raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
+            if self.gen_arbol:
+                self.arbol['funciones'][nombre_funcion]['params'] = self.funciones[nombre_funcion]
         else:
             raise KarelException("Se esperaba la palabra clave 'como' o un parametro")
 
@@ -740,16 +751,18 @@ class kgrammar:
         return es_valido
 
 if __name__ == "__main__":
+    from pprint import pprint
     deb = True
     if deb:
         print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
     if len(sys.argv) == 1:
-        grammar = kgrammar(debug=deb)
+        grammar = kgrammar(debug=deb, gen_arbol = True)
     else:
         fil = sys.argv[1]
-        grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb)
+        grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb, gen_arbol=True)
     try:
         grammar.verificar_sintaxis()
+        pprint(grammar.arbol)
     except KarelException, ke:
         print ke.args[0], "en la línea", grammar.tokenizador.lineno
         print
