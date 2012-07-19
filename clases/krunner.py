@@ -52,11 +52,15 @@ class krunner:
             if type(instruccion) == dict:
                 #Se trata de una estructura de control o una funcion definida
                 if instruccion['estructura'] == 'si':
-                    print "SI"
+                    if self.termino_logico(instruccion['argumento']['o']):
+                        self.bloque(instruccion['cola'])
+                    elif instruccion.has_key('sino-cola'):
+                        self.bloque(instruccion['sino-cola'])
                 elif instruccion['estructura'] == 'repite':
                     print "REPITE"
                 elif instruccion['estructura'] == 'mientras':
-                    print 'MIENTRAS'
+                    while self.termino_logico(instruccion['argumento']['o']):
+                        self.bloque(instruccion['cola'])
                 else:
                     print 'INSTRUCCION: ', instruccion['nombre']
             else:
@@ -80,10 +84,6 @@ class krunner:
         """
         pass
 
-    def expresion_si (self):
-        """ Ejecuta una estructura condicional """
-        pass
-
     def expresion_mientras (self):
         """ Ejecuta un bucle 'mientras' """
         pass
@@ -92,21 +92,70 @@ class krunner:
         """ Ejecuta un bucle 'repite' """
         pass
 
-    def termino_logico (self):
+    def termino_logico (self, lista_expresiones):
         """ Obtiene el resultado de la evaluacion de un termino logico 'o'
-        para el punto en que se encuentre Karel al momento de la llamada
+        para el punto en que se encuentre Karel al momento de la llamada,
+        recibe una lista con los terminos a evaluar
         """
-        pass
+        for termino in lista_expresiones:
+            if self.clausula_y(termino['y']):
+                return True
+        else:
+            return False
 
-    def clausula_y (self):
+    def clausula_y (self, lista_expresiones):
         """ Obtiene el resultado de una comparación 'y' entre terminos
         logicos """
-        pass
+        for termino in lista_expresiones:
+            if not self.clausula_no(termino):
+                return False #El resultado de una evaluacion 'y' es falso si uno de los terminos es falso
+        else:
+            return True
 
-    def clausula_no (self):
+    def clausula_no (self, termino):
         """ Obtiene el resultado de una negacion 'no' o de un termino
         logico """
-        pass
+        if type(termino) == dict:
+            #Se trata de una negacion, un 'o' o un 'si-es-cero'
+            if termino.has_key('no'):
+                return not self.clausula_no(termino['no'])
+            elif termino.has_key('o'):
+                return self.termino_logico(termino['o'])
+            else:
+                #TODO implementar 'si-es-cero'
+                pass
+        else:
+            #Puede ser una condicion relacionada con el mundo, o verdadero y falso
+            if termino == 'verdadero':
+                return True
+            elif termino == 'falso':
+                return False
+            elif termino == 'frente-libre':
+                return self.mundo.frente_libre()
+            elif termino == 'frente-bloqueado':
+                return not self.mundo.frente_libre()
+            elif termino == 'izquierda-libre':
+                return self.mundo.izquierda_libre()
+            elif termino == 'izquierda-bloqueada':
+                return not self.mundo.izquierda_libre()
+            elif termino == 'derecha-libre':
+                return self.mundo.derecha_libre()
+            elif termino == 'derecha-bloqueada':
+                return not self.mundo.derecha_libre()
+            elif termino == 'junto-a-zumbador':
+                return self.mundo.junto_a_zumbador()
+            elif termino == 'no-junto-a-zumbador':
+                return not self.mundo.junto_a_zumbador()
+            elif termino == 'algun-zumbador-en-la-mochila':
+                return self.mundo.algun_zumbador_en_la_mochila()
+            elif termino == 'ningun-zumbador-en-la-mochila':
+                return not self.mundo.algun_zumbador_en_la_mochila()
+            else:
+                #Es una preguna de orientacion
+                if termino.startswith('no-'):
+                    return not self.mundo.orientado_al(termino[13:]) #Que truco
+                else:
+                    return self.mundo.orientado_al(termino[13:]) #Oh si!
 
     def clausula_atomica (self):
         """ Obtiene el valor logico de una expresion, o de un conjunto
@@ -138,11 +187,11 @@ if __name__ == '__main__':
         mundo = kworld(karel_pos=(50, 50), mochila='inf', casillas={
             (50, 50) : {
             'zumbadores': 'inf',
-            'paredes': set(['este'])
+            'paredes': set()
             },
             (51, 50): {
                 'zumbadores': 1,
-                'paredes': set(['oeste'])
+                'paredes': set()
             }
         })
 
@@ -155,5 +204,5 @@ if __name__ == '__main__':
             print 'Ejecucion terminada'
         pprint(runner.mundo.mundo)
     fin = time()
-    print "time: ", fin-inicio
+    print "time: ", int((fin-inicio)*1000), "milisegundos"
 

@@ -772,7 +772,7 @@ class kgrammar:
                 retornar_valor = self.token_actual
             self.avanza_token()
         else:
-            raise KarelException("Se esperaba una condición como 'frente-libre', %s no es una condición"%self.token_actual)
+            raise KarelException("Se esperaba una condición como 'frente-libre', '%s' no es una condición"%self.token_actual)
 
         if self.debug:
             print "</funcion_booleana>"

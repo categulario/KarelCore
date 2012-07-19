@@ -1,14 +1,6 @@
 iniciar-programa
-    define-nueva-instruccion cosa como avanza;
     inicia-ejecucion
-        avanza;
-        gira-izquierda;
-        coge-zumbador;
-        deja-zumbador;
-        si frente-libre entonces apagate;
-        mientras frente-libre hacer apagate;
-        repite 15 veces apagate;
-        cosa;
+        mientras frente-libre y (junto-a-zumbador) hacer avanza;
         apagate;
     termina-ejecucion
 finalizar-programa

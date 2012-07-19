@@ -196,7 +196,7 @@ class kworld:
         if not self.mundo['casillas'].has_key(posicion):
             return True #No hay un registro para esta casilla, no hay paredes
         else:
-            if rotado(direccion) in self.mundo['casillas'][posicion]['paredes']:
+            if self.rotado(direccion) in self.mundo['casillas'][posicion]['paredes']:
                 return False
             else:
                 return True
@@ -220,7 +220,7 @@ class kworld:
         if not self.mundo['casillas'].has_key(posicion):
             return True #No hay un registro para esta casilla, no hay paredes extra
         else:
-            if rotado(rotado(rotado(direccion))) in self.mundo['casillas'][posicion]['paredes']:
+            if self.rotado(self.rotado(self.rotado(direccion))) in self.mundo['casillas'][posicion]['paredes']:
                 return False
             else:
                 return True
