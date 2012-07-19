@@ -57,12 +57,13 @@ class krunner:
                     elif instruccion.has_key('sino-cola'):
                         self.bloque(instruccion['sino-cola'])
                 elif instruccion['estructura'] == 'repite':
-                    print "REPITE"
+                    for i in xrange(self.expresion_entera(instruccion['argumento'])):
+                        self.bloque(instruccion['cola'])
                 elif instruccion['estructura'] == 'mientras':
                     while self.termino_logico(instruccion['argumento']['o']):
                         self.bloque(instruccion['cola'])
                 else:
-                    print 'INSTRUCCION: ', instruccion['nombre']
+                    print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
             else:
                 #Es una instruccion predefinida de Karel
                 if instruccion == 'avanza':
@@ -79,18 +80,21 @@ class krunner:
                 elif instruccion == 'apagate':
                     return
 
-    def expresion_entera (self):
+    def expresion_entera (self, valor):
         """ Obtiene el resultado de una evaluacion entera y lo devuelve
         """
-        pass
-
-    def expresion_mientras (self):
-        """ Ejecuta un bucle 'mientras' """
-        pass
-
-    def expresion_repite (self):
-        """ Ejecuta un bucle 'repite' """
-        pass
+        if type(valor) == dict:
+            #Se trata de un sucede o un precede
+            if valor.has_key('sucede'):
+                return self.expresion_entera(valor['sucede'])+1
+            else:
+                return self.expresion_entera(valor['precede'])-1
+        elif type(valor) == int:
+            return valor
+        else:
+            #Es una variable
+            #TODO implementar
+            return 0
 
     def termino_logico (self, lista_expresiones):
         """ Obtiene el resultado de la evaluacion de un termino logico 'o'
@@ -122,8 +126,11 @@ class krunner:
             elif termino.has_key('o'):
                 return self.termino_logico(termino['o'])
             else:
-                #TODO implementar 'si-es-cero'
-                pass
+                #Si es cero
+                if self.expresion_entera(termino['si-es-cero']) == 0:
+                    return True
+                else:
+                    return False
         else:
             #Puede ser una condicion relacionada con el mundo, o verdadero y falso
             if termino == 'verdadero':
@@ -153,14 +160,9 @@ class krunner:
             else:
                 #Es una preguna de orientacion
                 if termino.startswith('no-'):
-                    return not self.mundo.orientado_al(termino[13:]) #Que truco
+                    return not self.mundo.orientado_al(termino[16:]) #Que truco
                 else:
-                    return self.mundo.orientado_al(termino[13:]) #Oh si!
-
-    def clausula_atomica (self):
-        """ Obtiene el valor logico de una expresion, o de un conjunto
-        agrupado de ellas mediante parentesis """
-        pass
+                    return self.mundo.orientado_al(termino[16:]) #Oh si!
 
     def run (self):
         """ Ejecuta el codigo compilado de Karel en el mundo
@@ -188,10 +190,6 @@ if __name__ == '__main__':
             (50, 50) : {
             'zumbadores': 'inf',
             'paredes': set()
-            },
-            (51, 50): {
-                'zumbadores': 1,
-                'paredes': set()
             }
         })
 

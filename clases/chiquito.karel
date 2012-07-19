@@ -1,6 +1,9 @@
 iniciar-programa
     inicia-ejecucion
-        mientras frente-libre y (junto-a-zumbador) hacer avanza;
+        #repite 4 veces inicio
+            #avanza;
+            si si-es-cero(0) entonces avanza;
+        #fin;
         apagate;
     termina-ejecucion
 finalizar-programa
