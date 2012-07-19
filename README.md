@@ -49,6 +49,7 @@ Algunas buenas ideas por implementar en este proyecto
 * Hacer un editor de mundos.
 * Soportar la sintaxis Java de pascal.
 * Terminar la clase `krunner.py`.
+* Ajustar `ktokenizer.py` para agrupar símbolos como '++', '--', '&&', '||', '==', '//', '/*', '*/' etc...
 
 Notas
 -----

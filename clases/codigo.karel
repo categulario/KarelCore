@@ -19,8 +19,10 @@ iniciar-programa
             "hola mundo!"
             avanza;
         fin;
-        repetir sucede(5) veces inicio #Esto es un comentario de una linea
+        repetir sucede(sucede(5)) veces inicio #Esto es un comentario de una linea
             deja-zumbador;
+            avanza;
+            coge-zumbador;
         fin;
         repite 452 veces inicio
             avanza;
@@ -36,10 +38,10 @@ iniciar-programa
             deja-zumbador;
         fin;
     fin;
-    define-nueva-instruccion paranga como avanza;
+    define-nueva-instruccion paranga(m, n) como repetir m veces avanza;
     define-nueva-instruccion azul como avanza;
     define-nueva-instruccion recursion(m, n, p) como inicio
-        si no si-es-cero(m) entonces inicio
+        si no si-es-cero(m) y frente-libre entonces inicio
             apagate;
         fin;
         repite sucede(n) veces gira-izquierda;
@@ -57,7 +59,8 @@ iniciar-programa
                 apagate;
             fin;
         fin;
-        paranga;
+        repetir 11 veces avanza;
+        paranga(sucede(34), 15);
         apagate;
     termina-ejecucion
 finalizar-programa
