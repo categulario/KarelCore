@@ -28,6 +28,7 @@ Define la gramatica de Karel
 from ktokenizer import ktokenizer
 from kutil import KarelException
 from kutil import xml_prepare
+import json
 import sys
 
 class kgrammar:
@@ -455,7 +456,10 @@ class kgrammar:
             else:
                 self.expresion_si(lista_variables)
         elif self.token_actual == 'mientras':
-            self.expresion_mientras(lista_variables)
+            if self.gen_arbol:
+                retornar_valor = [self.expresion_mientras(lista_variables)]
+            else:
+                self.expresion_mientras(lista_variables)
         elif self.token_actual == 'repite' or self.token_actual == 'repetir':
             if self.gen_arbol:
                 retornar_valor = [self.expresion_repite(lista_variables)]
@@ -606,17 +610,31 @@ class kgrammar:
         """
         if self.debug:
             print "<expresion_mientras params='%s'>"%xml_prepare(lista_variables)
+        if self.gen_arbol:
+            retornar_valor = {
+                'estructura': 'mientras',
+                'argumento': None,
+                'cola': []
+            }
         self.avanza_token()
 
-        self.termino(lista_variables)
+        if self.gen_arbol:
+            retornar_valor['argumento'] = self.termino(lista_variables)
+        else:
+            self.termino(lista_variables)
 
         if self.token_actual != 'hacer':
             raise KarelException("Se esperaba 'hacer'")
         self.avanza_token()
-        self.expresion(lista_variables)
+        if self.gen_arbol:
+            retornar_valor['cola'] = self.expresion(lista_variables)
+        else:
+            self.expresion(lista_variables)
 
         if self.debug:
             print "</expresion_mientras>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def expresion_repite(self, lista_variables):
         """
@@ -813,6 +831,17 @@ class kgrammar:
             i += 1
         return es_valido
 
+    def guardar_compilado (self, nombrearchivo, expandir=False):
+        """ Guarda el resultado de una compilacion de codigo Karel a el
+        archivo especificado """
+        f = file(nombrearchivo, 'w')
+        if expandir:
+            f.write(json.dumps(self.arbol, indent=2))
+        else:
+            f.write(json.dumps(self.arbol))
+        f.close()
+
+
 if __name__ == "__main__":
     from pprint import pprint
     from time import time
@@ -827,6 +856,7 @@ if __name__ == "__main__":
         grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb, gen_arbol=True)
     try:
         grammar.verificar_sintaxis()
+        #grammar.guardar_compilado('codigo.kcmp', True)
         pprint(grammar.arbol)
     except KarelException, ke:
         print ke.args[0], "en la línea", grammar.tokenizador.lineno
