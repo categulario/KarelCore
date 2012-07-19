@@ -1,9 +1,7 @@
 iniciar-programa
+    define-nueva-instruccion gira(n) como repetir n veces gira-izquierda;
     inicia-ejecucion
-        #repite 4 veces inicio
-            #avanza;
-            si si-es-cero(0) entonces avanza;
-        #fin;
+        gira(8);
         apagate;
     termina-ejecucion
 finalizar-programa

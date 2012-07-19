@@ -45,7 +45,7 @@ class krunner:
         else:
             self.mundo = kworld() #En la 1,1 orientado al norte
 
-    def bloque (self, cola):
+    def bloque (self, cola, diccionario_variables=dict()):
         """ Ejecuta una cola de instrucciones dentro de una estructura
         mayor """
         for instruccion in cola:
@@ -63,7 +63,8 @@ class krunner:
                     while self.termino_logico(instruccion['argumento']['o']):
                         self.bloque(instruccion['cola'])
                 else:
-                    print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
+                    #print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
+                    self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'])
             else:
                 #Es una instruccion predefinida de Karel
                 if instruccion == 'avanza':
