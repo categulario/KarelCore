@@ -36,9 +36,44 @@ class krunner:
     """ Ejecuta codigos compilados de Karel hasta el final o hasta
     encontrar un error relacionado con las condiciones del mundo. """
 
-    def __init__ (self):
-        """ Inicializa el ejecutor dados un codigo fuente y un mundo. """
-        pass
+    def __init__ (self, programa_compilado, mundo=None):
+        """ Inicializa el ejecutor dados un codigo fuente compilado y un
+        mundo. """
+        self.arbol = programa_compilado
+        if mundo:
+            self.mundo = mundo
+        else:
+            self.mundo = kworld() #En la 1,1 orientado al norte
+
+    def bloque (self, cola):
+        """ Ejecuta una cola de instrucciones dentro de una estructura
+        mayor """
+        for instruccion in cola:
+            if type(instruccion) == dict:
+                #Se trata de una estructura de control o una funcion definida
+                if instruccion['estructura'] == 'si':
+                    print "SI"
+                elif instruccion['estructura'] == 'repite':
+                    print "REPITE"
+                elif instruccion['estructura'] == 'mientras':
+                    print 'MIENTRAS'
+                else:
+                    print 'INSTRUCCION: ', instruccion['nombre']
+            else:
+                #Es una instruccion predefinida de Karel
+                if instruccion == 'avanza':
+                    if not self.mundo.avanza():
+                        raise KarelException('Karel se topo con una pared')
+                elif instruccion == 'gira-izquierda':
+                    self.mundo.gira_izquierda()
+                elif instruccion == 'coge-zumbador':
+                    if not self.mundo.coge_zumbador():
+                        raise KarelException('Karel quizo coger un zumbador pero no habia en su posicion')
+                elif instruccion == 'deja-zumbador':
+                    if not self.mundo.deja_zumbador():
+                        raise KarelException('Karel quizo dejar un zumbador pero su mochila estaba vacia')
+                elif instruccion == 'apagate':
+                    return
 
     def expresion_entera (self):
         """ Obtiene el resultado de una evaluacion entera y lo devuelve
@@ -55,11 +90,6 @@ class krunner:
 
     def expresion_repite (self):
         """ Ejecuta un bucle 'repite' """
-        pass
-
-    def bloque (self):
-        """ Ejecuta una cola de instrucciones dentro de una estructura
-        mayor """
         pass
 
     def termino_logico (self):
@@ -87,8 +117,43 @@ class krunner:
         """ Ejecuta el codigo compilado de Karel en el mundo
         proporcionado, comenzando por el bloque 'main' o estructura
         principal. """
-        pass
+        self.bloque(self.arbol['main'])
 
 if __name__ == '__main__':
-    print "TODO terminar el krunner"
+    from pprint import pprint
+    from time import time
+    inicio = time()
+    if len(sys.argv) == 1:
+        grammar = kgrammar(debug=deb, gen_arbol = True)
+    else:
+        fil = sys.argv[1]
+        grammar = kgrammar(flujo=open(fil), archivo=fil, gen_arbol=True)
+    try:
+        grammar.verificar_sintaxis()
+        #grammar.guardar_compilado('codigo.kcmp', True)
+        #pprint(grammar.arbol)
+    except KarelException, ke:
+        print ke.args[0], "en la línea", grammar.tokenizador.lineno
+    else:
+        mundo = kworld(karel_pos=(50, 50), mochila='inf', casillas={
+            (50, 50) : {
+            'zumbadores': 'inf',
+            'paredes': set(['este'])
+            },
+            (51, 50): {
+                'zumbadores': 1,
+                'paredes': set(['oeste'])
+            }
+        })
+
+        runner = krunner(grammar.arbol, mundo)
+        try:
+            runner.run()
+        except KarelException, kre:
+            print 'Error:', kre.args[0]
+        else:
+            print 'Ejecucion terminada'
+        pprint(runner.mundo.mundo)
+    fin = time()
+    print "time: ", fin-inicio
 

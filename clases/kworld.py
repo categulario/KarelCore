@@ -101,32 +101,11 @@ class kworld:
         verdadero solo ensaya. """
         #TODO determinar si puede ser reemplazado por puede_avanzar()
         #Determino primero si está en los bordes
-        direccion = self.mundo['karel']['orientacion']
-        posicion = self.mundo['karel']['posicion']
-        if direccion == 'norte':
-            if posicion[0] == self.mundo['dimensiones']['filas']:
-                return False
-        if direccion == 'sur':
-            if posicion[0] == 1:
-                return False
-        if direccion == 'este':
-            if posicion[1] == self.mundo['dimensiones']['columnas']:
-                return False
-        if direccion == 'oeste':
-            if posicion[1] == 1:
-                return False
-        #Ya excluimos los bordes, revisamos las paredes
-        if not self.mundo['casillas'].has_key(posicion):
-            if not test:
-                self.mundo['karel']['posicion'] = self.obten_casilla_avance(posicion, direccion)
-            return True #No hay un registro para esta casilla, no hay paredes
+        if self.frente_libre():
+            self.mundo['karel']['posicion'] = self.obten_casilla_avance(self.mundo['karel']['posicion'], self.mundo['karel']['orientacion'])
+            return True
         else:
-            if direccion in self.mundo['casillas'][posicion]['paredes']:
-                return False
-            else:
-                if not test:
-                    self.mundo['karel']['posicion'] = self.obten_casilla_avance(posicion, direccion)
-                return True
+            return False
 
     def gira_izquierda (self, test=False):
         """ Gira a Karel 90° a la izquierda, obteniendo una nueva
@@ -139,27 +118,39 @@ class kworld:
         toma, devuelve Falso si no lo logra. Si el parámetro test es
         verdadero solo ensaya. """
         posicion = self.mundo['karel']['posicion']
-        if not self.mundo['casillas'].has_key(posicion):
-            return False
-        else:
+        if self.junto_a_zumbador():
             if self.mundo['casillas'][posicion]['zumbadores'] == 'inf':
                 if not test:
-                    self.mundo['karel']['mochila'] += 1
-                return True
+                    if self.mundo['karel']['mochila'] != 'inf':
+                        self.mundo['karel']['mochila'] += 1
             elif self.mundo['casillas'][posicion]['zumbadores']>0:
                 if not test:
-                    self.mundo['karel']['mochila'] += 1
+                    if self.mundo['karel']['mochila'] != 'inf':
+                        self.mundo['karel']['mochila'] += 1
                     self.mundo['casillas'][posicion]['zumbadores'] -= 1
-                return True
-            else:
-                return False
+            return True
+        else:
+            return False
 
     def deja_zumbador (self, test=False):
         """ Determina si Karel puede dejar un zumbador en la casilla
         actual, si es posible lo deja. Si el parámetro test es verdadero
         solo ensaya  """
         posicion = self.mundo['karel']['posicion']
-        if self.mundo['karel']['mochila'] > 0:
+        if self.mundo['karel']['mochila'] == 'inf':
+            if not test:
+                try:
+                    if self.mundo['casillas'][posicion]['zumbadores'] != 'inf':
+                        self.mundo['casillas'][posicion]['zumbadores'] += 1
+                except KeyError:
+                    self.mundo['casillas'].update({
+                        posicion: {
+                            'zumbadores': 1,
+                            'paredes': set()
+                        }
+                    })
+            return True
+        elif self.mundo['karel']['mochila'] > 0:
             if not test:
                 self.mundo['karel']['mochila'] -= 1
                 try:
@@ -171,6 +162,97 @@ class kworld:
                             'paredes': set()
                         }
                     })
+            return True
+        else:
+            return False
+
+    def frente_libre(self):
+        """ Determina si Karel tiene el frente libre """
+        direccion = self.mundo['karel']['orientacion']
+        posicion = self.mundo['karel']['posicion']
+        if direccion == 'norte':
+            if posicion[0] == self.mundo['dimensiones']['filas']:
+                return False
+        elif direccion == 'sur':
+            if posicion[0] == 1:
+                return False
+        elif direccion == 'este':
+            if posicion[1] == self.mundo['dimensiones']['columnas']:
+                return False
+        elif direccion == 'oeste':
+            if posicion[1] == 1:
+                return False
+        if not self.mundo['casillas'].has_key(posicion):
+            return True #No hay un registro para esta casilla, no hay paredes
+        else:
+            if direccion in self.mundo['casillas'][posicion]['paredes']:
+                return False
+            else:
+                return True
+
+    def izquierda_libre (self):
+        """ Determina si Karel tiene la izquierda libre """
+        direccion = self.mundo['karel']['orientacion']
+        posicion = self.mundo['karel']['posicion']
+        if direccion == 'norte':
+            if posicion[1] == 1:
+                return False
+        elif direccion == 'sur':
+            if posicion[1] == self.mundo['dimensiones']['columnas']:
+                return False
+        elif direccion == 'este':
+            if posicion[0] == self.mundo['dimensiones']['filas']:
+                return False
+        elif direccion == 'oeste':
+            if posicion[0] == 1:
+                return False
+        if not self.mundo['casillas'].has_key(posicion):
+            return True #No hay un registro para esta casilla, no hay paredes
+        else:
+            if rotado(direccion) in self.mundo['casillas'][posicion]['paredes']:
+                return False
+            else:
+                return True
+
+    def derecha_libre (self):
+        """ Determina si Karel tiene la derecha libre """
+        direccion = self.mundo['karel']['orientacion']
+        posicion = self.mundo['karel']['posicion']
+        if direccion == 'norte':
+            if posicion[1] == self.mundo['dimensiones']['columnas']:
+                return False
+        elif direccion == 'sur':
+            if posicion[1] == 1:
+                return False
+        elif direccion == 'este':
+            if posicion[0] == 1:
+                return False
+        elif direccion == 'oeste':
+            if posicion[0] == self.mundo['dimensiones']['filas']:
+                return False
+        if not self.mundo['casillas'].has_key(posicion):
+            return True #No hay un registro para esta casilla, no hay paredes extra
+        else:
+            if rotado(rotado(rotado(direccion))) in self.mundo['casillas'][posicion]['paredes']:
+                return False
+            else:
+                return True
+
+    def junto_a_zumbador (self):
+        """ Determina si Karel esta junto a un zumbador. """
+        if self.mundo['casillas'].has_key(self.mundo['karel']['posicion']):
+            if self.mundo['casillas'][self.mundo['karel']['posicion']]['zumbadores'] == 'inf':
+                return True
+            elif self.mundo['casillas'][self.mundo['karel']['posicion']]['zumbadores'] > 0:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def algun_zumbador_en_la_mochila(self):
+        """ Determina si karel tiene algun zumbador en la mochila """
+        if self.mundo['karel']['mochila'] > 0:
             return True
         else:
             return False
@@ -298,7 +380,7 @@ if __name__ == '__main__':
     from pprint import pprint
     casillas_prueba = {
         (1, 1) : {
-            'zumbadores': 0,
+            'zumbadores': 'inf',
             'paredes': set(['este'])
         },
         (1, 2): {
