@@ -59,6 +59,7 @@ class kgrammar:
             "falso", #reservadas para futuros usos
             "si-es-cero"
         ]
+        self.expresiones_enteras = ['sucede', 'precede']
         self.palabras_reservadas = [
             "iniciar-programa",
             "inicia-ejecucion",
@@ -71,8 +72,6 @@ class kgrammar:
             "define-prototipo-instruccion",
             "inicio",
             "fin",
-            "precede",
-            "sucede",
             "mientras",
             "hacer",
             "repite",
@@ -81,7 +80,7 @@ class kgrammar:
             "si",
             "entonces",
             "sino"
-        ] + self.instrucciones + self.condiciones
+        ] + self.instrucciones + self.condiciones + self.expresiones_enteras
         self.debug = debug
         self.tokenizador = ktokenizer(flujo, archivo)
         self.token_actual = self.tokenizador.get_token().lower()
@@ -488,28 +487,29 @@ class kgrammar:
         """
         if self.debug:
             print "<expresion_entera params='%s'>"%xml_prepare(lista_variables)
+        if self.gen_arbol:
+            retornar_valor = None
         #En este punto hay que verificar que se trate de un numero entero
         try:
             #Intentamos convertir el numero
-            int(self.token_actual, 10)
+            if self.gen_arbol:
+                retornar_valor = int(self.token_actual, 10)
+            else:
+                int(self.token_actual, 10)
         except ValueError:
             #No era un entero
-            if self.token_actual == 'precede':
+            if self.token_actual in self.expresiones_enteras:
+                if self.gen_arbol:
+                    retornar_valor = {
+                        self.token_actual: None
+                    }
                 self.avanza_token()
                 if self.token_actual == '(':
                     self.avanza_token()
-                    self.expresion_entera(lista_variables)
-                    if self.token_actual == ')':
-                        self.avanza_token()
+                    if self.gen_arbol:
+                        retornar_valor[retornar_valor.keys()[0]] = self.expresion_entera(lista_variables)
                     else:
-                        raise KarelException("Se esperaba ')'")
-                else:
-                    raise KarelException("Se esperaba '('")
-            elif self.token_actual == 'sucede':
-                self.avanza_token()
-                if self.token_actual == '(':
-                    self.avanza_token()
-                    self.expresion_entera(lista_variables)
+                        self.expresion_entera(lista_variables)
                     if self.token_actual == ')':
                         self.avanza_token()
                     else:
@@ -520,6 +520,8 @@ class kgrammar:
                 #Se trata de una variable definida por el usuario
                 if self.token_actual not in lista_variables:
                     raise KarelException("La variable '%s' no está definida en este contexto"%self.token_actual)
+                if self.gen_arbol:
+                    retornar_valor = self.token_actual
                 self.avanza_token()
             else:
                 raise KarelException("Se esperaba un entero, variable, sucede o predece, '%s' no es válido"%self.token_actual)
@@ -529,6 +531,8 @@ class kgrammar:
 
         if self.debug:
             print "</expresion_entera>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def expresion_general(self, lista_variables):
         """

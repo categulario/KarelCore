@@ -19,7 +19,7 @@ iniciar-programa
             "hola mundo!"
             avanza;
         fin;
-        repetir sucede(5) veces inicio #Esto es un comentario de una linea
+        repetir sucede(sucede(5)) veces inicio #Esto es un comentario de una linea
             deja-zumbador;
             avanza;
             coge-zumbador;
@@ -59,6 +59,7 @@ iniciar-programa
                 apagate;
             fin;
         fin;
+        repetir 11 veces avanza;
         paranga;
         apagate;
     termina-ejecucion
