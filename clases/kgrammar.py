@@ -60,6 +60,7 @@ class kgrammar:
             "si-es-cero"
         ]
         self.expresiones_enteras = ['sucede', 'precede']
+        self.estructuras = ['si', 'mientras', 'repite', 'repetir']
         self.palabras_reservadas = [
             "iniciar-programa",
             "inicia-ejecucion",
@@ -72,15 +73,11 @@ class kgrammar:
             "define-prototipo-instruccion",
             "inicio",
             "fin",
-            "mientras",
             "hacer",
-            "repite",
-            "repetir",
             "veces",
-            "si",
             "entonces",
             "sino"
-        ] + self.instrucciones + self.condiciones + self.expresiones_enteras
+        ] + self.instrucciones + self.condiciones + self.expresiones_enteras + self.estructuras
         self.debug = debug
         self.tokenizador = ktokenizer(flujo, archivo)
         self.token_actual = self.tokenizador.get_token().lower()
@@ -164,12 +161,17 @@ class kgrammar:
         """
         if self.debug:
             print "<clausula_atomica params='%s'>"%xml_prepare(lista_variables)
+        if self.gen_arbol:
+            retornar_valor = None
 
         if self.token_actual == 'si-es-cero':
             self.avanza_token()
             if self.token_actual == '(':
                 self.avanza_token()
-                self.expresion_entera(lista_variables)
+                if self.gen_arbol:
+                    retornar_valor = {'si-es-cero': self.expresion_entera(lista_variables)}
+                else:
+                    self.expresion_entera(lista_variables)
                 if self.token_actual == ')':
                     self.avanza_token()
                 else:
@@ -178,16 +180,24 @@ class kgrammar:
                 raise KarelException("Se esperaba '('")
         elif self.token_actual == '(':
             self.avanza_token()
-            self.termino(lista_variables)
+            if self.gen_arbol:
+                retornar_valor = self.termino(lista_variables)
+            else:
+                self.termino(lista_variables)
             if self.token_actual == ')':
                 self.avanza_token()
             else:
                 raise KarelException("Se esperaba ')'")
         else:
-            self.funcion_booleana()
+            if self.gen_arbol:
+                retornar_valor = self.funcion_booleana()
+            else:
+                self.funcion_booleana()
 
         if self.debug:
             print "</clausula_atomica>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def clausula_no(self, lista_variables):
         """
@@ -198,15 +208,25 @@ class kgrammar:
         """
         if self.debug:
             print "<clausula_no params='%s'>"%xml_prepare(lista_variables)
+        if self.gen_arbol:
+            retornar_valor = None
 
         if self.token_actual == 'no':
             self.avanza_token()
-            self.clausula_atomica(lista_variables)
+            if self.gen_arbol:
+                retornar_valor = {'no': self.clausula_atomica(lista_variables)}
+            else:
+                self.clausula_atomica(lista_variables)
         else:
-            self.clausula_atomica(lista_variables)
+            if self.gen_arbol:
+                retornar_valor = self.clausula_atomica(lista_variables)
+            else:
+                self.clausula_atomica(lista_variables)
 
         if self.debug:
             print "</clausula_no>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def clausula_y(self, lista_variables):
         """
@@ -217,15 +237,22 @@ class kgrammar:
         """
         if self.debug:
             print "<clausula_y params='%s'>"%xml_prepare(lista_variables)
-
-        self.clausula_no(lista_variables)
+        if self.gen_arbol:
+            retornar_valor = {'y': [self.clausula_no(lista_variables)]}
+        else:
+            self.clausula_no(lista_variables)
 
         while self.token_actual == 'y':
             self.avanza_token()
-            self.clausula_no(lista_variables)
+            if self.gen_arbol:
+                retornar_valor['y'].append(self.clausula_no(lista_variables))
+            else:
+                self.clausula_no(lista_variables)
 
         if self.debug:
             print "</clausula_y>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def declaracion_de_procedimiento(self):
         """
@@ -423,7 +450,10 @@ class kgrammar:
             else:
                 self.avanza_token()
         elif self.token_actual == 'si':
-            self.expresion_si(lista_variables)
+            if self.gen_arbol:
+                retornar_valor = [self.expresion_si(lista_variables)]
+            else:
+                self.expresion_si(lista_variables)
         elif self.token_actual == 'mientras':
             self.expresion_mientras(lista_variables)
         elif self.token_actual == 'repite' or self.token_actual == 'repetir':
@@ -638,23 +668,43 @@ class kgrammar:
         """
         if self.debug:
             print "<expresion_si params='%s'>"%xml_prepare(lista_variables)
+        if self.gen_arbol:
+            retornar_valor = {
+                'estructura': 'si',
+                'argumento': None,
+                'cola': []
+            }
 
         self.avanza_token()
-        self.termino(lista_variables)
+
+        if self.gen_arbol:
+            retornar_valor['argumento'] = self.termino(lista_variables)
+        else:
+            self.termino(lista_variables)
 
         if self.token_actual != 'entonces':
             raise KarelException("Se esperaba 'entonces'")
 
         self.avanza_token()
 
-        self.expresion(lista_variables)
+        if self.gen_arbol:
+            retornar_valor['cola'] = self.expresion(lista_variables)
+        else:
+            self.expresion(lista_variables)
 
         if self.token_actual == 'sino':
+            if self.gen_arbol:
+                retornar_valor.update({'sino-cola': []})
             self.avanza_token()
-            self.expresion(lista_variables)
+            if self.gen_arbol:
+                retornar_valor['sino-cola'] = self.expresion(lista_variables)
+            else:
+                self.expresion(lista_variables)
 
         if self.debug:
             print "</expresion_si>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def funcion_booleana(self):
         """
@@ -687,48 +737,20 @@ class kgrammar:
         """
         if self.debug:
             print "<funcion_booleana>"
+        if self.gen_arbol:
+            retornar_valor = ""
 
-        if self.token_actual == 'frente-libre':
-            self.avanza_token()
-        elif self.token_actual == 'frente-bloqueado':
-            self.avanza_token()
-        elif self.token_actual == 'derecha-libre':
-            self.avanza_token()
-        elif self.token_actual == 'derecha-bloqueada':
-            self.avanza_token()
-        elif self.token_actual == 'izquierda-libre':
-            self.avanza_token()
-        elif self.token_actual == 'izquierda-bloqueada':
-            self.avanza_token()
-        elif self.token_actual == 'junto-a-zumbador':
-            self.avanza_token()
-        elif self.token_actual == 'no-junto-a-zumbador':
-            self.avanza_token()
-        elif self.token_actual == 'algun-zumbador-en-la-mochila':
-            self.avanza_token()
-        elif self.token_actual == 'ningun-zumbador-en-la-mochila':
-            self.avanza_token()
-        elif self.token_actual == 'orientado-al-norte':
-            self.avanza_token()
-        elif self.token_actual == 'no-orientado-al-norte':
-            self.avanza_token()
-        elif self.token_actual == 'orientado-al-este':
-            self.avanza_token()
-        elif self.token_actual == 'no-orientado-al-este':
-            self.avanza_token()
-        elif self.token_actual == 'orientado-al-sur':
-            self.avanza_token()
-        elif self.token_actual == 'no-orientado-al-sur':
-            self.avanza_token()
-        elif self.token_actual == 'orientado-al-oeste':
-            self.avanza_token()
-        elif self.token_actual == 'no-orientado-al-oeste':
+        if self.token_actual in self.condiciones:
+            if self.gen_arbol:
+                retornar_valor = self.token_actual
             self.avanza_token()
         else:
             raise KarelException("Se esperaba una condición como 'frente-libre', %s no es una condición"%self.token_actual)
 
         if self.debug:
             print "</funcion_booleana>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def termino(self, lista_variables):
         """
@@ -740,15 +762,22 @@ class kgrammar:
         """
         if self.debug:
             print "<termino params='%s'>"%xml_prepare(lista_variables)
-
-        self.clausula_y(lista_variables)
+        if self.gen_arbol:
+            retornar_valor = {'o': [self.clausula_y(lista_variables)]} #Lista con las expresiones 'o'
+        else:
+            self.clausula_y(lista_variables)
 
         while self.token_actual == 'o':
             self.avanza_token()
-            self.clausula_y(lista_variables)
+            if self.gen_arbol:
+                retornar_valor['o'].append(self.clausula_y(lista_variables))
+            else:
+                self.clausula_y(lista_variables)
 
         if self.debug:
             print "</termino>"
+        if self.gen_arbol:
+            return retornar_valor
 
     def verificar_sintaxis (self):
         """ Verifica que este correcta la gramatica de un programa

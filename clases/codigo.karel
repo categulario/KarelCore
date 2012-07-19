@@ -41,7 +41,7 @@ iniciar-programa
     define-nueva-instruccion paranga como avanza;
     define-nueva-instruccion azul como avanza;
     define-nueva-instruccion recursion(m, n, p) como inicio
-        si no si-es-cero(m) entonces inicio
+        si no si-es-cero(m) y frente-libre entonces inicio
             apagate;
         fin;
         repite sucede(n) veces gira-izquierda;
