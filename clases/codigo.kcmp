@@ -52,5 +52,3 @@
            'estructura': 'mientras'},
           {'argumento': 11, 'cola': ['avanza'], 'estructura': 'repite'},
           'apagate']}
-<syntax status='good'/>
-time:  0.00777697563171

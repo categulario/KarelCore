@@ -38,7 +38,7 @@ iniciar-programa
             deja-zumbador;
         fin;
     fin;
-    define-nueva-instruccion paranga como avanza;
+    define-nueva-instruccion paranga(m, n) como repetir m veces avanza;
     define-nueva-instruccion azul como avanza;
     define-nueva-instruccion recursion(m, n, p) como inicio
         si no si-es-cero(m) y frente-libre entonces inicio
@@ -60,7 +60,7 @@ iniciar-programa
             fin;
         fin;
         repetir 11 veces avanza;
-        paranga;
+        paranga(sucede(34), 15);
         apagate;
     termina-ejecucion
 finalizar-programa

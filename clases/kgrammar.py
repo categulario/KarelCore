@@ -479,13 +479,22 @@ class kgrammar:
             #Se trata de una instrucción creada por el usuario
             if self.prototipo_funciones.has_key(self.token_actual) or self.funciones.has_key(self.token_actual):
                 nombre_funcion = self.token_actual
+                if self.gen_arbol:
+                    retornar_valor = [{
+                        'estructura': 'instruccion',
+                        'nombre': nombre_funcion,
+                        'argumento': []
+                    }]
                 self.avanza_token()
                 requiere_parametros = True
                 num_parametros = 0
                 if self.token_actual == '(':
                     self.avanza_token()
                     while True:
-                        self.expresion_entera(lista_variables)
+                        if self.gen_arbol:
+                            retornar_valor[0]['argumento'].append(self.expresion_entera(lista_variables))
+                        else:
+                            self.expresion_entera(lista_variables)
                         num_parametros += 1
                         if self.token_actual == ')':
                             #self.tokenizador.push_token(')') #Devolvemos el token a la pila
