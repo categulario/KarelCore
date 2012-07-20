@@ -6,6 +6,7 @@ Se agradece la colaboración en este proyecto a:
 * Karla Angélica Hernández Lima
 * Mary Carmen Arellano
 * Aleida Caja de Cereal
+* Daniel García Alvarado
 * Chuzpa
 
 por haber participado en alguna parte del proceso.

@@ -32,11 +32,13 @@ from kutil import KarelException
 from ktokenizer import ktokenizer
 import sys
 
+sys.setrecursionlimit(10000) #Ampliamos el limite de recursion del sistema
+
 class krunner:
     """ Ejecuta codigos compilados de Karel hasta el final o hasta
     encontrar un error relacionado con las condiciones del mundo. """
 
-    def __init__ (self, programa_compilado, mundo=None, limite_recursion=65000):
+    def __init__ (self, programa_compilado, mundo=None, limite_recursion=6500):
         """ Inicializa el ejecutor dados un codigo fuente compilado y un
         mundo, tambien establece el limite para la recursion sobre una
         funcion antes de botar un error stack_overflow."""
@@ -84,7 +86,7 @@ class krunner:
                 #Es una instruccion predefinida de Karel
                 if instruccion == 'avanza':
                     if not self.mundo.avanza():
-                        raise KarelException('Karel se topo con una pared')
+                        raise KarelException('Karel se ha estrellado con una pared!')
                 elif instruccion == 'gira-izquierda':
                     self.mundo.gira_izquierda()
                 elif instruccion == 'coge-zumbador':
@@ -216,12 +218,12 @@ if __name__ == '__main__':
         print ke.args[0], "en la línea", grammar.tokenizador.lineno
     else:
         mundo = kworld(karel_pos=(1, 1), casillas={
-            (2, 1) : {
-            'zumbadores': 1,
-            'paredes': set()
+            (1, 1) : {
+                'zumbadores': 1,
+                'paredes': set(['norte'])
             }
         })
-        runner = krunner(grammar.arbol, limite_recursion=50)
+        runner = krunner(grammar.arbol, mundo)
         try:
             runner.run()
         except KarelException, kre:

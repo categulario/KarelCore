@@ -1,10 +1,10 @@
 iniciar-programa
-    define-nueva-instruccion cosa como inicio
-        gira-izquierda;
-        cosa;
-    fin;
+    define-nueva-instruccion gira-derecha como repetir 3 veces gira-izquierda;
     inicia-ejecucion
-        cosa;
+        #avanza;
+        gira-derecha;
+        #coge-zumbador;
+        mientras izquierda-bloqueada hacer avanza;
         apagate;
     termina-ejecucion
 finalizar-programa
