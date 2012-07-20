@@ -1,16 +1,23 @@
 iniciar-programa
-    define-nueva-instruccion gira-derecha como repetir 3 veces gira-izquierda;
-    inicia-ejecucion
-        #avanza;
-        gira-derecha;
-        #coge-zumbador;
-        mientras izquierda-bloqueada hacer avanza;
-        gira-izquierda;
-        avanza;
-        mientras izquierda-bloqueada hacer avanza;
-        gira-izquierda;
-        avanza;
+    define-nueva-instruccion gira(n) como repetir n veces gira-izquierda;
+    define-nueva-instruccion columna como inicio
+        mientras frente-libre hacer inicio
+            deja-zumbador;
+            avanza;
+        fin;
+        si no junto-a-zumbador entonces deja-zumbador;
+        gira(2);
         mientras frente-libre hacer avanza;
+        gira(2);
+    fin;
+    inicia-ejecucion
+        mientras derecha-libre hacer inicio
+            columna;
+            gira(3);
+            avanza;
+            gira(1);
+        fin;
+        columna;
         apagate;
     termina-ejecucion
 finalizar-programa

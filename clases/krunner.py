@@ -66,12 +66,12 @@ class krunner:
                 elif instruccion['estructura'] == 'repite':
                     for i in xrange(self.expresion_entera(instruccion['argumento'], diccionario_variables)):
                         self.bloque(instruccion['cola'], diccionario_variables)
-                        if not self.corriendo:
+                        if not self.corriendo or self.sal_de_instruccion:
                             return
                 elif instruccion['estructura'] == 'mientras':
                     while self.termino_logico(instruccion['argumento']['o'], diccionario_variables):
                         self.bloque(instruccion['cola'], diccionario_variables)
-                        if not self.corriendo:
+                        if not self.corriendo or self.sal_de_instruccion:
                             return
                 else:
                     #print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
@@ -204,33 +204,36 @@ class krunner:
 if __name__ == '__main__':
     from pprint import pprint
     from time import time
-    inicio = time()
+    inicio = 0
+    fin = 0
+    c_inicio = 0
+    c_fin = 0
     if len(sys.argv) == 1:
         grammar = kgrammar(debug=deb, gen_arbol = True)
     else:
         fil = sys.argv[1]
         grammar = kgrammar(flujo=open(fil), archivo=fil, gen_arbol=True)
     try:
+        c_inicio = time()
         grammar.verificar_sintaxis()
+        c_fin = time()
         #grammar.guardar_compilado('codigo.kcmp', True)
         #pprint(grammar.arbol)
     except KarelException, ke:
         print ke.args[0], "en la línea", grammar.tokenizador.lineno
     else:
-        mundo = kworld()
-        for i in xrange(10):
-            mundo.agrega_pared((1, i+1), 'norte')
-            mundo.agrega_pared((5, i+1), 'sur')
-        for i in xrange(3):
-            mundo.agrega_pared((10, i), 'este')
+        mundo = kworld(mochila='inf')
         runner = krunner(grammar.arbol, mundo)
         try:
+            inicio = time()
             runner.run()
+            fin = time()
         except KarelException, kre:
             print 'Error:', kre.args[0]
         else:
             print 'Ejecucion terminada OK'
-        pprint(runner.mundo.mundo)
-    fin = time()
-    print "tiempo: ", int((fin-inicio)*1000), "milisegundos"
+        #pprint(runner.mundo.mundo)
+    print "tiempo: ", int((c_fin-c_inicio)*1000), "milisegundos en compilar"
+    print "tiempo: ", int((fin-inicio)*1000), "milisegundos en ejecutar"
+    print "total:", int((c_fin-c_inicio)*1000) + int((fin-inicio)*1000), "milisegundos"
 
