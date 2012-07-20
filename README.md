@@ -48,8 +48,9 @@ TODO
 
 Cosas importantes por hacer:
 
-* Corregir el funcionamiento de `sal-de-instruccion` y de `apagate` en `krunner` y `kgrammar`.
+* Asegurar el buen funcionamiento de `sal-de-instruccion` y de `apagate` en `krunner` y `kgrammar`.
 * Ajustar `ktokenizer.py` para agrupar símbolos como '++', '--', '&&', '||', '==', '//', '/\*', '\*/' etc...
+* Implementar la ejecucion paso a paso.
 * Implementar la GUI del IDE.
 * Hacer un editor de mundos.
 * Soportar la sintaxis Java de pascal.
