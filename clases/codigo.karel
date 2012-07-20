@@ -1,9 +1,13 @@
+/*
+ * Este codigo tiene absolutamente todas las estructuras que admite
+ * Karel el robot, y esta diseñado para pruebas
+ */
 iniciar-programa
     define-prototipo-instruccion cosa(k, r);
     define-nueva-instruccion media-vuelta como inicio
         gira-izquierda;
         gira-izquierda;
-        cosa(8, 9); #Esto debe marcar un error
+        cosa(8, 9); #Esto no debe marcar un error
     fin;
     /Pongo un comentario de varias lineas/
     define-nueva-instruccion cosa(t, q) como inicio
@@ -19,6 +23,7 @@ iniciar-programa
             "hola mundo!"
             avanza;
         fin;
+        sal-de-instruccion;
         repetir sucede(sucede(5)) veces inicio #Esto es un comentario de una linea
             deja-zumbador;
             avanza;
@@ -31,10 +36,10 @@ iniciar-programa
             coge-zumbador;
         fin;
         media-vuelta;
-        mientras frente-libre hacer inicio
+        mientras frente-libre y verdadero hacer inicio
             avanza;
         fin;
-        mientras algun-zumbador-en-la-mochila hacer inicio
+        mientras algun-zumbador-en-la-mochila o falso hacer inicio
             deja-zumbador;
         fin;
     fin;

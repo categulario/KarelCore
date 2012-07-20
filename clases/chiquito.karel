@@ -1,4 +1,5 @@
 iniciar-programa
+    define-nueva-instruccion cosa como avanza;
     inicia-ejecucion
         mientras frente-libre /y no-junto-a-zumbador/ hacer inicio
             avanza;
