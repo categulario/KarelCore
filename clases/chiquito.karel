@@ -5,6 +5,12 @@ iniciar-programa
         gira-derecha;
         #coge-zumbador;
         mientras izquierda-bloqueada hacer avanza;
+        gira-izquierda;
+        avanza;
+        mientras izquierda-bloqueada hacer avanza;
+        gira-izquierda;
+        avanza;
+        mientras frente-libre hacer avanza;
         apagate;
     termina-ejecucion
 finalizar-programa

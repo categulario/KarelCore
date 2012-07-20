@@ -217,12 +217,12 @@ if __name__ == '__main__':
     except KarelException, ke:
         print ke.args[0], "en la línea", grammar.tokenizador.lineno
     else:
-        mundo = kworld(karel_pos=(1, 1), casillas={
-            (1, 1) : {
-                'zumbadores': 1,
-                'paredes': set(['norte'])
-            }
-        })
+        mundo = kworld()
+        for i in xrange(10):
+            mundo.agrega_pared((1, i+1), 'norte')
+            mundo.agrega_pared((5, i+1), 'sur')
+        for i in xrange(3):
+            mundo.agrega_pared((10, i), 'este')
         runner = krunner(grammar.arbol, mundo)
         try:
             runner.run()
