@@ -35,7 +35,14 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=None, archivo=None, debug=False, gen_arbol=False):
+    def __init__(self, flujo=None, archivo=None, debug=False, gen_arbol=False, futuro=True):
+        """ Inicializa la gramatica:
+        flujo       indica el torrente de entrada
+        archivo     es el nombre del archivo fuente, si existe
+        debug       indica si es necesario imprimir mensajes para debug
+        gen_arbol   indica si hay que compilar
+        futuro      indica si se pueden usar caracteristicas del futuro
+                    de Karel como las condiciones 'falso' y 'verdadero'"""
         self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate', 'sal-de-instruccion']
         self.condiciones = [
             'frente-libre',
@@ -56,10 +63,12 @@ class kgrammar:
             "no-orientado-al-sur",
             "orientado-al-oeste",
             "no-orientado-al-oeste",
+            "si-es-cero",
             "verdadero", #Reservadas para futuros usos
-            "falso", #reservadas para futuros usos
-            "si-es-cero"
+            "falso" #reservadas para futuros usos
         ]
+        if not futuro:
+            self.condiciones = self.condiciones[:-2]
         self.expresiones_enteras = ['sucede', 'precede']
         self.estructuras = ['si', 'mientras', 'repite', 'repetir']
         self.palabras_reservadas = [
@@ -138,9 +147,9 @@ class kgrammar:
         if self.token_actual == 'inicia-ejecucion':
             self.avanza_token()
             if self.gen_arbol:
-                self.arbol['main'] = self.expresion_general([])
+                self.arbol['main'] = self.expresion_general([], False)
             else:
-                self.expresion_general([])
+                self.expresion_general([], False)
             if self.token_actual != 'termina-ejecucion':
                 raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lógico del programa, encontré '%s'"%self.token_actual)
             else:
@@ -263,7 +272,7 @@ class kgrammar:
                                          Expresion
         }
         Aqui se definen las nuevas funciones que extienden el lenguaje
-        de Karel, como por ejemplo gira-derecha
+        de Karel, como por ejemplo gira-derecha.
         """
         if self.debug:
             print "<declaracion_de_procedimiento>"
@@ -334,9 +343,9 @@ class kgrammar:
                 raise KarelException("La función '%s' no está definida como se planeó en el prototipo, verifica el número de variables"%nombre_funcion)
 
         if self.gen_arbol:
-            self.arbol['funciones'][nombre_funcion]['cola'] = self.expresion(self.funciones[nombre_funcion])
+            self.arbol['funciones'][nombre_funcion]['cola'] = self.expresion(self.funciones[nombre_funcion], True)
         else:
-            self.expresion(self.funciones[nombre_funcion]) #Le mandamos las variables existentes
+            self.expresion(self.funciones[nombre_funcion], True) #Le mandamos las variables existentes
 
         if self.token_actual != ';':
             raise KarelException("Se esperaba ';'")
@@ -415,7 +424,7 @@ class kgrammar:
         if self.debug:
             print "<declaracion_de_enlace/>"
 
-    def expresion(self, lista_variables):
+    def expresion(self, lista_variables, c_funcion):
         """
         Define una expresion
         {
@@ -425,7 +434,7 @@ class kgrammar:
                           "avanza"
                           "coge-zumbador"
                           "deja-zumbador"
-                          "sal-de-funcion"
+                          "sal-de-instruccion"
                           ExpresionLlamada
                           ExpresionSi
                           ExpresionRepite
@@ -437,7 +446,8 @@ class kgrammar:
 
         }
         Recibe para comprobar una lista con las variables válidas en
-        este contexto
+        este contexto, tambien comprueba mediante c_funcion si esta en
+        un contexto donde es valido el sal-de-instruccion.
         """
         if self.debug:
             print "<expresion params='%s'>"%xml_prepare(lista_variables)
@@ -445,32 +455,42 @@ class kgrammar:
             retornar_valor = []
 
         if self.token_actual in self.instrucciones:
-            if self.gen_arbol:
-                retornar_valor = [self.token_actual]
-                self.avanza_token()
+            if self.token_actual == 'sal-de-instruccion':
+                if c_funcion:
+                    if self.gen_arbol:
+                        retornar_valor = [self.token_actual]
+                        self.avanza_token()
+                    else:
+                        self.avanza_token()
+                else:
+                    raise KarelException("No es posible usar 'sal-de-instruccion' fuera de una instruccion :)")
             else:
-                self.avanza_token()
+                if self.gen_arbol:
+                    retornar_valor = [self.token_actual]
+                    self.avanza_token()
+                else:
+                    self.avanza_token()
         elif self.token_actual == 'si':
             if self.gen_arbol:
-                retornar_valor = [self.expresion_si(lista_variables)]
+                retornar_valor = [self.expresion_si(lista_variables, c_funcion)]
             else:
-                self.expresion_si(lista_variables)
+                self.expresion_si(lista_variables, c_funcion)
         elif self.token_actual == 'mientras':
             if self.gen_arbol:
-                retornar_valor = [self.expresion_mientras(lista_variables)]
+                retornar_valor = [self.expresion_mientras(lista_variables, c_funcion)]
             else:
-                self.expresion_mientras(lista_variables)
+                self.expresion_mientras(lista_variables, c_funcion)
         elif self.token_actual == 'repite' or self.token_actual == 'repetir':
             if self.gen_arbol:
-                retornar_valor = [self.expresion_repite(lista_variables)]
+                retornar_valor = [self.expresion_repite(lista_variables, c_funcion)]
             else:
-                self.expresion_repite(lista_variables)
+                self.expresion_repite(lista_variables, c_funcion)
         elif self.token_actual == 'inicio':
             self.avanza_token()
             if self.gen_arbol:
-                retornar_valor = self.expresion_general(lista_variables)
+                retornar_valor = self.expresion_general(lista_variables, c_funcion)
             else:
-                self.expresion_general(lista_variables)
+                self.expresion_general(lista_variables, c_funcion)
             if self.token_actual == 'fin':
                 self.avanza_token()
             else:
@@ -577,7 +597,7 @@ class kgrammar:
         if self.gen_arbol:
             return retornar_valor
 
-    def expresion_general(self, lista_variables):
+    def expresion_general(self, lista_variables, c_funcion):
         """
         Define una expresion general
         { Expresion | ExpresionVacia }
@@ -591,9 +611,9 @@ class kgrammar:
 
         while self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
             if self.gen_arbol:
-                retornar_valor += self.expresion(lista_variables)
+                retornar_valor += self.expresion(lista_variables, c_funcion)
             else:
-                self.expresion(lista_variables)
+                self.expresion(lista_variables, c_funcion)
             if self.token_actual != ';' and self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
                 raise KarelException("Se esperaba ';'")
             elif self.token_actual == ';':
@@ -609,7 +629,7 @@ class kgrammar:
         if self.gen_arbol:
             return retornar_valor
 
-    def expresion_mientras(self, lista_variables):
+    def expresion_mientras(self, lista_variables, c_funcion):
         """
         Define la expresion del bucle MIENTRAS
         {
@@ -636,16 +656,16 @@ class kgrammar:
             raise KarelException("Se esperaba 'hacer'")
         self.avanza_token()
         if self.gen_arbol:
-            retornar_valor['cola'] = self.expresion(lista_variables)
+            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion)
         else:
-            self.expresion(lista_variables)
+            self.expresion(lista_variables, c_funcion)
 
         if self.debug:
             print "</expresion_mientras>"
         if self.gen_arbol:
             return retornar_valor
 
-    def expresion_repite(self, lista_variables):
+    def expresion_repite(self, lista_variables, c_funcion):
         """
         Define la expresion del bucle REPITE
         {
@@ -673,16 +693,16 @@ class kgrammar:
 
         self.avanza_token()
         if self.gen_arbol:
-            retornar_valor['cola'] = self.expresion(lista_variables)
+            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion)
         else:
-            self.expresion(lista_variables)
+            self.expresion(lista_variables, c_funcion)
 
         if self.debug:
             print "</expresion_repite>"
         if self.gen_arbol:
             return retornar_valor
 
-    def expresion_si(self, lista_variables):
+    def expresion_si(self, lista_variables, c_funcion):
         """
         Define la expresion del condicional SI
         {
@@ -715,18 +735,18 @@ class kgrammar:
         self.avanza_token()
 
         if self.gen_arbol:
-            retornar_valor['cola'] = self.expresion(lista_variables)
+            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion)
         else:
-            self.expresion(lista_variables)
+            self.expresion(lista_variables, c_funcion)
 
         if self.token_actual == 'sino':
             if self.gen_arbol:
                 retornar_valor.update({'sino-cola': []})
             self.avanza_token()
             if self.gen_arbol:
-                retornar_valor['sino-cola'] = self.expresion(lista_variables)
+                retornar_valor['sino-cola'] = self.expresion(lista_variables, c_funcion)
             else:
-                self.expresion(lista_variables)
+                self.expresion(lista_variables, c_funcion)
 
         if self.debug:
             print "</expresion_si>"
