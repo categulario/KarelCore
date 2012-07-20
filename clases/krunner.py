@@ -44,6 +44,8 @@ class krunner:
             self.mundo = mundo
         else:
             self.mundo = kworld() #En la 1,1 orientado al norte
+        self.corriendo = True
+        self.sal_de_instruccion = False
 
     def bloque (self, cola, diccionario_variables):
         """ Ejecuta una cola de instrucciones dentro de una estructura
@@ -59,12 +61,18 @@ class krunner:
                 elif instruccion['estructura'] == 'repite':
                     for i in xrange(self.expresion_entera(instruccion['argumento'], diccionario_variables)):
                         self.bloque(instruccion['cola'], diccionario_variables)
+                        if not self.corriendo:
+                            return
                 elif instruccion['estructura'] == 'mientras':
                     while self.termino_logico(instruccion['argumento']['o'], diccionario_variables):
                         self.bloque(instruccion['cola'], diccionario_variables)
+                        if not self.corriendo:
+                            return
                 else:
                     #print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
                     self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'], self.merge(self.arbol['funciones'][instruccion['nombre']]['params'], instruccion['argumento']))
+                    if self.sal_de_instruccion:
+                        self.sal_de_instruccion = False
             else:
                 #Es una instruccion predefinida de Karel
                 if instruccion == 'avanza':
@@ -79,8 +87,10 @@ class krunner:
                     if not self.mundo.deja_zumbador():
                         raise KarelException('Karel quizo dejar un zumbador pero su mochila estaba vacia')
                 elif instruccion == 'apagate':
+                    self.corriendo = False
                     return
                 elif instruccion == 'sal-de-instruccion':
+                    self.sal_de_instruccion = True
                     return
 
     def expresion_entera (self, valor, diccionario_variables):
@@ -198,14 +208,13 @@ if __name__ == '__main__':
     except KarelException, ke:
         print ke.args[0], "en la línea", grammar.tokenizador.lineno
     else:
-        mundo = kworld(karel_pos=(50, 50), mochila='inf', casillas={
-            (50, 50) : {
-            'zumbadores': 'inf',
+        mundo = kworld(karel_pos=(1, 1), casillas={
+            (2, 1) : {
+            'zumbadores': 1,
             'paredes': set()
             }
         })
-
-        runner = krunner(grammar.arbol)
+        runner = krunner(grammar.arbol, mundo)
         try:
             runner.run()
         except KarelException, kre:
