@@ -36,9 +36,10 @@ class krunner:
     """ Ejecuta codigos compilados de Karel hasta el final o hasta
     encontrar un error relacionado con las condiciones del mundo. """
 
-    def __init__ (self, programa_compilado, mundo=None):
+    def __init__ (self, programa_compilado, mundo=None, limite_recursion=65000):
         """ Inicializa el ejecutor dados un codigo fuente compilado y un
-        mundo. """
+        mundo, tambien establece el limite para la recursion sobre una
+        funcion antes de botar un error stack_overflow."""
         self.arbol = programa_compilado
         if mundo:
             self.mundo = mundo
@@ -46,6 +47,8 @@ class krunner:
             self.mundo = kworld() #En la 1,1 orientado al norte
         self.corriendo = True
         self.sal_de_instruccion = False
+        self.limite_recursion = limite_recursion
+        self.profundidad = 0 #El punto inicial en la recursion
 
     def bloque (self, cola, diccionario_variables):
         """ Ejecuta una cola de instrucciones dentro de una estructura
@@ -70,7 +73,11 @@ class krunner:
                             return
                 else:
                     #print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
+                    if self.profundidad == self.limite_recursion:
+                        raise KarelException(u"StackOverflow! Se ha alcanzado el límite de una recursion")
+                    self.profundidad += 1
                     self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'], self.merge(self.arbol['funciones'][instruccion['nombre']]['params'], instruccion['argumento']))
+                    self.profundidad -= 1
                     if self.sal_de_instruccion:
                         self.sal_de_instruccion = False
             else:
@@ -214,7 +221,7 @@ if __name__ == '__main__':
             'paredes': set()
             }
         })
-        runner = krunner(grammar.arbol, mundo)
+        runner = krunner(grammar.arbol, limite_recursion=50)
         try:
             runner.run()
         except KarelException, kre:
