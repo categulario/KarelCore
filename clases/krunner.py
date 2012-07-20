@@ -223,5 +223,5 @@ if __name__ == '__main__':
             print 'Ejecucion terminada OK'
         pprint(runner.mundo.mundo)
     fin = time()
-    print "time: ", int((fin-inicio)*1000), "milisegundos"
+    print "tiempo: ", int((fin-inicio)*1000), "milisegundos"
 
