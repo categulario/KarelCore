@@ -233,7 +233,7 @@ if __name__ == '__main__':
     except KarelException, ke:
         print ke.args[0], "en la línea", grammar.tokenizador.lineno
     else:
-        mundo = kworld(mochila='inf')
+        mundo = kworld(mochila=0)
         runner = krunner(grammar.arbol, mundo)
         try:
             inicio = time()
