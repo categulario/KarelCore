@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  karel
+#
+#  Copyright 2012 Developingo <a.wonderful.code@gmail.com>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#
+#
+
+"""
+Controlador principal de Karel el Robot
+"""
+
+import sys
+from util import info
+from os import listdir
+from clases.kgrammar import kgrammar
+from clases.kutil import KarelException
+from time import time
+
+if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        print info.cmd_help
+    else:
+        if '--version' in sys.argv:
+            print """Karel %.2f (built: %s)
+Copyright (c) 2012 Developingo
+"""%(info.VERSION, info.BUILD_DATE)
+        elif '--help' in sys.argv:
+            print info.cmd_help
+        elif 'help' in sys.argv:
+            try:
+                comando = sys.argv[sys.argv.index('help')+1]
+                print info.ayuda(comando)
+            except:
+                print info.cmd_help
+        elif 'check_all' in sys.argv:
+            #Opcion para checar la sintaxis de una carpeta llena de
+            #archivos de Karel
+            if '-d' in sys.argv:
+                try:
+                    carpeta = sys.argv[sys.argv.index('-d')+1]
+                    archivos = listdir(carpeta)
+                    err_count = 0
+                    file_count = 0
+                    t_inicio = time()
+                    for arch in archivos:
+                        if arch.endswith(".txt") or arch.endswith(".karel"):
+                            file_count += 1
+                            grammar = kgrammar(flujo=open(carpeta+arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
+                            try:
+                                grammar.verificar_sintaxis()
+                            except KarelException, ke:
+                                print "El archivo %s tiene errores:"%arch
+                                print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
+                                err_count += 1
+                    t_fin = time()
+                    if err_count == 0:
+                        print "Todos los archivos estan correctos"
+                    else:
+                        print "Se encontraron", err_count, "errores"
+                    print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar", file_count, "archivos"
+                except IndexError:
+                    print "Falta el nombre de una carpeta despues de '-d'"
+                except OSError:
+                    print "No existe la carpeta '%s'"%carpeta
+            else:
+                print "No se proporciono ninguna carpeta..."

@@ -79,7 +79,6 @@ class krunner:
                             self.sal_de_bucle = False
                             return
                 else:
-                    #print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
                     if self.profundidad == self.limite_recursion:
                         raise KarelException(u"StackOverflow! Se ha alcanzado el límite de una recursion")
                     self.profundidad += 1

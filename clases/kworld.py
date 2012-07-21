@@ -38,7 +38,6 @@ class kworld:
         * casillas indica cómo está construido el mundo mediante un
         diccionario, que tiene por llaves las tuplas con la posicion que
         representan: (fila, columna) """
-        #TODO habilitar lectura y escritura desde archivo
         self.mundo = dict()
         if archivo is not None and isinstance(archivo, basestring):
             self.carga_archivo(archivo)
@@ -99,7 +98,6 @@ class kworld:
         """ Determina si puede karel avanzar desde la posición en la que
         se encuentra, de ser posible avanza. Si el parámetro test es
         verdadero solo ensaya. """
-        #TODO determinar si puede ser reemplazado por puede_avanzar()
         #Determino primero si está en los bordes
         if self.frente_libre():
             self.mundo['karel']['posicion'] = self.obten_casilla_avance(self.mundo['karel']['posicion'], self.mundo['karel']['orientacion'])

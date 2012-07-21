@@ -2,7 +2,7 @@
 """
 Un analizador lexico para archivos Karel, basado en el módulo shlex de python
 """
-
+#TODO Hacer que agrupe los simbolos al escanear
 import os.path
 import sys
 from collections import deque

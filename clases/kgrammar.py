@@ -35,7 +35,7 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=None, archivo=None, debug=False, gen_arbol=False, futuro=True):
+    def __init__(self, flujo=None, archivo=None, debug=False, gen_arbol=False, futuro=False):
         """ Inicializa la gramatica:
         flujo       indica el torrente de entrada
         archivo     es el nombre del archivo fuente, si existe
