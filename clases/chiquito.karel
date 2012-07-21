@@ -69,27 +69,26 @@ iniciar-programa
         columna;
     fin;
     define-nueva-instruccion verde como inicio
+        /Un ejemplo ptráctico de la utilidad de la parabra 'verdadero'
+         en un algoritmo Karel, llenando una columna de zumbadores sin
+         preocuparse mucho por el último zumbador/
         mientras verdadero hacer inicio
-            si falso entonces inicio
-                repetir 1 veces inicio
-                    sal-de-instruccion;
-                    deja-zumbador;
-                fin;
+            si frente-bloqueado entonces inicio
                 deja-zumbador;
-            fin sino inicio
-                #deja-zumbador;
+                sal-de-bucle;
             fin;
             deja-zumbador;
-            si verdadero entonces si verdadero entonces sal-de-bucle;
+            avanza;
         fin;
-        #deja-zumbador;
+        /Tambien puede ser útil para sustituir la recursion en muchos
+         algoritmos/
     fin;
     inicia-ejecucion
         #tapete; #Desempeño de 519 milisegundos, recursiva
         #rectangulo(100, 100); #Desempeño de 140 milisegundos, repite
         #cubre; #Desempeño de 131 milisegundos, mientras
         verde;
-        repite 4 veces deja-zumbador;
+        #repite 4 veces deja-zumbador;
         apagate;
     termina-ejecucion
 finalizar-programa
