@@ -1,0 +1,31 @@
+{
+  "karel": {
+    "posicion": [1, 1],
+    "orientacion": "norte",
+    "mochila": 0               #Puede ser 'inf' o un entero
+  },
+  "casillas": [
+    'casilla': {
+        'fila': 1,
+        'columna': 1,
+        'zumbadores': 2,
+        'paredes': ['norte', 'este']
+    },
+    'casilla': {
+        'fila': 1,
+        'columna': 2,
+        'zumbadores': 'inf',
+        'paredes': ['oeste']
+    },
+    'casilla': {
+        'fila': 2,
+        'columna': 1,
+        'zumbadores': 2,
+        'paredes': ['sur']     #Las paredes deben aparecer en todas las casillas involucradas
+    }
+  ],
+  "dimensiones": {
+    "columnas": 100,
+    "filas": 100
+  }
+}
