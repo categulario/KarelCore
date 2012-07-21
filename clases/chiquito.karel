@@ -47,7 +47,7 @@ iniciar-programa
     fin;
     define-nueva-instruccion verde como inicio
         mientras verdadero hacer inicio
-            si no falso entonces inicio
+            si falso entonces inicio
                 repetir 1 veces inicio
                     sal-de-instruccion;
                     deja-zumbador;
@@ -56,6 +56,7 @@ iniciar-programa
             fin sino inicio
                 deja-zumbador;
             fin;
+            si verdadero entonces si verdadero entonces sal-de-bucle;
             deja-zumbador;
         fin;
         deja-zumbador;
@@ -65,7 +66,7 @@ iniciar-programa
         #rectangulo(100, 100); #Desempeño de 140 milisegundos, repite
         #cubre; #Desempeño de 131 milisegundos, mientras
         verde;
-        repite 5 veces deja-zumbador;
+        repite 4 veces deja-zumbador;
         apagate;
     termina-ejecucion
 finalizar-programa

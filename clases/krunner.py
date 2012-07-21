@@ -49,6 +49,7 @@ class krunner:
             self.mundo = kworld() #En la 1,1 orientado al norte
         self.corriendo = True
         self.sal_de_instruccion = False
+        self.sal_de_bucle = False
         self.limite_recursion = limite_recursion
         self.profundidad = 0 #El punto inicial en la recursion
 
@@ -63,17 +64,19 @@ class krunner:
                         self.bloque(instruccion['cola'], diccionario_variables)
                     elif instruccion.has_key('sino-cola'):
                         self.bloque(instruccion['sino-cola'], diccionario_variables)
-                    if not self.corriendo or self.sal_de_instruccion:
+                    if not self.corriendo or self.sal_de_instruccion or self.sal_de_bucle:
                         return
                 elif instruccion['estructura'] == 'repite':
                     for i in xrange(self.expresion_entera(instruccion['argumento'], diccionario_variables)):
                         self.bloque(instruccion['cola'], diccionario_variables)
-                        if not self.corriendo or self.sal_de_instruccion:
+                        if not self.corriendo or self.sal_de_instruccion or self.sal_de_bucle:
+                            self.sal_de_bucle = False
                             return
                 elif instruccion['estructura'] == 'mientras':
                     while self.termino_logico(instruccion['argumento']['o'], diccionario_variables):
                         self.bloque(instruccion['cola'], diccionario_variables)
-                        if not self.corriendo or self.sal_de_instruccion:
+                        if not self.corriendo or self.sal_de_instruccion or self.sal_de_bucle:
+                            self.sal_de_bucle = False
                             return
                 else:
                     #print 'INSTRUCCION: ', instruccion['nombre'] #TODO programar la llamada a funciones
@@ -102,6 +105,9 @@ class krunner:
                     return
                 elif instruccion == 'sal-de-instruccion':
                     self.sal_de_instruccion = True
+                    return
+                elif instruccion == 'sal-de-bucle':
+                    self.sal_de_bucle = True
                     return
 
     def expresion_entera (self, valor, diccionario_variables):
