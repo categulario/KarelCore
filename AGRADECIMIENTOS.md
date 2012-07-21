@@ -7,6 +7,7 @@ Se agradece la colaboración en este proyecto a:
 * Mary Carmen Arellano
 * Aleida Caja de Cereal
 * Daniel García Alvarado
+* Alejandro Maldonado Navarro
 * Chuzpa
 
 por haber participado en alguna parte del proceso.

@@ -45,10 +45,27 @@ iniciar-programa
         fin;
         columna;
     fin;
+    define-nueva-instruccion verde como inicio
+        mientras verdadero hacer inicio
+            si no falso entonces inicio
+                repetir 1 veces inicio
+                    sal-de-instruccion;
+                    deja-zumbador;
+                fin;
+                deja-zumbador;
+            fin sino inicio
+                deja-zumbador;
+            fin;
+            deja-zumbador;
+        fin;
+        deja-zumbador;
+    fin;
     inicia-ejecucion
         #tapete; #Desempeño de 519 milisegundos, recursiva
         #rectangulo(100, 100); #Desempeño de 140 milisegundos, repite
-        cubre; #Desempeño de 131 milisegundos, mientras
+        #cubre; #Desempeño de 131 milisegundos, mientras
+        verde;
+        repite 5 veces deja-zumbador;
         apagate;
     termina-ejecucion
 finalizar-programa

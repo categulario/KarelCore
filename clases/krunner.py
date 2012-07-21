@@ -63,6 +63,8 @@ class krunner:
                         self.bloque(instruccion['cola'], diccionario_variables)
                     elif instruccion.has_key('sino-cola'):
                         self.bloque(instruccion['sino-cola'], diccionario_variables)
+                    if not self.corriendo or self.sal_de_instruccion:
+                        return
                 elif instruccion['estructura'] == 'repite':
                     for i in xrange(self.expresion_entera(instruccion['argumento'], diccionario_variables)):
                         self.bloque(instruccion['cola'], diccionario_variables)

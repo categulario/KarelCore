@@ -43,7 +43,8 @@ class kgrammar:
         gen_arbol   indica si hay que compilar
         futuro      indica si se pueden usar caracteristicas del futuro
                     de Karel como las condiciones 'falso' y 'verdadero'"""
-        self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate', 'sal-de-instruccion']
+        self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate', 'sal-de-instruccion', 'sal-de-bucle']
+        #La instruccion sirve para combinarse con el bucle mientras y la condicion verdadero
         self.condiciones = [
             'frente-libre',
             'frente-bloqueado',
@@ -69,6 +70,7 @@ class kgrammar:
         ]
         if not futuro:
             self.condiciones = self.condiciones[:-2]
+            self.instrucciones = self.instrucciones[:-1]
         self.expresiones_enteras = ['sucede', 'precede']
         self.estructuras = ['si', 'mientras', 'repite', 'repetir']
         self.palabras_reservadas = [
