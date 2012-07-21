@@ -9,6 +9,7 @@ iniciar-programa
             gira(2);
             repetir q veces si frente-libre entonces avanza;
             gira-izquierda;
+            si frente-libre entonces
             avanza;
             gira-izquierda;
         fin;
@@ -25,9 +26,29 @@ iniciar-programa
             fin;
         fin;
     fin;
+    define-nueva-instruccion columna como inicio
+        mientras frente-libre hacer inicio
+            deja-zumbador;
+            avanza;
+        fin;
+        deja-zumbador;
+        gira(2);
+        mientras frente-libre hacer avanza;
+        gira(2);
+    fin;
+    define-nueva-instruccion cubre como inicio
+        mientras derecha-libre hacer inicio
+            columna;
+            gira(3);
+            avanza;
+            gira(1);
+        fin;
+        columna;
+    fin;
     inicia-ejecucion
-        #tapete;
-        rectangulo(2, 2);
+        #tapete; #Desempeño de 519 milisegundos, recursiva
+        #rectangulo(100, 100); #Desempeño de 140 milisegundos, repite
+        cubre; #Desempeño de 131 milisegundos, mientras
         apagate;
     termina-ejecucion
 finalizar-programa
