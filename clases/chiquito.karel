@@ -1,23 +1,25 @@
 iniciar-programa
     define-nueva-instruccion gira(n) como repetir n veces gira-izquierda;
-    define-nueva-instruccion columna como inicio
+    define-nueva-instruccion columna(p, q) como inicio
         mientras frente-libre hacer inicio
-            deja-zumbador;
+            repetir q veces deja-zumbador;
             avanza;
         fin;
-        si no junto-a-zumbador entonces deja-zumbador;
-        gira(2);
-        mientras frente-libre hacer avanza;
-        gira(2);
+    fin;
+    define-nueva-instruccion tapete como inicio
+        si no junto-a-zumbador entonces inicio
+            deja-zumbador;
+            repetir 4 veces inicio
+                si frente-libre entonces inicio
+                    avanza;
+                    tapete;
+                fin;
+                gira-izquierda;
+            fin;
+        fin;
     fin;
     inicia-ejecucion
-        mientras derecha-libre hacer inicio
-            columna;
-            gira(3);
-            avanza;
-            gira(1);
-        fin;
-        columna;
+        tapete;
         apagate;
     termina-ejecucion
 finalizar-programa

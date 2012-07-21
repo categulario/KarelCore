@@ -195,9 +195,12 @@ class krunner:
         """ Combina un par de listas de la misma longitud en un
         diccionario """
         d = dict()
-        lista_valores.reverse()
+        l_valores = lista_valores[:]
+        #Hacemos una copia de la lista, por que no queremos modificar
+        #la lista original, creeme, no lo queremos...
+        l_valores.reverse()
         for i in lista_llaves:
-            d.update({i: lista_valores.pop()})
+            d.update({i: l_valores.pop()})
         return d
 
 
