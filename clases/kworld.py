@@ -142,6 +142,8 @@ class kworld:
                 try:
                     if self.mundo['casillas'][posicion]['zumbadores'] != 'inf':
                         self.mundo['casillas'][posicion]['zumbadores'] += 1
+                        if self.mundo['karel']['mochila'] != 'inf':
+                            self.mundo['karel']['mochila'] -= 1
                 except KeyError:
                     self.mundo['casillas'].update({
                         posicion: {
@@ -149,6 +151,8 @@ class kworld:
                             'paredes': set()
                         }
                     })
+                    if self.mundo['karel']['mochila'] != 'inf':
+                        self.mundo['karel']['mochila'] -= 1
             return True
         else:
             return False

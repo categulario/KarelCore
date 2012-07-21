@@ -225,7 +225,7 @@ if __name__ == '__main__':
     except KarelException, ke:
         print ke.args[0], "en la línea", grammar.tokenizador.lineno
     else:
-        mundo = kworld(mochila='inf')
+        mundo = kworld(mochila=4)
         runner = krunner(grammar.arbol, mundo)
         try:
             inicio = time()
@@ -235,7 +235,7 @@ if __name__ == '__main__':
             print 'Error:', kre.args[0]
         else:
             print 'Ejecucion terminada OK'
-        #pprint(runner.mundo.mundo)
+        pprint(runner.mundo.mundo)
     print "tiempo: ", int((c_fin-c_inicio)*1000), "milisegundos en compilar"
     print "tiempo: ", int((fin-inicio)*1000), "milisegundos en ejecutar"
     print "total:", int((c_fin-c_inicio)*1000) + int((fin-inicio)*1000), "milisegundos"
