@@ -1,3 +1,26 @@
+#!/usr/bin/karel
+# -*- coding: iso-8859-1 -*-
+#
+#  chiquito.karel
+#
+#  Copyright 2012 Developingo <a.wonderful.code@gmail.com>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Sarbolt, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#
+#
 iniciar-programa
     define-nueva-instruccion gira(n) como repetir n veces gira-izquierda;
     define-nueva-instruccion rectangulo(p, q) como inicio
@@ -54,12 +77,12 @@ iniciar-programa
                 fin;
                 deja-zumbador;
             fin sino inicio
-                deja-zumbador;
+                #deja-zumbador;
             fin;
-            si verdadero entonces si verdadero entonces sal-de-bucle;
             deja-zumbador;
+            si verdadero entonces si verdadero entonces sal-de-bucle;
         fin;
-        deja-zumbador;
+        #deja-zumbador;
     fin;
     inicia-ejecucion
         #tapete; #Desempeño de 519 milisegundos, recursiva
@@ -70,3 +93,4 @@ iniciar-programa
         apagate;
     termina-ejecucion
 finalizar-programa
+#Los desempeños de las funciones estan medidos con un procesador core i5
