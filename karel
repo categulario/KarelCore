@@ -90,6 +90,8 @@ Copyright (c) 2012 Developingo
                     if '-m' in sys.argv:
                         archivomundo = sys.argv[sys.argv.index('-m')+1]
                         mun = kworld(archivo=file(archivomundo))
+                    else:
+                        mun = kworld()
                     arch = sys.argv[sys.argv.index('-k')+1]
                     runner = None
                     grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
@@ -103,7 +105,7 @@ Copyright (c) 2012 Developingo
                         t_inicio = time()
                         runner.run()
                         t_fin = time()
-                        print runner.mensaje
+                        print runner.estado, runner.mensaje
                         print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo"
                 except IndexError:
                     print "Falta el nombre de un archivo despues de '-k' o '-m'"
