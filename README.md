@@ -1,6 +1,31 @@
 PyRel
 =====
 
+Xalapa, Ver. 2012
+
+Descripción
+-----------
+
+Te gustaba tanto jugar con Karel que decidiste que lo querías en tu plataforma favorita: Linux, así que programaste como poseído en python hasta lograr que Karel corra en Linux, Windows, Mac, Solaris y cualquier otra bestia...
+
+Problema
+--------
+
+Karel requiere algunas librerías privativas para correr, escribe un programa que no las requiera, y que permita ejecutar códigos de Karel en un mundo.
+
+Consideraciones
+---------------
+
+* Karel necesita recursión para poder resolver problemas.
+* Las estructuras se heredan del lenguaje en que es programado.
+* Karel se lleva muy bien con los pingüinos.
+* Un autómata finito o máquina de estado finito es un modelo computacional que realiza cómputos en forma automática sobre una entrada para producir una salida.
+* No importa la posición ni orientación final de Karel.
+* Solo tienes el verano para hacerlo.
+
+Proyecto
+--------
+
 Karel el robot, escrito completamente en python. Por [@Categulario](https://twitter.com/categulario)
 
 El objetivo de este proyecto es ofrecer el lenguaje ''Karel'' orientado al aprendizaje de la programación para todas las plataformas y sin requerir librerías privativas.
