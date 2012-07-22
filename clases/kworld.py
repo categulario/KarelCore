@@ -326,7 +326,7 @@ class kworld:
         try:
             self.mundo = {
                 'karel': {
-                    'posicion': mundo['karel']['posicion'],
+                    'posicion': tuple(mundo['karel']['posicion']),
                     'orientacion': mundo['karel']['orientacion'],
                     'mochila': mundo['karel']['mochila'] #Zumbadores en la mochila
                 },
