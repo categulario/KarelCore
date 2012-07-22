@@ -40,33 +40,24 @@ Si conoces Karel el robot y tienes códigos escritos en PASCAL (el pascal de Kar
 * Probar que los codigos sean correctamente reconocidos por el analizador sintáctico.
 * Hecho lo anterior, poner un error de sintaxis en los códigos y ver si el analizador lo reconoce.
 
-Cualquier irregularidad me avisan a a.wonderful.code@gmail.com
-
-Ahora también es posible correr archivos de karel usando:
-
-`$ python krunner.py codigo.karel`
+Cualquier irregularidad me avisan a a.wonderful.code@gmail.com, información sobre cómo verificar la sintaxis de los archivos está abajo.
 
 Testing
 -------
 
-Para probar alguno de los componentes hay que ir a la carpeta `/clases` y correr el script elegido
+Para probar alguno de los componentes hay que ejecutar el archivo `karel` en la carpeta raiz.
 
 Ejemplo:
 
-`$ python kgrammar.py`
+`$ python karel check -k archivo.karel`
 
 O también
 
-`$ python ktokenizer.py`
+`$ python karel run -k archivo.karel`
 
-También es posible pasar un archivo como parámetro, se supondrá que el archivo contiene un programa en karel. En la misma carpeta que los scripts existen archivos con código karel para pruebas.
+Es posible obtener una poca de ayuda con:
 
-* `codigo.karel` contiene un programa correcto sintácticamente
-* `malo.karel` tiene algún error de sintaxis
-
-Un ejemplo de cómo pasar un archivo como parámetro:
-
-`$ python kgrammar.py codigo.karel`
+`$ python karel --help`
 
 TODO
 ----
@@ -80,6 +71,7 @@ Cosas importantes por hacer:
 * Implementar la GUI del IDE.
 * Hacer un editor de mundos.
 * Soportar la sintaxis Java de pascal.
+* Extender la ayuda.
 
 Algunas buenas ideas por implementar en este proyecto:
 
