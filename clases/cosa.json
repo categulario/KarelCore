@@ -1,0 +1,15 @@
+{
+  "karel": {
+    "posicion": [
+      1, 
+      1
+    ], 
+    "orientacion": "norte", 
+    "mochila": "inf"
+  }, 
+  "casillas": [], 
+  "dimensiones": {
+    "columnas": 100, 
+    "filas": 100
+  }
+}

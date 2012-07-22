@@ -45,6 +45,7 @@ class krunner:
         self.arbol = programa_compilado
         if mundo:
             self.mundo = mundo
+            print mundo.mundo
         else:
             self.mundo = kworld() #En la 1,1 orientado al norte
         self.corriendo = True
@@ -52,6 +53,8 @@ class krunner:
         self.sal_de_bucle = False
         self.limite_recursion = limite_recursion
         self.profundidad = 0 #El punto inicial en la recursion
+        self.estado = "Ok" #El estado en que se encuentra
+        self.mensaje = "" #Mensaje con que termina la ejecucion
 
     def bloque (self, cola, diccionario_variables):
         """ Ejecuta una cola de instrucciones dentro de una estructura
@@ -196,7 +199,14 @@ class krunner:
         """ Ejecuta el codigo compilado de Karel en el mundo
         proporcionado, comenzando por el bloque 'main' o estructura
         principal. """
-        self.bloque(self.arbol['main'], dict()) #Enviamos un diccionario vacio de variables para iniciar
+        try:
+            self.bloque(self.arbol['main'], dict()) #Enviamos un diccionario vacio de variables para iniciar
+        except KarelException, kre:
+            self.estado = 'ERROR'
+            self.mensaje = kre.args[0]
+        else:
+            self.estado = 'OK'
+            self.mensaje = 'Ejecucion terminada'
 
     def merge (self, lista_llaves, lista_valores):
         """ Combina un par de listas de la misma longitud en un
@@ -222,10 +232,10 @@ if __name__ == '__main__':
         grammar = kgrammar(debug=deb, gen_arbol = True)
     else:
         fil = sys.argv[1]
-        grammar = kgrammar(flujo=open(fil), archivo=fil, gen_arbol=True)
+        grammar = kgrammar(flujo=open(fil), archivo=fil, futuro=True)
     try:
         c_inicio = time()
-        grammar.verificar_sintaxis()
+        grammar.verificar_sintaxis(gen_arbol=True)
         c_fin = time()
         #grammar.guardar_compilado('codigo.kcmp', True)
         #pprint(grammar.arbol)
@@ -234,15 +244,15 @@ if __name__ == '__main__':
     else:
         mundo = kworld(mochila='inf')
         runner = krunner(grammar.arbol, mundo)
-        try:
-            inicio = time()
-            runner.run()
-            fin = time()
-        except KarelException, kre:
-            print 'Error:', kre.args[0]
-        else:
-            print 'Ejecucion terminada OK'
+
+        inicio = time()
+        runner.run()
+        fin = time()
+
         pprint(runner.mundo.mundo)
+        print runner.mensaje
+
+
     print "tiempo: ", int((c_fin-c_inicio)*1000), "milisegundos en compilar"
     print "tiempo: ", int((fin-inicio)*1000), "milisegundos en ejecutar"
     print "total:", int((c_fin-c_inicio)*1000) + int((fin-inicio)*1000), "milisegundos"

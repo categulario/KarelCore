@@ -45,7 +45,8 @@ Los comandos mas comunes de Karel son:
 La directiva --future activa las palabras 'verdadero', 'falso' y la
 instruccion 'sal-de-bucle'.
 
-See 'karel help <command>' for more information on a specific command.
+Escribe 'karel help <comando>' para mayor informacion sobre un comando
+particular.
 """
 
 def ayuda(comando):
@@ -54,10 +55,10 @@ def ayuda(comando):
         "run": """Corre un programa en Karel.""",
         "check": """Verifica la sintaxis de un programa en Karel""",
         "check_all": """Verifica la sintaxis de todos los codigos dentro
-        de una carpeta.""",
+de una carpeta.""",
         "test": """Prueba un programa de Karel en un mundo.""",
         "contest": """Evalua una carpeta de codigos de Karel dado un
-        archivo de condiciones de evaluacion."""
+archivo de condiciones de evaluacion."""
     }
     try:
         return comandos[comando]

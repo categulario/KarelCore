@@ -38,11 +38,7 @@ class kworld:
         * casillas indica cómo está construido el mundo mediante un
         diccionario, que tiene por llaves las tuplas con la posicion que
         representan: (fila, columna) """
-        self.mundo = dict()
-        if archivo is not None and isinstance(archivo, basestring):
-            self.carga_archivo(archivo)
-        else:
-            self.mundo = {
+        self.mundo = {
                 'karel': {
                     'posicion': karel_pos,
                     'orientacion': orientacion,
@@ -54,6 +50,8 @@ class kworld:
                 },
                 'casillas': casillas
             }
+        if archivo is not None and isinstance(archivo, file):
+            self.carga_archivo(archivo)
 
     def agrega_pared (self, coordenadas, posicion):
         """ Agrega una pared al mundo, si es que está permitido, el
@@ -318,11 +316,11 @@ class kworld:
             f.write(json.dumps(mundo))
         f.close()
 
-    def carga_archivo (self, nombrearchivo):
+    def carga_archivo (self, archivo):
         """ Carga el contenido de un archivo con la configuración del
-        mundo """
-        f = file(nombrearchivo, 'r')
-        mundo = json.load(f)
+        mundo. Archivo debe ser una estancia de 'file' o de un objeto
+        con metodo 'read()'"""
+        mundo = json.load(archivo)
         #Lo cargamos al interior
         self.mundo_backup = self.mundo
         try:
@@ -409,6 +407,6 @@ if __name__ == '__main__':
 
     #pprint(mundo.mundo)
     mundo.exporta_mundo('mundo.json', True)
-    mundo.carga_archivo('cosa.json')
+    mundo.carga_archivo(file('cosa.json'))
     pprint(mundo.mundo)
 

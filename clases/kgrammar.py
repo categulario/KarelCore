@@ -35,7 +35,7 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=None, archivo=None, debug=False, gen_arbol=False, futuro=False):
+    def __init__(self, flujo=None, archivo=None, debug=False, futuro=False):
         """ Inicializa la gramatica:
         flujo       indica el torrente de entrada
         archivo     es el nombre del archivo fuente, si existe
@@ -95,11 +95,11 @@ class kgrammar:
         self.token_actual = self.tokenizador.get_token().lower()
         self.prototipo_funciones = dict()
         self.funciones = dict()
-        self.gen_arbol = gen_arbol
+        self.gen_arbol = False #Indica si se debe generar un arbol con las instrucciones
         self.arbol = {
             "main": [], #Lista de instrucciones principal, declarada en 'inicia-ejecucion'
             "funciones": dict() #Diccionario con los nombres de las funciones como llave
-        } #Indica si se debe generar un arbol con las instrucciones
+        }
         # Un diccionario que tiene por llaves los nombres de las funciones
         # y que tiene por valores listas con las variables de dichas
         # funciones
@@ -828,9 +828,10 @@ class kgrammar:
         if self.gen_arbol:
             return retornar_valor
 
-    def verificar_sintaxis (self):
+    def verificar_sintaxis (self, gen_arbol=False):
         """ Verifica que este correcta la gramatica de un programa
         en karel """
+        self.gen_arbol = gen_arbol
         if self.token_actual == 'iniciar-programa':
             if self.avanza_token():
                 self.bloque()
@@ -881,12 +882,12 @@ if __name__ == "__main__":
     if deb:
         print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
     if len(sys.argv) == 1:
-        grammar = kgrammar(debug=deb, gen_arbol = True)
+        grammar = kgrammar(debug=deb, futuro=True)
     else:
         fil = sys.argv[1]
-        grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb, gen_arbol=True)
+        grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb, futuro=True)
     try:
-        grammar.verificar_sintaxis()
+        grammar.verificar_sintaxis( gen_arbol=True )
         #grammar.guardar_compilado('codigo.kcmp', True)
         pprint(grammar.arbol)
     except KarelException, ke:

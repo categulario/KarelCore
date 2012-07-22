@@ -30,6 +30,8 @@ import sys
 from util import info
 from os import listdir
 from clases.kgrammar import kgrammar
+from clases.krunner import krunner
+from clases.kworld import kworld
 from clases.kutil import KarelException
 from time import time
 
@@ -80,4 +82,63 @@ Copyright (c) 2012 Developingo
                 except OSError:
                     print "No existe la carpeta '%s'"%carpeta
             else:
+                print info.ayuda('check_all')
                 print "No se proporciono ninguna carpeta..."
+        elif 'run' in sys.argv:
+            if '-k' in sys.argv:
+                try:
+                    if '-m' in sys.argv:
+                        archivomundo = sys.argv[sys.argv.index('-m')+1]
+                        mun = kworld(archivo=file(archivomundo))
+                    arch = sys.argv[sys.argv.index('-k')+1]
+                    runner = None
+                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
+                    try:
+                        grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
+                    except KarelException, ke:
+                        print "El archivo %s tiene errores:"%arch
+                        print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
+                    else:
+                        runner = krunner(grammar.arbol, mundo=mun)
+                        t_inicio = time()
+                        runner.run()
+                        t_fin = time()
+                        print runner.mensaje
+                        print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo"
+                except IndexError:
+                    print "Falta el nombre de un archivo despues de '-k' o '-m'"
+                except OSError:
+                    print "No existe el archivo '%s'"%arch
+                except IOError:
+                    print "No existe el archivo '%s'"%archivomundo
+                #except ValueError:
+                    #print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
+            else:
+                print info.ayuda('run')
+                print "No se proporciono ningun archivo..."
+        elif 'check' in sys.argv:
+            if '-k' in sys.argv:
+                try:
+                    arch = sys.argv[sys.argv.index('-k')+1]
+                    t_inicio = time()
+
+                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
+                    try:
+                        grammar.verificar_sintaxis()
+                    except KarelException, ke:
+                        print "El archivo %s tiene errores:"%arch
+                        print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
+                    else:
+                        print "Sintaxis verificada, todo bien"
+
+                    t_fin = time()
+                    print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar el archivo"
+                except IndexError:
+                    print "Falta el nombre de un archivo despues de '-k'"
+                except OSError:
+                    print "No existe el archivo '%s'"%arch
+            else:
+                print info.ayuda('check')
+                print "No se proporciono ningun archivo..."
+        else:
+            print info.cmd_help
