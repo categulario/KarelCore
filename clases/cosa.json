@@ -5,7 +5,7 @@
       1
     ], 
     "orientacion": "norte", 
-    "mochila": "inf"
+    "mochila": 0
   }, 
   "casillas": [], 
   "dimensiones": {

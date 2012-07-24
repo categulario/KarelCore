@@ -338,9 +338,9 @@ class kworld:
             }
             for casilla in mundo['casillas']:
                 self.mundo['casillas'].update({
-                    (casilla['fila'], casilla['columna']): {
-                        'zumbadores': casilla['zumbadores'],
-                        'paredes': set(casilla['paredes'])
+                    (casilla['casilla']['fila'], casilla['casilla']['columna']): {
+                        'zumbadores': casilla['casilla']['zumbadores'],
+                        'paredes': set(casilla['casilla']['paredes'])
                     }
                 })
         except KeyError:
