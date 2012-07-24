@@ -51,7 +51,8 @@ class kworld:
                 'casillas': casillas
             }
         if archivo is not None and isinstance(archivo, file):
-            self.carga_archivo(archivo)
+            if not self.carga_archivo(archivo):
+                raise KarelException("El archivo de mundo que me diste esta dañado!")
 
     def agrega_pared (self, coordenadas, posicion):
         """ Agrega una pared al mundo, si es que está permitido, el
