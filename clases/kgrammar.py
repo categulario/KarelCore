@@ -149,9 +149,9 @@ class kgrammar:
         if self.token_actual == 'inicia-ejecucion':
             self.avanza_token()
             if self.gen_arbol:
-                self.arbol['main'] = self.expresion_general([], False)
+                self.arbol['main'] = self.expresion_general([], False, False)
             else:
-                self.expresion_general([], False)
+                self.expresion_general([], False, False)
             if self.token_actual != 'termina-ejecucion':
                 raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lógico del programa, encontré '%s'"%self.token_actual)
             else:
@@ -345,9 +345,9 @@ class kgrammar:
                 raise KarelException("La función '%s' no está definida como se planeó en el prototipo, verifica el número de variables"%nombre_funcion)
 
         if self.gen_arbol:
-            self.arbol['funciones'][nombre_funcion]['cola'] = self.expresion(self.funciones[nombre_funcion], True)
+            self.arbol['funciones'][nombre_funcion]['cola'] = self.expresion(self.funciones[nombre_funcion], True, False)
         else:
-            self.expresion(self.funciones[nombre_funcion], True) #Le mandamos las variables existentes
+            self.expresion(self.funciones[nombre_funcion], True, False) #Le mandamos las variables existentes
 
         if self.token_actual != ';':
             raise KarelException("Se esperaba ';'")
@@ -426,7 +426,7 @@ class kgrammar:
         if self.debug:
             print "<declaracion_de_enlace/>"
 
-    def expresion(self, lista_variables, c_funcion):
+    def expresion(self, lista_variables, c_funcion, c_bucle):
         """
         Define una expresion
         {
@@ -466,6 +466,15 @@ class kgrammar:
                         self.avanza_token()
                 else:
                     raise KarelException("No es posible usar 'sal-de-instruccion' fuera de una instruccion :)")
+            elif self.token_actual == 'sal-de-bucle':
+                if c_bucle:
+                    if self.gen_arbol:
+                        retornar_valor = [self.token_actual]
+                        self.avanza_token()
+                    else:
+                        self.avanza_token()
+                else:
+                    raise KarelException("No es posible usar 'sal-de-bucle' fuera de un bucle :)")
             else:
                 if self.gen_arbol:
                     retornar_valor = [self.token_actual]
@@ -474,9 +483,9 @@ class kgrammar:
                     self.avanza_token()
         elif self.token_actual == 'si':
             if self.gen_arbol:
-                retornar_valor = [self.expresion_si(lista_variables, c_funcion)]
+                retornar_valor = [self.expresion_si(lista_variables, c_funcion, c_bucle)]
             else:
-                self.expresion_si(lista_variables, c_funcion)
+                self.expresion_si(lista_variables, c_funcion, c_bucle)
         elif self.token_actual == 'mientras':
             if self.gen_arbol:
                 retornar_valor = [self.expresion_mientras(lista_variables, c_funcion)]
@@ -490,9 +499,9 @@ class kgrammar:
         elif self.token_actual == 'inicio':
             self.avanza_token()
             if self.gen_arbol:
-                retornar_valor = self.expresion_general(lista_variables, c_funcion)
+                retornar_valor = self.expresion_general(lista_variables, c_funcion, c_bucle)
             else:
-                self.expresion_general(lista_variables, c_funcion)
+                self.expresion_general(lista_variables, c_funcion, c_bucle)
             if self.token_actual == 'fin':
                 self.avanza_token()
             else:
@@ -599,7 +608,7 @@ class kgrammar:
         if self.gen_arbol:
             return retornar_valor
 
-    def expresion_general(self, lista_variables, c_funcion):
+    def expresion_general(self, lista_variables, c_funcion, c_bucle):
         """
         Define una expresion general
         { Expresion | ExpresionVacia }
@@ -613,9 +622,9 @@ class kgrammar:
 
         while self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
             if self.gen_arbol:
-                retornar_valor += self.expresion(lista_variables, c_funcion)
+                retornar_valor += self.expresion(lista_variables, c_funcion, c_bucle)
             else:
-                self.expresion(lista_variables, c_funcion)
+                self.expresion(lista_variables, c_funcion, c_bucle)
             if self.token_actual != ';' and self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
                 raise KarelException("Se esperaba ';'")
             elif self.token_actual == ';':
@@ -658,9 +667,9 @@ class kgrammar:
             raise KarelException("Se esperaba 'hacer'")
         self.avanza_token()
         if self.gen_arbol:
-            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion)
+            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion, True)
         else:
-            self.expresion(lista_variables, c_funcion)
+            self.expresion(lista_variables, c_funcion, True)
 
         if self.debug:
             print "</expresion_mientras>"
@@ -695,16 +704,16 @@ class kgrammar:
 
         self.avanza_token()
         if self.gen_arbol:
-            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion)
+            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion, True)
         else:
-            self.expresion(lista_variables, c_funcion)
+            self.expresion(lista_variables, c_funcion, True)
 
         if self.debug:
             print "</expresion_repite>"
         if self.gen_arbol:
             return retornar_valor
 
-    def expresion_si(self, lista_variables, c_funcion):
+    def expresion_si(self, lista_variables, c_funcion, c_bucle):
         """
         Define la expresion del condicional SI
         {
@@ -737,18 +746,18 @@ class kgrammar:
         self.avanza_token()
 
         if self.gen_arbol:
-            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion)
+            retornar_valor['cola'] = self.expresion(lista_variables, c_funcion, c_bucle)
         else:
-            self.expresion(lista_variables, c_funcion)
+            self.expresion(lista_variables, c_funcion, c_bucle)
 
         if self.token_actual == 'sino':
             if self.gen_arbol:
                 retornar_valor.update({'sino-cola': []})
             self.avanza_token()
             if self.gen_arbol:
-                retornar_valor['sino-cola'] = self.expresion(lista_variables, c_funcion)
+                retornar_valor['sino-cola'] = self.expresion(lista_variables, c_funcion, c_bucle)
             else:
-                self.expresion(lista_variables, c_funcion)
+                self.expresion(lista_variables, c_funcion, c_bucle)
 
         if self.debug:
             print "</expresion_si>"
