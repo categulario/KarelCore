@@ -884,6 +884,9 @@ class kgrammar:
 
 
 if __name__ == "__main__":
+    #Cosas para pruebas
+    #Se usa con:
+    #$ python kgrammar.py archivo.karel
     from pprint import pprint
     from time import time
     inicio = time()
