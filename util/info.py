@@ -56,7 +56,8 @@ def ayuda(comando):
         "check": """Verifica la sintaxis de un programa en Karel""",
         "check_all": """Verifica la sintaxis de todos los codigos dentro
 de una carpeta.""",
-        "test": """Prueba un programa de Karel en un mundo.""",
+        "test": """Prueba un programa de Karel en un mundo de prueba,
+los mundos de prueba tienen la extension .kec""",
         "contest": """Evalua una carpeta de codigos de Karel dado un
 archivo de condiciones de evaluacion."""
     }

@@ -34,6 +34,8 @@ from clases.krunner import krunner
 from clases.kworld import kworld
 from clases.kutil import KarelException
 from time import time
+import json
+from pprint import pprint
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
@@ -141,6 +143,50 @@ Copyright (c) 2012 Developingo
                     print "No existe el archivo '%s'"%arch
             else:
                 print info.ayuda('check')
+                print "No se proporciono ningun archivo..."
+        elif 'test' in sys.argv:
+            if '-k' in sys.argv and '-m' in sys.argv:
+                try:
+                    archivomundo = sys.argv[sys.argv.index('-m')+1]
+                    f = file(archivomundo)
+                    kec = json.load(f) #Tenemos el archivo de condiciones de evaluacion cargado.
+                    arch = sys.argv[sys.argv.index('-k')+1]
+                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
+                    try:
+                        grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
+                    except KarelException, ke:
+                        print "El archivo %s tiene errores:"%arch
+                        print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
+                    else:
+                        t_inicio = time()
+                        puntaje = 0
+                        num_caso = 0
+                        suma_puntos = 0
+                        for caso in kec['casos']:
+                            num_caso += 1
+                            #pprint(caso['mundo'])
+                            mun = kworld(filas=caso['mundo']['dimensiones']['filas'], columnas=caso['mundo']['dimensiones']['columnas'], karel_pos=tuple(caso['mundo']['karel']['posicion']), orientacion=caso['mundo']['karel']['orientacion'], mochila=caso['mundo']['karel']['mochila'])
+                            mun.carga_casillas(caso['mundo']['casillas'])
+                            runner = krunner(grammar.arbol, mundo=mun)
+                            runner.run()
+                            if runner.estado == 'OK':
+                                puntaje += caso['puntaje']
+                            suma_puntos += caso['puntaje']
+                            print 'caso', num_caso, runner.estado, runner.mensaje, caso['puntaje'], 'puntos'
+                        t_fin = time()
+                        print 'puntaje:', puntaje, '/', suma_puntos
+                        print 'efectividad:', puntaje/float(suma_puntos)
+                        print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo"
+                except IndexError:
+                    print "Falta el nombre de un archivo despues de '-k' o '-m'"
+                except OSError:
+                    print "No existe el archivo '%s'"%arch
+                except IOError:
+                    print "No existe el archivo '%s'"%archivomundo
+                except ValueError:
+                    print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
+            else:
+                print info.ayuda('run')
                 print "No se proporciono ningun archivo..."
         else:
             print info.cmd_help

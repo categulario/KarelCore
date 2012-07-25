@@ -45,7 +45,7 @@ class krunner:
         self.arbol = programa_compilado
         if mundo:
             self.mundo = mundo
-            print mundo.mundo
+            #print mundo.mundo
         else:
             self.mundo = kworld() #En la 1,1 orientado al norte
         self.corriendo = True

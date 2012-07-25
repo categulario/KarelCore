@@ -23,6 +23,7 @@
 #
 
 import json
+from kutil import KarelException
 
 class kworld:
     """ Representa el mundo de Karel """
@@ -317,11 +318,31 @@ class kworld:
             f.write(json.dumps(mundo))
         f.close()
 
+    def carga_casillas (self, casillas):
+        """ Carga las casillas de un diccionario dado. """
+        self.mundo_backup_c = self.mundo
+        try:
+            for casilla in casillas:
+                self.mundo['casillas'].update({
+                    (casilla['casilla']['fila'], casilla['casilla']['columna']): {
+                        'zumbadores': casilla['casilla']['zumbadores'],
+                        'paredes': set(casilla['casilla']['paredes'])
+                    }
+                })
+        except KeyError:
+            self.mundo = self.mundo_backup_c
+            del(self.mundo_backup_c)
+            return False
+        else:
+            del(self.mundo_backup_c)
+            return True
+
     def carga_archivo (self, archivo):
         """ Carga el contenido de un archivo con la configuración del
         mundo. Archivo debe ser una estancia de 'file' o de un objeto
         con metodo 'read()'"""
         mundo = json.load(archivo)
+        #print mundo
         #Lo cargamos al interior
         self.mundo_backup = self.mundo
         try:
@@ -337,13 +358,8 @@ class kworld:
                 },
                 'casillas': dict()
             }
-            for casilla in mundo['casillas']:
-                self.mundo['casillas'].update({
-                    (casilla['casilla']['fila'], casilla['casilla']['columna']): {
-                        'zumbadores': casilla['casilla']['zumbadores'],
-                        'paredes': set(casilla['casilla']['paredes'])
-                    }
-                })
+            if not self.carga_casillas(mundo['casillas']):
+                raise KarelException("Se mando un mundo deformado")
         except KeyError:
             self.mundo = self.mundo_backup
             del(self.mundo_backup)
@@ -367,6 +383,10 @@ class kworld:
             'casillas': dict()
         }
 
+    def cumple_condicion (self, condiciones):
+        """ Compara el mundo actual con las condiciones de evaluacion
+        proporcionadas en el diccionario 'resultado' """
+        return False
 
 
 
