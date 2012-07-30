@@ -1,0 +1,1204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title></title>
+</head>
+<body lang="ES" link="blue" vlink="purple" style="" text="#000000"
+ bgcolor="#ffffff" alink="#000099" background="workbook.gif">
+<div class="Section1">
+<div align="center"></div>
+<p class="MsoNormal" align="center"><span lang="EN-GB"
+ style="color: red;"><o:p>&nbsp;</o:p><img src="KarelTitle.gif" alt=""
+ width="205" height="105"><o:p></o:p></span></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><b
+ style=""><span lang="EN-GB" style="">Tutorial de Karel<o:p></o:p></span></b></p>
+<p class="MsoNormal"><b style=""><span lang="EN-GB" style=""><o:p>&nbsp;</o:p></span></b></p>
+<ol start="1" type="1">
+ <li class="MsoNormal" style=""><a href="#uno"><span
+ style="font-size: 13.5pt;">Introducci&oacute;n</span></a>: Por qu&eacute;
+programamos el      robot Karel.&nbsp; </li>
+ <li class="MsoNormal" style=""><a href="#dos"><span
+ style="font-size: 13.5pt;">El mundo de Karel</span></a>: Como visualizamos
+y      configuramos el lugar que ocupa Karel. </li>
+ <li class="MsoNormal" style=""><a href="#tres"><span
+ style="font-size: 13.5pt;">Programando Karel</span></a>: Como le decimos
+a      Karel qu&eacute; cosas debe hacer. </li>
+ <li class="MsoNormal" style=""><a href="#cuatro"><span
+ style="font-size: 13.5pt;">Comandos b&aacute;sicos de Karel </span></a>:
+Las cosas que Karel es capaz de hacer      incluso sin pensar. </li>
+ <li class="MsoNormal" style=""><span style="font-size: 13.5pt;"><a
+ href="#cinco">Sentencias de Control de Karel</a> </span>: Las      sentencias
+de control se usan para seleccionar que &oacute;rdenes se deben      ejecutar
+  </li>
+ <li class="MsoNormal" style=""><span style="font-size: 13.5pt;"><a
+ href="#seis">La sentencia<b><span style="font-family: &quot;Courier New&quot;;"> si/entonces</span></b></a></span>:
+A      veces, Karel siente la necesidad de realizar algo s&oacute;lo en ciertas
+     condiciones. </li>
+ <li class="MsoNormal" style=""><span style="font-size: 13.5pt;"><a
+ href="#siete">Condiciones que puede detectar <span class="GramE"><span
+ style="color: windowtext; text-decoration: none;">Karel </span></span></a></span>:
+     Una condici&oacute;n es una funci&oacute;n de la situaci&oacute;n actual
+de Karel, tal como &eacute;l      ejecuta las &oacute;rdenes. </li>
+ <li class="MsoNormal" style=""><span style="font-size: 13.5pt;"><a
+ href="#ocho">La sentencia </a></span><b><span
+ style="font-size: 13.5pt; font-family: &quot;Courier New&quot;;"><a href="#ocho">repetir/veces</a></span></b><span
+ style="font-size: 13.5pt;"> </span>: Es &uacute;til cuando se sabe exactamente
+     cuantas veces se debe de realizar una cosa. </li>
+ <li class="MsoNormal" style=""><span style="font-size: 13.5pt;"><a
+ href="#nueve">La sentencia <b><span style="font-family: &quot;Courier New&quot;;">si/entonces/sino</span></b></a>
+     </span>: Karel puede darse cuenta que necesita realizar una cosa u otra.
+  </li>
+ <li class="MsoNormal" style=""><span style="font-size: 13.5pt;"><a
+ href="#diez">La sentencia <b><span style="font-family: &quot;Courier New&quot;;">define-nueva-instruccion/como</span></b></a>
+     </span>: Usando la taquigraf&iacute;a de Karel para tareas que se realizan
+a      menudo. </li>
+ <li class="MsoNormal" style=""><span style=""></span><a href="#once"><span
+ style="font-size: 13.5pt;">La sentencia </span><b><span
+ style="font-size: 13.5pt; font-family: &quot;Courier New&quot;;">mientras/hacer</span></b></a>
+: Extremadamente valiosa      cuando no se sabe de antemano exactamente cuantas
+veces se necesita      realizar una tarea. </li>
+</ol>
+<p class="MsoNormal" align="center" style="text-align: center;"><b><span
+ style="font-size: 13.5pt;">El<span style="">&nbsp; </span>Robot</span><span
+ style="">&nbsp;</span></b><b><span style="font-size: 13.5pt;">Karel</span></b></p>
+<b><span style="font-size: 13.5pt; font-family: &quot;Times New Roman&quot;;"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</span></b>
+<hr width="100%" size="2"><b><span
+ style="font-size: 13.5pt; font-family: &quot;Times New Roman&quot;;"></span></b>
+<p class="MsoNormal" align="center" style="text-align: center;"><a
+ name="uno"></a><b><span style="font-size: 13.5pt;">1. Por qu&eacute; programamos
+Karel </span></b></p>
+<p>Programar un ordenador en un lenguaje como Pascal, requiere un secuenciamiento
+preciso de los pasos, uno detr&aacute;s de otro, escogiendo que pasos hay
+que seguir en cada caso, y controlando la repetici&oacute;n de ciertos pasos,
+en el proceso de resoluci&oacute;n de un problema. Aunque esta precisi&oacute;n
+se requiere para las operaciones sin razonamiento de las computadoras, es
+extra&ntilde;a a los humanos. Los humanos somos mucho menos r&iacute;gidos
+en nuestro comportamiento y podemos retroceder elegantemente si nuestros pasos
+no parecen llevar a la consecuci&oacute;n de un objetivo. Debido a que son
+diferentes las habilidades de las computadoras y lo humanos, expresar la
+soluci&oacute;n de un problema en instrucciones que una computadora puede
+seguir est&aacute; comprobado que es dif&iacute;cil para mucha gente. Para
+conocer estos conceptos, nosotros empezaremos programando el Robot Karel.
+Karel es una herramienta de aprendizaje que presenta los conceptos de una
+forma visual, lo cual es menos abstracto que programar en un lenguaje como
+Pascal o C. El Robot Karel fue introducido por Richard Pattis en su libro
+<i>Karel the Robot: A Gentle Introduction to the Art of Programming with Pascal,
+</i>John Wiley &amp; Sons, Inc., 1981.&nbsp;</p>
+<p class="MsoNormal" style="">Nosotros programaremos Karel, un Robot simple
+que vive en un mundo simple. Debido a que Karel y su mundo son simulados,
+nosotros podemos realmente ver los resultados de un programa en acci&oacute;n<span
+ class="GramE">!</span> El lenguaje con el que programaremos Karel es una
+versi&oacute;n especial de Pascal, por lo tanto, la mayor parte de lo que
+aprendamos, podr&aacute; ser aplicado directamente al lenguaje de programaci&oacute;n
+est&aacute;ndar Pascal.</p>
+<p align="center" style="text-align: center;"><b><span
+ style="font-size: 13.5pt; color: black;">Por qu&eacute; programamos Karel</span></b>
+</p>
+<span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</span>
+<hr width="100%" size="2"><span
+ style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"></span>
+<p class="MsoNormal" align="center" style="text-align: center;"><b><span
+ style="font-size: 13.5pt;"><a name="dos"></a>2. El mundo de Karel</span></b><span
+ style="font-size: 13.5pt;"> </span></p>
+<p>Karel puede orientarse en una de las cuatro direcciones: este, oeste, norte
+y sur. S&oacute;lo gira 90&ordm; cada vez, por tanto no puede orientarse hacia
+en nordeste, por ejemplo. En el mundo de Karel, las calles van de este a
+oeste, y son numeradas comenzando por 1. No hay n&uacute;meros de calle igual
+a 0 o negativos. Las avenidas van de norte a sur, y tambi&eacute;n est&aacute;n
+numeradas empezando por 1. Tampoco hay n&uacute;meros de avenida igual a
+0 o negativos. Se le llama esquina a la intersecci&oacute;n de una calle
+con una avenida. Karel va de una esquina a la siguiente en un solo movimiento.
+&nbsp;</p>
+<p>Selecciona en tu PC<span style="">&nbsp;</span>Inicio/Programas/JKarelTheRobot/<span
+ class="GramE">JKarelTheRobot&nbsp;.</span>Se iniciar&aacute; el simulador
+del Robot. Ahora deber&iacute;as ver la ventana de <span class="GramE">abajo
+.</span></p>
+<p align="center" style="text-align: center;"><!--[if gte vml 1]><v:shapetype id="_x0000_t75"
+ coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe"
+ filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:378pt;
+ height:330pt'>
+ <v:imagedata src="image001.png" o:title=""/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="504" height="440" src="image010.jpg"
+ v:shapes="_x0000_i1025"><!--[endif]--></p>
+<p class="MsoNormal" style="">Esta ventana muestra las calles y avenidas que
+usa Karel para desplazarse. Primero debemos inicializar (o crear) el mundo
+que Karel va a ocupar. La idea es que puedas introducir algunos elementos
+en el mundo inicial de Karel </p>
+<p class="MsoNormal" style="">El cuadrado en la esquina de la 1&ordf; avenida
+es el cursor que puedes avanzar con los botones del cursor o con el rat&oacute;n
+</p>
+<p>Puedes colocar muros en el norte, sur, este u oeste del cursor us&aacute;ndolas
+casillas de opci&oacute;n (checkboxes). Los muros que limitan las calles y
+avenidas no se pueden quitar, &eacute;stos son los que previenen que Karel
+se salga del mundo.<span style="">&nbsp; </span><b style="">Prueba a introducir
+algunos muros para ver que aspecto tienen</b>.</p>
+<p class="MsoNormal" style=""><br>
+Otro elemento de inter&eacute;s en el mundo de Karel son los zumbadores. Un
+zumbador es una forma de marca que Karel puede escuchar s&oacute;lo cuando
+se encuentra en la misma esquina que el zumbador. Karel tiene una bolsa que
+puede utilizar para poner los zumbadores que vaya cogiendo. Tambi&eacute;n
+puede hacer lo contrario, es decir, sacar los zumbadores de su bolsa y depositarlos
+en las esquinas por las que va pasando. Puedes ajustar el n&uacute;mero inicial
+de zumbadores en cada esquina con el control Zumbadores. </p>
+<p class="MsoNormal" style="">Prueba a poner algunos zumbadores para ver como
+se visualizan en el mundo. Crea el mundo inicial que se muestra a continuaci&oacute;n.
+</p>
+<p class="MsoNormal" style="">Dado que hemos realizado todo el trabajo necesario
+para crear un mundo para Karel, vamos a guardarlo<span class="GramE">!</span>
+Pulsa sobre el bot&oacute;n Guardar, ve a tu directorio particular y guarda
+el mundo como &#8220;NuevoMundo.km&#8221;</p>
+<p class="MsoNormal" align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape id="_x0000_i1026" type="#_x0000_t75"
+ style='width:281.25pt;height:146.25pt' o:bordertopcolor="this"
+ o:borderleftcolor="this" o:borderbottomcolor="this" o:borderrightcolor="this">
+ <v:imagedata src="image003.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="377" height="197" src="image012.jpg"
+ v:shapes="_x0000_i1026"><!--[endif]--></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><br>
+Finalmente, Karel tiene su sitio en el mundo<span class="GramE">!</span>Mueve
+el cursor hacia la esquina de la Avenida 15 y Calle 1 y haz click sobre el
+bot&oacute;n <b>"Ve al Cursor". </b><span style="">Desplaza el cursor hacia
+la 2&ordf; Calle para tener una buena vista de Karel.<b> </b>Karel se representa
+con una flecha que muestra su orientaci&oacute;n.</span> <span style="">Haz
+click sobre el bot&oacute;n<b>"Orient." y selecciona oeste. </b></span>Ahora
+deber&iacute;as visualizar el mundo de abajo. <span style="">Haz de nuevo
+click sobre el bot&oacute;n</span> <b>"Guardar"</b><span style="">,<b> </b>para
+almacenar los cambios<b>.<o:p></o:p></b></span></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape id="_x0000_i1027" type="#_x0000_t75"
+ style='width:279pt;height:146.25pt' o:bordertopcolor="this" o:borderleftcolor="this"
+ o:borderbottomcolor="this" o:borderrightcolor="this">
+ <v:imagedata src="image005.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="374" height="197" src="image014.jpg"
+ v:shapes="_x0000_i1027"><!--[endif]--></p>
+<p align="center" style="text-align: center;"><b><span
+ style="font-size: 13.5pt;">El mundo de Karel</span></b></p>
+<p align="center" style="text-align: center;"><o:p>&nbsp;<br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+<br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+<br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p></o:p></p>
+<hr width="100%" size="2">
+<p align="center" style="text-align: center;"><a name="tres"></a>3. <b><span
+ style="font-size: 13.5pt;">Programando Karel</span></b></p>
+<p class="MsoNormal" style=""><br>
+Antes de poder empezar, necesitamos dar a Karel un programa (serie de instrucciones)<span
+ style="">&nbsp; </span>a seguir. Despu&eacute;s de todo es s&oacute;lo un
+Robot<span class="GramE">!.</span> Pulsa sobre la pesta&ntilde;a<span
+ style="">&nbsp; </span>"Programa" Ahora deber&iacute;as ver una ventana con
+el aspecto de esta de abajo. La zona que est&aacute; vac&iacute;a es donde
+escribiremos y veremos el programa de Karel. </p>
+<p class="MsoNormal" align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape id="_x0000_i1028" type="#_x0000_t75"
+ style='width:300pt;height:281.25pt'>
+ <v:imagedata src="image007.png" o:title=""/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="400" height="375" src="image016.jpg"
+ v:shapes="_x0000_i1028"><!--[endif]--></p>
+<p class="MsoNormal" style=""><br>
+Pulsa en el bot&oacute;n<b> "Nuevo<span class="GramE">" .<span
+ style="font-weight: normal;">&nbsp;</span></span></b> <span
+ class="GramE">n</span>esqueleto del programa ser&aacute; creado autom&aacute;ticamente.
+Se crear&aacute; un programa inicial. Este programa inicial contiene los comandos
+b&aacute;sicos que son necesarios en cada programa. Ahora deber&iacute;as
+ver una ventana como la siguiente.</p>
+<p class="MsoNormal" align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape id="_x0000_i1029" type="#_x0000_t75"
+ style='width:389.25pt;height:198pt' o:bordertopcolor="this" o:borderleftcolor="this"
+ o:borderbottomcolor="this" o:borderrightcolor="this">
+ <v:imagedata src="image009.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="521" height="266" src="image017.jpg"
+ v:shapes="_x0000_i1029"><!--[endif]--></p>
+<p class="MsoNormal" style=""><br>
+Date cuenta de que el programa anterior s&oacute;lo le dice a Karel que se
+apague<span class="GramE">!.</span> Antes de apagarlo, vamos a mandarle algunas
+tareas. &nbsp; La orden<span style="">&nbsp; </span>"avanza" le dice a Karel
+que se mueva hacia adelante una esquina. <b>Escribe "avanza;" antes de"apagate;"</b><span
+ style="">. Date cuenta de que lel punto y coma se usa para separar &oacute;rdenes
+(tal como en Pascal). Ahora pulsa el bot&oacute;n<b> "Compilar". </b>Si no
+has cometido ning&uacute;n error, tu programa tendr&aacute;s el aspecto del
+de la ventana siguiente. </span></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape id="_x0000_i1030" type="#_x0000_t75"
+ style='width:255.75pt;height:155.25pt' o:bordertopcolor="this"
+ o:borderleftcolor="this" o:borderbottomcolor="this" o:borderrightcolor="this">
+ <v:imagedata src="image011.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="343" height="209" src="image019.jpg"
+ v:shapes="_x0000_i1030"><!--[endif]--></p>
+<p class="MsoNormal" style=""><span lang="EN-GB" style="">&nbsp;Click the
+Execute tab, <span class="GramE">then</span> click the Initialize button.
+(Execute begins the execution (running) of your program. Initializing Karel's
+world displays the world you previously created (in this case "newworld.kw").
+You should now see the screen below (assuming that "newworld.kw", you created
+and saved is still open.) If not, click the "Initial World" tab, and then
+the "Open" button, and open the "newworld.kw" file you saved in the last step.
+Then click the Execute tab and the Initialize button. Notice that Karel's
+next instruction field says "avanza", and a small arrow points to the position
+in the program. At this point click Step to have Karel carry out the first
+command of his program. Wow! Karel avanzad on his own! Notice the next instruction
+is now "apagate". Oh well...you've got to go sometime. Click Step again. Notice
+that the next instruction now reads "turned-off". If you try to step again,
+you will be told the program has not been started. To see Karel in action
+again, you have to click Initialize.<o:p></o:p></span></p>
+<p class="MsoNormal" style=""><br>
+<span style="">Pulsa la pesta&ntilde;a de<b> Ejecutar, </b>y despu&eacute;s
+haz click en el bot&oacute;n<b> Inicializar</b></span>. (Ejecutar inicia la
+ejecuci&oacute;n (correr) de nuestro programa. Al Inicializar, se muestra
+el mundo que hab&iacute;amos creado previamente (NuevoMundo.km). <span
+ style="">Ahora deber&iacute;as ver la ventana de abajo (asumiendo que el
+fichero &#8220;NuevoMundo.km&#8221; que creaste est&aacute; todav&iacute;a abierto. Si
+no, pulsa en la pesta&ntilde;a &#8220;Mundo&#8221;, y pulsando en el bot&oacute;n &#8220;Abrir&#8221;,
+selecciona el fichero &#8220;NuevoMundo.km&#8221; que guardaste en el punto anterior).<o:p></o:p></span></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><b><!--[if gte vml 1]><v:shape id="_x0000_i1031"
+ type="#_x0000_t75" style='width:354.75pt;height:333pt'>
+ <v:imagedata src="image013.png" o:title=""/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="473" height="444" src="image020.jpg"
+ v:shapes="_x0000_i1031"><!--[endif]--><o:p></o:p></b></p>
+<p class="MsoNormal" style=""><span style="">Date cuenta que el campo &#8220;siguiente
+intrucci&oacute;n&#8221; dice<b> </b></span>"avanzar", y una flecha peque&ntilde;a
+apunta a esa posici&oacute;n en el programa. En este punto haz click en <b
+ style="">&#8220;Paso&#8221;</b> para que Karel realice esa primera orden del programa.
+Wow! Karel se ha movido solo<span class="GramE">!</span> Date cuenta que la
+siguiente instrucci&oacute;n<span style="">&nbsp; </span>ahora es "apagate".
+Haz click sobre <b style="">&#8220;Paso&#8221;</b>de nuevo. Ahora la siguiente instrucci&oacute;n
+dice "apagate".<span style="">&nbsp; </span>Si quieres probarlo otra vez,
+antes tendr&aacute;s que pulsar sobre el bot&oacute;n Inicializar.</p>
+<p class="MsoNormal" style="">&nbsp;</p>
+<p class="MsoNormal" style=""><br>
+<b style="">Ejercicio<span style=""> 1</span></b>: Escribe un programa de
+Karel para que se mueva a la esquina de la 1&ordf; Calle con la 1&ordf; Avenida
+y se desconecte, asumiendo que empieza en la esquina de la Calle 15 y la Avenida
+15 con orientaci&oacute;n hacia el Oeste. Guarda el programa con el nombre
+&#8220;karel_1.kp&#8221;. Como mundo utiliza el guardado anteriormente con el nombre
+&#8220;NuevoMundo.km&#8221;.</p>
+<p class="MsoNormal" style="">&nbsp; Int&eacute;ntalo <span
+ class="GramE">!!.</span>&nbsp; </p>
+<p align="center" style="text-align: center;"><o:p>&nbsp;</o:p></p>
+<span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</span>
+<hr width="100%" size="2">
+<p align="center" style="text-align: center;"><a name="cuatro"></a>4. <b
+ style="">Comandos b&aacute;sicos de</b> <b><span
+ style="font-size: 13.5pt;">Karel</span></b></p>
+<p>Hay cinco comandos b&aacute;sicos para Karel, estos son: </p>
+<ol start="1" type="1">
+ <li class="MsoNormal" style=""><strong>avanza&nbsp;<span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </span>(avanza una esquina)</strong>     </li>
+ <li class="MsoNormal" style=""><strong>gira-izquierda&nbsp;<span
+ style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>(gira
+a la izquierda)</strong> </li>
+ <li class="MsoNormal" style=""><strong>coge-zumbador&nbsp;<span
+ style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>(coge un
+zumbador)</strong> </li>
+ <li class="MsoNormal" style=""><strong>deja-zumbador&nbsp;<span
+ style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>(deja
+un zumpador)</strong> </li>
+ <li class="MsoNormal" style=""><strong>apagate&nbsp;<span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </span>(desconectate)</strong>     </li>
+</ol>
+<p><u><span style="font-size: 13.5pt;">La salud de Karel</span></u><br>
+Andar entre muros no es bueno para un robot, por lo tanto Karel tiene algunos
+mecanismos salvavidas dentro de &eacute;l. Si un programa le dice a Karel
+que se mueva aunque haya un muro delante de &eacute;l, &eacute;l dir&aacute;
+que hay un error y no realizar&aacute; la acci&oacute;n. Lo mismo ocurrir&aacute;
+si le decimos que coja un zumbador en una esquina y no exista ninguno. Las
+&uacute;nicas &oacute;rdenes que siempre lleva a cabo sin importar la situaci&oacute;n
+en la que se encuentre son <b>gira-izquierda</b> y <b>apagate</b>. Cuando
+Karel nos dice que hay un error, no tenemos que echarle las culpas, sino
+que probablemente habremos escrito mal alguna instrucci&oacute;n. </p>
+<p><b>Ejercicio 2: </b><span style="">Cada ma&ntilde;ana Karel se levanta
+de la cama y tiene que recoger el peri&oacute;dico, representado por un zumbador,
+que est&aacute; en el porche de la casa. Escribe un programa que ordenar&aacute;
+a Karel que recoja el peri&oacute;dico y lo lleve de vuelta a la cama. La
+situaci&oacute;n inicial es la de la imagen de abajo, y la situaci&oacute;n
+final debe tener a Karel de vuelta en la cama (misma esquina, misma direcci&oacute;n
+que cuando empez&oacute;) con el peri&oacute;dico (zumbador en su mochila).
+Crea un mundo como el de la imagen y gu&aacute;rdalo como &#8220;peri&oacute;dico.km&#8221;.
+<o:p></o:p></span></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape
+ id="_x0000_i1032" type="#_x0000_t75" style='width:278.25pt;height:135pt'>
+ <v:imagedata src="image015.png" o:title=""/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="371" height="180" src="image021.jpg"
+ v:shapes="_x0000_i1032"><!--[endif]--></p>
+<p><b style="">&iquest;</b>C&oacute;mo lo hago?</p>
+<p>Puedes editar el mundo &#8220;karel_1.kp&#8221; pulsando en la pesta&ntilde;a Programa,
+y abriendo el fichero. <span class="GramE"><span lang="EN-GB" style="">Guarda
+tu programa con el nombre &#8220;karel_2.kp&#8221;.</span></span><span lang="EN-GB"
+ style=""> </span>Ahora pulsa en Compilar. Pulsa en la pesta&ntilde;a Ejecutar,
+Inicializa y corre el programa.<o:p></o:p></p>
+<p align="center" style="text-align: center;"><b style="">Comandos b&aacute;sicos
+de</b> <b><span style="font-size: 13.5pt;">Karel</span></b></p>
+<span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</span>
+<hr width="100%" size="2">
+<p align="center" style="text-align: center;"><a name="cinco"></a>5. <span
+ style="font-size: 13.5pt;">Sentencias de Control de KAREL</span> </p>
+<p>Las sentencias de control se usan para elegir qu&eacute; hacer, y/o&nbsp;
+cuantas veces hacerlo. Sin embargo, por si solos no causan que ocurra algo.
+Simplemente controlan la ejecuci&oacute;n de otras sentencias o&nbsp; fragmentos
+de c&oacute;digo. A continuaci&oacute;n se lista una serie de sentencias de
+control de Karel: </p>
+<p style="margin-left: 36pt; text-indent: -18pt;"><!--[if !supportLists]--><span
+ style="font-size: 10pt; font-family: Symbol;"><span style="">&middot;<span
+ style="font-family: &quot;Times New Roman&quot;; font-style: normal; font-variant: normal; font-weight: normal; font-size: 7pt; line-height: normal; font-stretch: normal; font-size-adjust: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><!--[endif]--><strong><span
+ style="font-family: &quot;Courier New&quot;;">Si/Entonces</span></strong></p>
+<p style="margin-left: 36pt; text-indent: -18pt;"><!--[if !supportLists]--><span
+ style="font-size: 10pt; font-family: Symbol;"><span style="">&middot;<span
+ style="font-family: &quot;Times New Roman&quot;; font-style: normal; font-variant: normal; font-weight: normal; font-size: 7pt; line-height: normal; font-stretch: normal; font-size-adjust: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><!--[endif]--><strong><span
+ style="font-family: &quot;Courier New&quot;;">repite/N&ordm; de veces&nbsp;&nbsp;</span></strong></p>
+<p style="margin-left: 36pt; text-indent: -18pt;"><!--[if !supportLists]--><span
+ style="font-size: 10pt; font-family: Symbol;"><span style="">&middot;<span
+ style="font-family: &quot;Times New Roman&quot;; font-style: normal; font-variant: normal; font-weight: normal; font-size: 7pt; line-height: normal; font-stretch: normal; font-size-adjust: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><!--[endif]--><strong><span
+ style="font-family: &quot;Courier New&quot;;">Si/Entonces/Sino</span></strong></p>
+<p style="margin-left: 36pt; text-indent: -18pt;"><!--[if !supportLists]--><span
+ style="font-size: 10pt; font-family: Symbol;"><span style="">&middot;<span
+ style="font-family: &quot;Times New Roman&quot;; font-style: normal; font-variant: normal; font-weight: normal; font-size: 7pt; line-height: normal; font-stretch: normal; font-size-adjust: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><!--[endif]--><strong><span
+ style="font-family: &quot;Courier New&quot;;">Mientras/Hacer&nbsp;&nbsp;</span></strong></p>
+<p>Siempre a continuaci&oacute;n de las sentencias de control&nbsp; <b><span
+ style="font-family: &quot;Courier New&quot;;">entonces</span></b><span
+ style="font-family: &quot;Courier New&quot;;">, <b style="">veces</b>, <b
+ style="">sino</b>, y <b style="">Hacer</b></span> van seguidas de la palabra&nbsp;
+<strong><span style="font-family: &quot;Courier New&quot;;">inicio</span></strong>para
+iniciar el grupo de sentencias a ser realizado. El grupo de sentencias va
+seguido de la palabra <strong><span style="font-family: &quot;Courier New&quot;;">fin</span></strong>.
+Utilizamos el par&nbsp;<b><u>inicio/fin</u></b> para un s&oacute;lo par&aacute;metro
+o para varios, no importa el n&uacute;mero de ellos. El compilador devolver&aacute;
+una advertencia en caso de que no se siga este estilo.&nbsp; </p>
+<p>Nota: Un punto y coma no debe estar a continuaci&oacute;n de un <tt><b><span
+ style="font-size: 10pt;">inicio</span></b></tt>, pero s&iacute; es necesario
+a continuaci&oacute;n de un <b style="">fin</b> (excepto cuando precede una
+sentencia <b style="">sino</b>). </p>
+<p>&nbsp; </p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;">Sentencias de Control de KAREL</span></p>
+<span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</span><span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"></span>
+<hr width="100%" size="2">
+<p align="center" style="text-align: center;"><a name="seis"></a>6. <span
+ style="font-size: 13.5pt;">La sentencia Si/Entnces&nbsp;</span> </p>
+<p>En el Ejercicio 1 asumimos que Karel estaba orientado hacia el Este. Y
+si supi&eacute;ramos que cuando se inicia est&aacute; orientado hacia el Oeste
+o hacia el Sur<span class="GramE">?</span> A veces necesitaremos girar primero
+tres veces, y a veces no. En este caso, la sentencia de control <b>si/entonces</b>
+es lo que necesitamos en nuestro programa. Aqu&iacute; hay un ejemplo de como
+se debe escribir: </p>
+<pre>...</pre>
+<pre><span class="GramE"><b>si</b></span><b> orientado-al-sur entonces inicio<o:p></o:p></b></pre>
+<pre><b><span style="">&nbsp;&nbsp; </span>gira-izquierda;<o:p></o:p></b></pre>
+<pre><b><span style="">&nbsp;&nbsp; </span>gira-izquierda;<o:p></o:p></b></pre>
+<pre><b><span style="">&nbsp;&nbsp; </span>gira-izquierda;<o:p></o:p></b></pre>
+<pre><span class="GramE"><b>fin</b></span><b>;<o:p></o:p></b></pre>
+<pre>...</pre>
+<pre>&nbsp;</pre>
+<p style="">Las l&iacute;neas "<tt><span style="font-size: 10pt;">...</span></tt>"
+significan que pueden haber otras sentencias antes o despu&eacute;s de la
+sentencia <b style=""><span style="font-family: &quot;Courier New&quot;;">si</span></b><span
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">. </span>Nos da igual
+en esta explicaci&oacute;n ya que no hay restricciones en cuanto a lo que
+hay antes o despu&eacute;s de la sentencia <b>si</b>. </p>
+<p style="">La forma m&aacute;s general de la sentencia <b><span
+ style="font-family: &quot;Courier New&quot;;">si</span></b>es: </p>
+<pre><span lang="EN-GB" style="font-size: 11pt;">...<o:p></o:p></span></pre>
+<pre><span class="GramE"><b><span lang="EN-GB" style="font-size: 11pt;">si</span></b></span><b><span
+ lang="EN-GB" style="font-size: 11pt;"> <u>xxx</u> entonces inicio<o:p></o:p></span></b></pre>
+<pre><b><span lang="EN-GB" style="font-size: 11pt;"><span style="">&nbsp;&nbsp; </span><span
+ class="GramE"><u>yyy</u></span><o:p></o:p></span></b></pre>
+<pre><span class="GramE"><b><span lang="EN-GB" style="font-size: 11pt;">fin</span></b></span><b><span
+ lang="EN-GB" style="font-size: 11pt;">;<o:p></o:p></span></b></pre>
+<pre><span style="font-size: 11pt;">...<o:p></o:p></span></pre>
+<p style=""><span class="GramE">donde</span>&nbsp; <b><u><span
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">xxx</span></u></b>es
+una condici&oacute;n y <b>yyy</b> es cualquier n&uacute;mero de sentencias
+a ejecutar si la condici&oacute;n <span
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">if</span> es verdadera.&nbsp;
+</p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;">La sentencia Si/Entonces </span></p>
+<span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</span>
+<hr width="100%" size="2">
+<p class="MsoNormal" align="center" style="text-align: center;"><a
+ name="siete"></a>7. <span style="font-size: 13.5pt;">Condiciones que puede
+detectar Karel&nbsp;</span></p>
+<p style="">Date cuenta de que la condici&oacute;n orientado-al-sur, en el
+fragmento de programa de la p&aacute;gina del <b style="">si</b><tt><b><span
+ style="font-size: 10pt;">/entonces&nbsp;</span></b></tt> </p>
+<pre>...</pre>
+<pre><span class="GramE"><b>si</b></span><b> orientado-al-sur entonces inicio<o:p></o:p></b></pre>
+<pre><b><span style="">&nbsp;&nbsp; </span>gira-izquierda;<o:p></o:p></b></pre>
+<pre><b><span style="">&nbsp;&nbsp; </span>gira-izquierda;<o:p></o:p></b></pre>
+<pre><b><span style="">&nbsp;&nbsp; </span>gira-izquierda;<o:p></o:p></b></pre>
+<pre><span class="GramE"><b>fin</b></span><b>;<o:p></o:p></b></pre>
+<pre>...</pre>
+<p class="MsoNormal" style=""><o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style="">La condici&oacute;n es una funci&oacute;n de
+la situaci&oacute;n actual de Karel, a medida que se ejecuta el programa.
+Si Karel est&aacute; actualmente orientado hacia el Sur, el valor de la funci&oacute;n
+<tt><b><span style="font-size: 10pt;">orientado-al-sur </span></b></tt>ser&aacute;
+verdadero, y el conjunto de sentencias entre el par inicio/fin, se ejecutar&aacute;.
+De otra manera,&nbsp; el valor <tt><b><span style="font-size: 10pt;">orientado-al-sur
+</span></b></tt>ser&aacute; false y el bloque de sentencias se saltar&aacute;.
+Karel comprende cualquier funci&oacute;n booleana que comprueba su situaci&oacute;n
+actual. Aqu&iacute; hay un listado: </p>
+<p class="MsoNormal" style=""><o:p>&nbsp;</o:p></p>
+<div align="center">
+<table class="MsoNormalTable" border="1" cellspacing="3" cellpadding="0"
+ style="">
+ <tbody>
+    <tr style="">
+  <td width="160" style="padding: 1.5pt; width: 120pt;">         
+      <p style=""><b style="">&nbsp;frente-libre <o:p></o:p></b></p>
+  </td>
+  <td width="196" style="padding: 1.5pt; width: 147pt;">         
+      <p class="MsoNormal"><b style="">junto-a-zumbador<o:p></o:p></b></p>
+  </td>
+  <td width="138" style="padding: 1.5pt; width: 103.5pt;">         
+      <p class="MsoNormal"><b style="">orientado-al-este<o:p></o:p></b></p>
+  </td>
+ </tr>
+ <tr style="">
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">frente-bloqueado<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">no-junto-a-zumbador<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">orientado-al-oeste<o:p></o:p></b></p>
+  </td>
+ </tr>
+ <tr style="">
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">izquierda-libre<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">algun-zumbador-en-la   mochila<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">no-orientado-al-norte<o:p></o:p></b></p>
+  </td>
+ </tr>
+ <tr style="">
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">izquierda-bloqueada<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">ningun-zumbador-en-la   mochila<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">no-orientado-al-sur<o:p></o:p></b></p>
+  </td>
+ </tr>
+ <tr style="">
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">derecha-libre<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">orientado-al-norte<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">no-orientado-al-este<o:p></o:p></b></p>
+  </td>
+ </tr>
+ <tr style="">
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">derecha-bloqueada<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">orientado-al-sur<o:p></o:p></b></p>
+  </td>
+  <td style="padding: 1.5pt;">         
+      <p class="MsoNormal"><b style="">no-orientado-al-oeste<o:p></o:p></b></p>
+  </td>
+ </tr>
+  
+  </tbody>
+</table>
+</div>
+<p style="">"libre" significa que no hay ning&uacute;n muro, mientras que
+"bloqueado" significa que hay un muro en esa direcci&oacute;n. Karel puede
+detectar si hay o no alg&uacute;n zumbador en la esquina en la que se encuentra
+actualmente, as&iacute; como detectar si tiene alg&uacute;n zumbador en la
+bolsa o no. Tambi&eacute;n tiene una br&uacute;jula para detectar hacia qu&eacute;
+direcci&oacute;n est&aacute; orientado. </p>
+<p style=""><b>Ejemplo 3</b><span class="GramE">: <span style="">&nbsp;</span>Escribe</span>
+un programa de Karel que haga que Karel est&eacute; orientado al Norte, desde
+cualquier direcci&oacute;n inicial, y a continuaci&oacute;n se apague. Deber&iacute;a
+terminar en la misma intersecci&oacute;n en la que empez&oacute;.</p>
+<p style="">Alguna sugerencia<span class="GramE">?</span></p>
+<p style="">Edita el programa &#8220;karel_2.kp&#8221; pulsando en la pesta&ntilde;a "Programa"
+y abriendo el fichero &#8220;karel_2.kp<span class="GramE">&#8221; ,</span>si no est&aacute;
+abierto todav&iacute;a. <span style="">&nbsp;</span>Guarda el programa con
+el nombre &#8220;karel_3.kp&#8221;.<span style="">&nbsp;</span><span style="">&nbsp;</span><span
+ class="GramE">luego</span> inserta el ejemplo visto arriba para el caso
+en que Karel est&aacute; orientado hacia el Sur. Pero, &iquest;qu&eacute;
+ocurre cuando no est&aacute; orientado hacia el Sur? Podr&iacute;a estar
+tambi&eacute;n orientado hacia el Norte o el Este<span class="GramE">!.</span>
+Entonces necesitas dos sentencias si adicionales, en las cuales se especifique
+que es lo que debe hacer Karel en esas situaciones. Compila el programa como
+antes, pulsa la pesta&ntilde;a&nbsp; "Ejecutar", y luego pulsa el bot&oacute;n
+"Inicializar". A continuaci&oacute;n deber&iacute;as pulsar en "Paso" o "Correr"
+para ejecutar el programa. Usa el mundo &#8220;NuevoMundo.km&#8221; para probar tu programa.</p>
+<p style="">Modifica el mundo inicial de Karel para probar cualquiera de las
+4 direcciones de inicio, y para cada una de ellas vuelve a ejecutar el programa.
+En esta secci&oacute;n hemos visto como usar las sentencias de control para
+adaptar Karel a cada situaci&oacute;n. </p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;">Condiciones que puede detectar Karel<br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+<br>
+</span></p>
+<hr width="100%" size="2">
+<p align="center" style="text-align: center;"><a name="ocho"></a><span
+ style="font-size: 13.5pt;">8. La sentencia repite/veces <o:p></o:p></span></p>
+<p style="">En el ejercicio 2, ten&iacute;ais que contar la secuencia correcta
+de pasos para que Karel pudiese resolver el problema. En este caso probablemente
+no hay una forma m&aacute;s corta de resolverlo. Sin embargo, en algunos problemas
+hay aspectos del problema que tienen una naturaleza repetitiva. Por ejemplo,
+para ir de la esquina 15 a la 1 tendr&iacute;amos que poner un total de 14
+&#8220;avanza&#8221;. &iquest;Es dif&iacute;cil dar justo con el n&uacute;mero correcto<span
+ class="GramE">?.</span> El lenguaje de programaci&oacute;n de Karel ofrece
+un m&eacute;todo mejor, la sentencia de control <b style="">repite</b>. Se
+escribe como sigue: </p>
+<pre>...</pre>
+<pre><span class="GramE"><b>repite</b></span><b> </b><u>xxx</u><b> veces inicio<o:p></o:p></b></pre>
+<pre><span style="">&nbsp;&nbsp; </span><span class="GramE"><u><span
+ lang="EN-GB" style="">yyy</span></u></span><span lang="EN-GB" style=""><o:p></o:p></span></pre>
+<pre><span class="GramE"><b><span lang="EN-GB" style="">fin</span></b></span><b><span
+ lang="EN-GB" style="">;<o:p></o:p></span></b></pre>
+<pre>...</pre>
+<p style=""><span class="GramE">donde</span> <b><u>xxx</u></b> debe ser un
+n&uacute;mero entero positivo, y <b>yyy</b> representa cualquier n&uacute;mero
+de sentencias de Karel. El problema de los 14 avances podr&iacute;a haberse
+<span class="GramE">escrito :</span> </p>
+<pre>...</pre>
+<pre><span class="GramE"><b>repite</b></span><b> </b>14<b> veces inicio<o:p></o:p></b></pre>
+<pre><span style="">&nbsp;&nbsp; </span><span class="GramE">avanza</span>;<o:p></o:p></pre>
+<pre><span class="GramE"><b>fin</b></span><b>;<o:p></o:p></b></pre>
+<pre>...</pre>
+<p style=""><b>Ejercicio 4: </b><span style="">Asume que Karel est&aacute;
+en la esquina de la 8&ordf; Avenida y la 8&ordf; Calle, con el escenario que
+se ve en la siguiente imagen. Escribe un programa que haga a Karel recoger
+todos los zumbadores y acabe en la 1&ordf; esquina orientado al Sur.<b><o:p></o:p></b></span></p>
+<p align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape
+ id="_x0000_i1033" type="#_x0000_t75" style='width:200.25pt;height:146.25pt'
+ o:bordertopcolor="this" o:borderleftcolor="this" o:borderbottomcolor="this"
+ o:borderrightcolor="this">
+ <v:imagedata src="image018.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="269" height="197" src="image022.jpg"
+ v:shapes="_x0000_i1033"><!--[endif]--></p>
+<p style="">&iquest;Crees que es muy dif&iacute;cil?<o:p></o:p></p>
+<p style="">Bien&#8230; puede ser que un poco de ayuda venga bien. Si puedes imaginar
+como hacerlo una vez (el primer zumbador de la esquina 7,7), la sentencia
+repite lo har&aacute; tantas veces como t&uacute; quieras.</p>
+<p style="">Crea un mundo como el de arriba y gu&aacute;rdalo con el nombre
+&#8220;diagonal.km&#8221;. Escribe el programa y gu&aacute;rdalo con el nombre &#8220;karel_4.kp&#8221;.
+Asegurate de utilizar la sentencia repetir/veces. Prueba el programa en este
+mundo inicial. Karel deber&iacute;a terminar en la esquina de la primera Avenida
+con la primera Calle, y llevando 7 zumbadores en la mochila.&nbsp;<o:p></o:p></p>
+<p align="center" style="text-align: center;"><big><tt><b><span style=""></span></b></tt></big><span
+ style="font-size: 13.5pt;">La sentencia iterate/times<br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<p align="center" style="text-align: center;"><span
+ style="font-size: 13.5pt;"><br>
+</span></p>
+<span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"><br>
+<br>
+<br>
+</span>
+<hr width="100%" size="2">
+<p class="MsoNormal" align="center" style="text-align: center;"><a
+ name="nueve"></a>9. <span style="font-size: 13.5pt;">La sentencia&nbsp; Si/Entonces/Sino&nbsp;</span></p>
+<p style="">Aqu&iacute; pod&eacute;is ver como se escribe una sentencia <span
+ style="font-size: 11pt;">Si/Entonces/<span class="GramE">Sino<span
+ style="font-size: 13.5pt;">&nbsp;</span><span style="font-size: 12pt;">:</span></span></span></p>
+<pre><span lang="EN-GB" style="">...<o:p></o:p></span></pre>
+<pre><span class="GramE"><b><span lang="EN-GB" style="">si</span></b></span><b><span
+ lang="EN-GB" style=""> <u>xxx</u> entonces inicio<o:p></o:p></span></b></pre>
+<pre><span lang="EN-GB" style="">&nbsp;&nbsp; <span class="GramE"><u>yyy</u></span><u><o:p></o:p></u></span></pre>
+<pre><span class="GramE"><b>fin</b></span><b><o:p></o:p></b></pre>
+<pre><span class="GramE"><b>sino</b></span><b> inicio<o:p></o:p></b></pre>
+<pre>&nbsp;&nbsp; <span class="GramE"><u>zzz</u></span><u><o:p></o:p></u></pre>
+<pre><span class="GramE"><b>fin</b></span><b>;<o:p></o:p></b></pre>
+<pre>...</pre>
+<p class="MsoNormal" style=""><span class="GramE">donde</span> <b><u>xxx</u></b>
+es una condici&oacute;n, <b>yyy</b> son sentencias a realizar si xxx es verdadero,
+y zzz son las sentencias a ejecutar si <b><u>xxx</u></b> es falso. </p>
+<p style=""><b>Ejercicio 5<span class="GramE">: <span style="">&nbsp;</span><span
+ style="font-weight: normal;">Karel</span></span></b><span style=""> tiene
+la tarea de alinear una colecci&oacute;n de zumbadores en la primera Calle
+que ha sido distribuida desigualmente. Empieza en la 1&ordf; Calle y la 15&ordf;
+Avenida y est&aacute; orientado al Oeste. Se supone que en cada esquina hay
+exactamente un zumbador. Sin embargo, Karek puede encontrar 0, 1 o 2 zumbadores
+en cualquier intersecci&oacute;n. Su tarea es asegurar que exactamente hay
+un zumbador antes de continuar hacia la siguiente esquina. Cuando llega a
+la esquina 1,1 debe apagarse.<o:p></o:p></span></p>
+<p style=""><span style="">Dise&ntilde;a el mundo inicial para que Karel
+comience en la esquina 1,15 orientado hacia el Oeste. Karel debe empezar
+con 15 zumbadores en la mochila. Aleatoriamente sit&uacute;a 1 o 2 zumbadores
+en esquinas a lo largo de la 1&ordf; Calle, y deja alguna sin zumbadores.
+Guarda tu mundo inicial con el nombre &#8220;lineaDeZumbadores.km&#8221;<o:p></o:p></span></p>
+<p style=""><span style="">Escribe el programa para hacer que Karel complete
+la tarea descrita anteriormente. Guarda tu programa con el nombre &#8220;karel_5.kp&#8221;.
+<o:p></o:p></span></p>
+<p style=""><span style="">Truco: utiliza repite/veces, un Si/Entonces/Sino,
+y un Si/Entonces.<o:p></o:p></span></p>
+<p style=""><span style="">Recuerda, no sabemos qu&eacute; esquinas tienen
+el n&uacute;mero equivocado de zumbadores<span class="GramE">!</span> Karel
+debe hacer la tarea correctamente independientemente del n&ordm; de zumbadores
+que haya en cada esquina.<o:p></o:p></span></p>
+<p align="center" style="text-align: center;"><span lang="EN-GB"
+ style="font-size: 13.5pt;">La sentencia<span class="GramE">&nbsp; If</span>/Then/Else&nbsp;</span></p>
+<p align="center" style="text-align: center;"><span lang="EN-GB"
+ style=""><o:p></o:p></span></p>
+<span lang="EN-GB"
+ style="font-size: 12pt; font-family: &quot;Times New Roman&quot;;"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</span>
+<hr width="100%" size="2">
+<p class="MsoNormal" align="center" style="text-align: center;"><a
+ name="diez"></a>10. <big><b><span style="">La sentencia</span></b> <b><span
+ style="">define-nueva-instruction/como</span></b></big>&nbsp;<o:p></o:p></p>
+<p class="MsoNormal" style=""><br>
+Hasta ahora, le hemos dicho a Karel exactamente lo que ten&iacute;a que hacer&nbsp;
+tal como necesit&aacute;bamos que lo hiciese. Esto funciona bien, pero os
+podr&eacute;is haber dado cuenta de que siempre se utilizan secuencias de
+sentencias similares. Un ejemplo es cuando Karel tiene que girar a la derecha,
+y nosotros le decimos "<tt><span style="font-size: 10pt;">gira-izquierda;
+gira-izquierda; gira-izquierda;</span></tt>". No ser&iacute;a m&aacute;s f&aacute;cil
+si le pudi&eacute;ramos decir simplemente "gira-derecha"<span
+ class="GramE">?</span>En otras palabras, diciendo "<tt><span
+ style="font-size: 10pt;">gira-derecha;</span></tt>" Karel girar&iacute;a
+tres veces hacia la izquierda para alcanzar nuestro objetivo. Es posible.
+&iquest;Est&aacute;s suficientemente <span class="GramE">motivados</span>
+para aprender una nueva sentencia? </p>
+<p style="">Una de las razones de crear nuevas instrucciones, es por evitar
+escribir tanto. Otra es para documentar mejor cual es nuestro objetivo, cuando
+nosotros mismos u otra persona lee el programa. Como os&nbsp; estar&eacute;is
+dando cuenta, programar es una tarea extremadamente compleja, y necesitamos
+toda la ayuda necesaria para hacer las cosas correctamente<span
+ class="GramE">!</span> </p>
+<p style="">Las sentencias <b>define-nueva-instrucion</b> est&aacute;n situadas
+en un sitio especial dentro de un programa de Karel, justo despu&eacute;s
+de la sentencia <b>inicio-de-ejecucion.</b><span lang="EN-GB" style="">El
+siguiente es <span class="GramE">un</span> programa v&aacute;lido para Karel:
+<o:p></o:p></span></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape
+ id="_x0000_i1034" type="#_x0000_t75" style='width:301.5pt;height:324pt'
+ o:bordertopcolor="this" o:borderleftcolor="this" o:borderbottomcolor="this"
+ o:borderrightcolor="this">
+ <v:imagedata src="image029.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="404" height="434" src="image023.jpg"
+ v:shapes="_x0000_i1034"><!--[endif]--></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style="">Pod&eacute;is definir cualquier n&uacute;mero
+de instrucciones nuevas, y despu&eacute;s usarlas en el programa donde las
+necesit&eacute;is. Las instrucciones nuevas pueden contener sentencias de
+control, si es necesario. Daros cuenta de que la nueva instrucci&oacute;n
+puede tambi&eacute;n usar una instrucci&oacute;n definida previamente<span
+ class="GramE">!</span> El <a
+ href="../Secundaria2002-2003/WEBkarel/sentenciaIfThenElse.htm">ejercicio
+5</a> podr&iacute;a haberse escrito:&nbsp; </p>
+<p align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape
+ id="_x0000_i1035" type="#_x0000_t75" style='width:372.75pt;height:349.5pt'
+ o:bordertopcolor="this" o:borderleftcolor="this" o:borderbottomcolor="this"
+ o:borderrightcolor="this">
+ <v:imagedata src="image031.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="499" height="468" src="image024.jpg"
+ v:shapes="_x0000_i1035"><!--[endif]--><br>
+&nbsp;&nbsp;&nbsp;&nbsp; <br style="">
+<!--[if !supportLineBreakNewLine]--><br style="">
+<!--[endif]--></p>
+<p style="">Daros cuenta de como la instrucci&oacute;n <b>repetir</b> acaba
+moviendo a Karel una esquina hacia adelante, sin tener en cuenta en n&ordm;
+de zumbadores. Si hac&eacute;is esto 14 veces, estar&eacute;is en casa<span
+ class="GramE">!</span> </p>
+<p style=""><b>Ejercicio 6:</b> Re-escribir el programa para el <a
+ href="../Secundaria2002-2003/WEBkarel/IterateTimes.htm">ejercicio 4</a>,
+pero esta vez puede no haber un zumbador en cada esquina. Guarda tu programa
+con el nombre &#8220;karel_6.kp&#8221;. <span style="">&nbsp;</span>La nueva&nbsp; instrucci&oacute;n
+deber&iacute;a coger un zumbador en la posici&oacute;n actual, si es que lo
+hay. Deber&iacute;ais usar esta instrucci&oacute;n para coger todos los zumbadores
+mientras Karel va a su casa en diagonal. Aseguraros de que ten&eacute;is el
+mundo &#8220;diagonal.km&#8221; cargado y probar vuestro programa. Karel deber&iacute;a
+finalizar el la esquina de la 1&ordf; Calle con la 1&ordf; Avenida, con todos
+los zumbadores que ha ido cogiendo por el camino, y apagarse.</p>
+<p align="center" style="text-align: center;"><b><font size="+1"><span
+ style="font-size: 10pt;">La sentencia </span><span
+ style="font-size: 10pt;">define-new-instruction/as</span></font></b></p>
+<p align="center" style="text-align: center;"><o:p>&nbsp;<br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p><br>
+<br>
+</o:p></p>
+<p align="center" style="text-align: center;"><o:p></o:p></p>
+<hr width="100%" size="2">
+<p align="center" style="text-align: center;"><o:p></o:p></p>
+<p class="MsoNormal" align="center" style="text-align: center;"><a
+ name="once"></a><b style="">11. La sentencia&nbsp; mientras</b><tt><b><span
+ style="">/hacer</span></b></tt><b style=""> &nbsp;<o:p></o:p></b></p>
+<p style="">Desde el principio, siempre se nos ha dicho la esquina exacta
+de inicio. Nosotros queremos programar Karel para que se adapte mejor a su
+mundo. La sentencia <b>mientras/hacer</b>nos permite repetir pasos mientras
+se cumple una condici&oacute;n, y esto nos va a permitir programar a Karel
+para que no sea un chico tan r&iacute;gido<span class="GramE">!.</span> La
+sentencia <b>mientras/hacer</b> tiene la forma <span class="GramE">siguiente&nbsp;
+:</span> </p>
+<pre><span class="GramE"><b>mientras</b></span><b> <u>xxx</u> hacer inicio<o:p></o:p></b></pre>
+<pre>&nbsp;&nbsp; <span class="GramE"><u>yyy</u></span><u><o:p></o:p></u></pre>
+<pre><span class="GramE"><b>fin</b></span><b>;</b></pre>
+<p class="MsoNormal" style=""><o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style=""><span class="GramE">donde</span> <b><u>xxx</u></b>
+debe ser una condici&oacute;n (una de las funciones booleanas <a
+ href="../Secundaria2002-2003/WEBkarel/condiciones.htm">listadas anteriormente</a>),
+y <b>yyy</b> representa cualquier n&uacute;mero de sentencias de Karel. El
+ejercicio 1 podr&iacute;a haberse escrito de la siguiente manera: </p>
+<p class="MsoNormal" style=""><o:p>&nbsp;</o:p></p>
+<pre><span class="GramE"><b>mientras</b></span><b> <u>frente-libre</u> hacer inicio<o:p></o:p></b></pre>
+<pre>&nbsp;&nbsp; <span class="GramE"><u>avanza</u></span><u>;<o:p></o:p></u></pre>
+<pre><span class="GramE"><b>fin</b></span><b>;</b></pre>
+<p class="MsoNormal" style=""><o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style="">Esto soluciona el problema de caminar de nuevo
+a&nbsp; la 1&ordf; Calle, sin importar como de lejos se encuentre de esta
+Calle. </p>
+<p class="MsoNormal" style=""><o:p>&nbsp;</o:p></p>
+<p style=""><b>Ejercicio 7:</b> La tarea de Karel es dejar zumbadores a lo
+largo de una pista de carreras. Un ejemplo de dicha pista es la de la siguiente
+imagen. Karel debe dar una vuelta completa y depositar un zumbador en cada
+esquina a lo largo del camino. Guarda el programa con el nombre &#8220;karel7.kp&#8221;.
+Tu soluci&oacute;n debe usar sentencias mientras/hacer. Construye el mundo
+inicial de la siguiente imagen con el nombre &#8220;pistaCarreras.km&#8221;. Asegurate
+de poner dentro de <span class="GramE">la mochila suficientes</span> zumbadores
+para todas las esquinas. El ejemplo requiere 22 zumbadores. Karel debe empezar
+en cualquier intersecci&oacute;n de la pista.<o:p></o:p></p>
+<p align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape
+ id="_x0000_i1036" type="#_x0000_t75" style='width:237pt;height:172.5pt'
+ o:bordertopcolor="this" o:borderleftcolor="this" o:borderbottomcolor="this"
+ o:borderrightcolor="this">
+ <v:imagedata src="image002.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="318" height="232" src="image025.jpg"
+ v:shapes="_x0000_i1036"><!--[endif]--></p>
+<p style="">Asegurate de que tu programa funciona en el mundo anterior, y
+despu&eacute;s prueba tu programa modificando el mundo inicial. Tambi&eacute;n,
+intenta iniciar a Karel desde diferentes intersecciones a lo largo del camino.
+<span class="GramE"><span lang="EN-GB" style="">&iquest;Realiza Karel su tarea
+correctamente en todos los casos?</span></span><span lang="EN-GB"
+ style=""><o:p></o:p></span></p>
+<p style=""><b>Ejercicio 8</b>: Escribe un programa que ayude a Karel a escapar
+de un laberinto que no contiene islas. La salida del laberinto est&aacute;
+marcada ubicando un zumbador en la primera esquina que est&aacute; fuera del
+laberinto, al lado del muro de la derecha. Una forma de resolver este problema
+es hacer que Karel avance a lo largo del laberinto siguiendo el muro de su
+derecha <span class="GramE">( imagina</span>que est&aacute; tocando el muro
+y que nunca puede despegar su mano de &eacute;l). En la siguiente imagen
+hay un ejemplo de un laberinto del cual deber&iacute;a ser capaz de salir
+(no olvides que tu programa deber&iacute;a funcionar en todos los laberintos,
+no solo en el de la imagen). Guarda tu programa con el nombre &#8220;karel_8.kp&#8221;.</p>
+<p style="">Esto parece muy, muy complicado. &iquest;Puedes darnos un mundo
+de ejemplo? </p>
+<p align="center" style="text-align: center;"><!--[if gte vml 1]><v:shape
+ id="_x0000_i1037" type="#_x0000_t75" style='width:205.5pt;height:171.75pt'
+ o:bordertopcolor="this" o:borderleftcolor="this" o:borderbottomcolor="this"
+ o:borderrightcolor="this">
+ <v:imagedata src="image006.png" o:title=""/>
+ <w:bordertop type="single" width="4"/>
+ <w:borderleft type="single" width="4"/>
+ <w:borderbottom type="single" width="4"/>
+ <w:borderright type="single" width="4"/>
+</v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="276" height="231" src="image026.jpg"
+ v:shapes="_x0000_i1037"><!--[endif]--><o:p></o:p></p>
+<p style=""><i>Aqu&iacute; ten&eacute;is un mundo inicial de ejemplo. La l&iacute;nea
+roja muestra el camino que deber&iacute;a seguir Karel para este mundo. Recordar
+que no sabr&eacute;is de antemano donde estar&aacute;n los muros.</i>&nbsp;</p>
+<p style="">&nbsp;</p>
+<p style="">Podr&iacute;a hacerse m&aacute;s f&aacute;cil si definierais unas
+pocas nuevas instrucciones que hicieran parte del trabajo. <span
+ lang="EN-GB" style="">Aqu&iacute; ten&eacute;is<span class="GramE">un</span>
+ejemplo: <o:p></o:p></span></p>
+<pre><span class="GramE"><b>define-nueva-instruccion</b></span><b> sigue-muro-rerecha como inicio<o:p></o:p></b></pre>
+<pre><b>&nbsp;&nbsp; {pon tu c&oacute;digo aqu&iacute;}<o:p></o:p></b></pre>
+<pre><span class="GramE"><b>fin</b></span><b>;</b></pre>
+<pre><b>...</b></pre>
+<p style="">Esta instrucci&oacute;n hace que Karel avance correctamente hacia
+el siguiente segmento de muro. Los diagramas de abajo muestran las 4 situaciones,
+Karel podr&iacute;a estar en cualquier punto del laberinto. Si sigue-muro-derecha
+resuelve correctamente los 4 casos, entonces has solucionado la parte principal
+del problema. Tambi&eacute;n deber&iacute;as definir gira-derecha Para probar
+tu programa crea un mundo como el del ejemplo y lo guardas con el nombre &#8220;laberinto.km&#8221;.
+Una vez te funcione el programa para este mundo, prueba a modificarlo an&ntilde;adi&eacute;ndo
+o quitando muros. &iquest;Realiza Karel la tarea bien en todos los casos?
+<o:p></o:p></p>
+<div align="center">
+<table class="MsoTableGrid" border="1" cellspacing="0" cellpadding="0"
+ style="border: medium none ; margin-left: 1.9pt; border-collapse: collapse;">
+ <tbody>
+    <tr style="">
+  <td width="288" valign="top"
+ style="padding: 0cm 5.4pt; width: 216.1pt;">         
+      <p align="center" style="text-align: center;"><b style=""><!--[if gte vml 1]><v:shape id="_x0000_i1039"
+   type="#_x0000_t75" style='width:148.5pt;height:149.25pt'>
+   <v:imagedata src="image027.png" o:title=""/>
+  </v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="198" height="199" src="image028.jpg"
+ v:shapes="_x0000_i1039"><!--[endif]--><o:p></o:p></b></p>
+  </td>
+  <td width="288" valign="top"
+ style="border-style: solid solid solid none; border-width: 1pt 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.1pt;">
+         
+      <p align="center" style="text-align: center;"><b style=""><!--[if gte vml 1]><v:shape id="_x0000_i1038"
+   type="#_x0000_t75" style='width:149.25pt;height:149.25pt'>
+   <v:imagedata src="image030.png" o:title=""/>
+  </v:shape><![endif]--><!--[if !vml]--><img
+ border="0" width="199" height="199" src="image032.jpg"
+ v:shapes="_x0000_i1038"><!--[endif]--><o:p></o:p></b></p>
+  </td>
+ </tr>
+ <tr style="">
+  <td width="288" valign="top"
+ style="border-style: none solid solid; border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 216.1pt;">
+         
+      <p align="center" style="text-align: center;"><b style="">Situaciones
+iniciales<o:p></o:p></b></p>
+  </td>
+  <td width="288" valign="top"
+ style="border-style: none solid solid none; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.1pt;">
+         
+      <p align="center" style="text-align: center;"><b style="">Movimientos
+respectivos<o:p></o:p></b></p>
+  </td>
+ </tr>
+  
+  </tbody>
+</table>
+</div>
+<p align="center" style="text-align: center;"><b style=""><o:p>&nbsp;</o:p></b></p>
+<p align="center" style="text-align: center;"><b style="">La sentencia </b><tt><b><span
+ style="">mientras/hacer</span></b></tt><b style=""> <o:p></o:p></b></p>
+<p class="MsoNormal" style=""><b style=""><o:p>&nbsp;</o:p></b></p>
+</div>
+<br>
+<br>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <title>
+         BNF para Karel: Sintaxis de Pascal
+      </title>
+   </head>
+   <body background="../Common/workbook2.gif">
+      <center> 
+      		  <h2>KAREL OMI Version 1.2 por Cesar Cepeda<br />
+  Para comentarios escriba a cesar@auronix.com</h2>
+  <h3>Revisado por Eduardo Urias Barrientos AKA Wero Shinoda</h3>         <h1>
+             &nbsp;<a href="Karel.htm">TUTORIAL DE KAREL</a>
+         </h1>
+         <h1>&nbsp;
+             
+        </h1>
+         <h1>
+             BNF para Karel: Sintaxis de Pascal
+         </h1>
+         <h2>
+             Traducido por Eric Alvarez Revisado por Joaquin López
+         </h2>
+         <h3>
+             (el simulador no ditingue mayúsculas/minúsculas)
+         </h3>
+      </center>
+      <table align="center" cellpadding="6"
+			summary="Table of productions for the Pascal syntax" >
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod2" id="prod2">DeclaracionDePrograma</a>
+            </td>
+            <td align="center" valign="baseline" nowrap="nowrap">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               "iniciar-programa"<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               [ <a href="#prod4">DeclaracionDeProcedimiento</a> ";" ]...<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                "inicia-ejecucion"<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <a href="#prod9">ExpresionGeneral</a> [ ";"<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							 <a href="#prod9">ExpresionGeneral</a> ]...<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               "termina-ejecucion"<br />
+               "finalizar-programa"<br />
+		   &nbsp;<a href="#EOF">EOF</a>           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod4" id="prod4">DeclaracionDeProcedimiento</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               "define-nueva-instruccion" <a href="#Identifier">Identificador</a> [
+               "(" <a href="#Identifier">Identificador</a> ")" ] "como"<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           <a href="#prod10">Expresion</a>           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+            </td>
+            <td align="center" valign="baseline">
+            </td>
+            <td align="left" valign="baseline">
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod9" id="prod9">ExpresionGeneral</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               { <a href="#prod10">Expresion</a> | <a href="#prod21">
+               ExpresionVacia</a> }
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod10" id="prod10">Expresion</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline" nowrap="nowrap">
+                {"apagate"<br />
+							  | "gira-izquierda"<br />
+						    | "avanza"<br />
+						    | "coge-zumbador"<br />
+						    | "deja-zumbador"<br />
+						    | "sal-de-instruccion"<br />
+                | <a href="#prod20">ExpresionLlamada</a><br />
+                | <a href="#prod12">ExpresionSi</a><br />
+                | <a href="#prod13">ExpresionMientras</a><br />
+                | <a href="#prod14">ExpresionPara</a><br />
+								| "inicio"<br />
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                 <a href="#prod9">ExpresionGeneral</a> [ ";"<br />
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							   <a href="#prod9">ExpresionGeneral</a> ]...<br />
+                 &nbsp;
+		   "fin" }           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod20" id="prod20">ExpresionLlamada</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               <a href="#Identifier">Identificador</a> [ "(" <a href="#prod22">
+               ExpresionEntera</a> ")" ]
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod12" id="prod12">ExpresionSi</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               "si" <a href="#prod23">Termino</a> "entonces"<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							 <a href="#prod10">Expresion</a><br />
+							 ["sino"<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		   <a href="#prod10">Expresion</a> ]           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod13" id="prod13">ExpresionMientras</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               "mientras" <a href="#prod23">Termino</a> "hacer"<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		   <a href="#prod10">Expresion</a>           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod14" id="prod14">ExpresionPara</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               "repetir" <a href="#prod22">ExpresionEntera</a> "veces"<br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		   <a href="#prod10">Expresion</a>           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod21" id="prod21">ExpresionVacia</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod23" id="prod23">Termino</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               <a href="#prod24">ClausulaY</a> [ "o" <a href="#prod24">
+               ClausulaY</a> ]...
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod24" id="prod24">ClausulaY</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               <a href="#prod25">ClausulaNo</a> [ "y" <a href="#prod25">
+               ClausulaNo</a> ]...
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod25" id="prod25">ClausulaNo</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               [ "no" ] <a href="#prod26">ClausulaAtomica</a>
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod26" id="prod26">ClausulaAtomica</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               { "si-es-cero" "(" <a href="#prod22">ExpresionEntera</a> ")" | <a href= 
+               "#BooleanFunction">FuncionBooleana</a> | "(" <a href="#prod23">
+               Termino</a> ")" }
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod22" id="prod22">ExpresionEntera</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               { <a href="#Decimal">Decimal  </a> | <a href="#Identifier">
+               Identificador</a> | "precede" "(" <a href="#prod22">ExpresionEntera</a> ")" |
+               "sucede" "(" <a href="#prod22">ExpresionEntera</a> ")" }
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="Identifier" id="Identifier">Identificador</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               <a href="#Letra">Letra</a> [ <a href="#Letra">Letra</a> | <a
+               href="#Digit">Digito</a> | "-" ] ...
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="Decimal" id="Decimal">Decimal</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               { {"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"} [ <a href="#Digit">
+               Digito</a> ] ...<br />
+           | "0" }           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="String" id="String">Cadena</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               Cualquier cosa entre comillas en una única línea.
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="BooleanFunction" id="BooleanFunction">FuncionBooleana</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline" nowrap="nowrap">
+               {"frente-libre"<br />
+                | "frente-bloqueado"<br />
+                | "izquierda-libre"<br />
+                | "izquierda-bloqueada"<br />
+                | "derecha-libre"<br />
+                | "derecha-bloqueada"<br />
+                | "junto-a-zumbador"<br />
+                | "no-junto-a-zumbador"<br />
+                | "algun-zumbador-en-la mochila"<br />
+                | "ningun-zumbador-en-la mochila"<br />
+                | "orientado-al-norte"<br />
+                | "orientado-al-sur"<br />
+                | "orientado-al-este"<br />
+                | "orientado-al-oeste"<br />
+                | "no-orientado-al-norte"<br />
+                | "no-orientado-al-sur"<br />
+                | "no-orientado-al-este"<br />
+           | "no-orientado-al-oeste"}           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="Digit" id="Digit">Digito</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               {"0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"}
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="Letra" id="Letra">Letra</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               Una letra del alfabeto
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="EOF" id="EOF">EOF</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               Marca de final de fichero.
+            </td>
+         </tr>
+         <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+         </tr>
+         <tr>
+            <td colspan="3" valign="baseline">
+               <h2 align="center">
+                   Definiciones del Panel Instantaneo
+               </h2>
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod7" id="prod7">ProgramaInstantaneo</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               <a href="#prod8">ExpresionInstantanea</a> [ ";"<br />
+							 <a href="#prod8">ExpresionInstantanea</a> ]...<br />
+		   <a href="#EOF">EOF</a>           </td>
+         </tr>
+         <tr>
+            <td align="right" valign="baseline">
+               <a name="prod8" id="prod8">ExpresionInstantanea</a>
+            </td>
+            <td align="center" valign="baseline">
+               ::=
+            </td>
+            <td align="left" valign="baseline">
+               { <a href="#prod4">DeclaracionDeMetodo</a> | <a href="#prod5">
+               DeclaracionDeEnlace</a> | <a href="#prod9">ExpresionGeneral</a> }
+            </td>
+         </tr>
+      </table>
+      <h2 align="center">
+         <br />
+   Comentarios   </h2>
+      <table cellpadding="10" align="center" summary="Comment styles supported 
+      for Pascal syntax">
+         <tr>
+            <td>
+               Están soportados los dos estilos de comentario en Pascal: 
+               <ul>
+                  <li>
+                     { Comentario en la misma línea }
+                  </li>
+                  <li>
+                     (* Comentario en la misma línea *)
+                  </li>
+               </ul>
+               <p>
+                   Están soportados los dos estilos de comentario en Java/C++:
+               </p>
+               <ul>
+                  <li>
+                     /* Comentario en la misma línea */
+                  </li>
+                  <li>
+                     // Comentario para el resto de línea
+                  </li>
+               </ul>
+            </td>
+         </tr>
+      </table>
+      <p>
+           
+      </p>
+      <hr />
+      <p align="center">
+          Final-de-página
+      </p>
+	  
+	  <hr />
+	  <br />
+   </body>
+</html>
+
