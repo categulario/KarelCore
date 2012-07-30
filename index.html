@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>PyRel by developingo</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>PyRel</h1>
+        <h2>Karel el robot, reescrito y tuneado completamente en python</h2>
+        <a href="https://github.com/developingo/PyRel" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>PyRel</h1>
+
+<p>Xalapa, Ver. 2012</p>
+
+<h2>Descripción</h2>
+
+<p>Te gustaba tanto jugar con Karel que decidiste que lo querías en tu plataforma favorita: Linux, así que programaste como poseído en python hasta lograr que Karel corra en Linux, Windows, Mac, Solaris y cualquier otra bestia...</p>
+
+<h2>Problema</h2>
+
+<p>Karel requiere algunas librerías privativas para correr, escribe un programa que no las requiera, y que permita ejecutar códigos de Karel en un mundo.</p>
+
+<h2>Consideraciones</h2>
+
+<ul>
+<li>Karel necesita recursión para poder resolver problemas.</li>
+<li>Las estructuras se heredan del lenguaje en que es programado.</li>
+<li>Karel se lleva muy bien con los pingüinos.</li>
+<li>Un autómata finito o máquina de estado finito es un modelo computacional que realiza cómputos en forma automática sobre una entrada para producir una salida.</li>
+<li>No importa la posición ni orientación final de Karel.</li>
+<li>Solo tienes el verano para hacerlo.</li>
+</ul><h2>Proyecto</h2>
+
+<p>Karel el robot, escrito completamente en python. Por <a href="https://twitter.com/categulario">@Categulario</a></p>
+
+<p>El objetivo de este proyecto es ofrecer el lenguaje ''Karel'' orientado al aprendizaje de la programación para todas las plataformas y sin requerir librerías privativas.</p>
+
+<p>Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos cambios en la sintaxis pueden haber sido influenciados por la sintaxis de Python, sin embargo cualquier código en la sintaxis original de Karel será reconocido (Excepto por los códigos con comentarios de una sola línea con <code>//</code>).</p>
+
+<h2>Necesito ayuda!</h2>
+
+<p>Si conoces Karel el robot y tienes códigos escritos en PASCAL (el pascal de Karel) puedes hacer dos cosas por mi:</p>
+
+<ul>
+<li>Probar que los codigos sean correctamente reconocidos por el analizador sintáctico.</li>
+<li>Hecho lo anterior, poner un error de sintaxis en los códigos y ver si el analizador lo reconoce.</li>
+</ul><p>Cualquier irregularidad me avisan a <a href="mailto:a.wonderful.code@gmail.com">a.wonderful.code@gmail.com</a>, información sobre cómo verificar la sintaxis de los archivos está abajo.</p>
+
+<h2>Testing</h2>
+
+<p>Para probar alguno de los componentes hay que ejecutar el archivo <code>karel</code> en la carpeta raiz.</p>
+
+<p>Ejemplo:</p>
+
+<p><code>$ python karel check -k archivo.karel</code></p>
+
+<p>O también</p>
+
+<p><code>$ python karel run -k archivo.karel</code></p>
+
+<p>Es posible obtener una poca de ayuda con:</p>
+
+<p><code>$ python karel --help</code></p>
+
+<h2>TODO</h2>
+
+<p>Cosas importantes por hacer:</p>
+
+<ul>
+<li>Asegurar el buen funcionamiento de <code>sal-de-instruccion</code> y de <code>apagate</code> en <code>krunner</code> y <code>kgrammar</code>.</li>
+<li>Ajustar <code>ktokenizer.py</code> para agrupar símbolos como '++', '--', '&amp;&amp;', '||', '==', '//', '/*', '*/' etc...</li>
+<li>Implementar la ejecucion paso a paso o step_run.</li>
+<li>Implementar la GUI del IDE.</li>
+<li>Hacer un editor de mundos.</li>
+<li>Soportar la sintaxis Java de pascal.</li>
+<li>Extender la ayuda.</li>
+</ul><p>Algunas buenas ideas por implementar en este proyecto:</p>
+
+<ul>
+<li>Poner una sección con un tutorial de Karel a modo de 'misiones'.</li>
+</ul><h2>Notas</h2>
+
+<ul>
+<li>Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan. (Cuando competí en la OMI no saben cuánta lata me dio esto :) )</li>
+<li>Trato de hacer los mensajes de error lo más comprensibles posible, se aceptan comentarios.</li>
+<li>Se pueden hacer comentarios en una línea usando <code>#</code>, los comentarios de varias lineas se hacen con <code>/</code>, <code>"</code> y <code>'</code>.</li>
+<li>Los procedimientos tienen soporte para varias variables, quién sabe, con suerte esto abre las puertas a mas problemas.</li>
+<li>También en un delirio de locura podría incluir las variables <code>verdadero</code> y <code>falso</code>, actualmente ya son palabras reservadas.</li>
+<li>Se usará Scintilla para el editor de código y pygame para el visor del mundo, la interfaz correrá por cuenta de wxPython.</li>
+<li>Provisionalmente estoy usando JSON para el almacenamiento de los mundos, es la magia de los diccionarios en python.</li>
+<li>Se implementó la instruccion <code>sal-de-bucle</code> que rompe un ciclo, equivalente al <code>break</code> en otros lenguajes, para usarse en conjunto con las condiciones <code>verdadero</code> y <code>falso</code>.</li>
+<li>En <code>kgrammar.py</code> hay una directiva llamada <code>futuro</code> en el constructor, que activa las palabras <code>verdadero</code>, <code>falso</code> y <code>sal-de-instruccion</code>.</li>
+</ul><p>Todo el desarrollo del proyecto se llevó a cabo en Debian Wheezy, Ubuntu 12.04 y OpenSUSE usando el IDE Geany Tavira. Otras herramientas incluyen Git como sistema de control de versiones, Git-cola como interfaz para Git, y la magia del escritorio Gnome shell!!</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/developingo/PyRel/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/developingo/PyRel/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/developingo/PyRel"></a> is maintained by <a href="https://github.com/developingo">developingo</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-17396954-12");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
