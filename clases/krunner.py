@@ -208,6 +208,15 @@ class krunner:
             self.estado = 'OK'
             self.mensaje = 'Ejecucion terminada'
 
+    def step_run (self):
+        """ Ejecuta el codigo compilado paso a paso. """
+        pass
+
+    def step (self):
+        """ Avanza un paso en la ejecucion paso a paso, requiere
+        step_run para funcionar. """
+        pass
+
     def merge (self, lista_llaves, lista_valores):
         """ Combina un par de listas de la misma longitud en un
         diccionario """
