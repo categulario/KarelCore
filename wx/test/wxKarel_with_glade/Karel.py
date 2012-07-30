@@ -71,8 +71,8 @@ class KarelFrame(wx.Frame):
         self.text_ctrl_1 = wx.TextCtrl(self.panel_1, -1, _("0"))
         self.label_2 = wx.StaticText(self.panel_1, -1, _(u"Retraso en la ejecución (ms): "))
         self.text_ctrl_2 = wx.TextCtrl(self.panel_1, -1, _("500"))
-        self.panel_2 = wx.ScrolledWindow(self.panel_1, -1, style=wx.TAB_TRAVERSAL)
-        self.panel_3 = wx.Panel(self.panel_2, -1)
+        self.karelscrolledwindow = wx.ScrolledWindow(self.panel_1, -1, style=wx.TAB_TRAVERSAL)
+        self.panel_3 = wx.Panel(self.karelscrolledwindow, -1)
 
         self.__set_properties()
         self.__do_layout()
@@ -99,7 +99,7 @@ class KarelFrame(wx.Frame):
         self.label_1.SetToolTipString(_("Zumbadores en la mochila de Karel"))
         self.panel_3.SetMinSize((2040, 2040))
         self.panel_3.SetBackgroundColour(wx.Colour(142, 35, 35))
-        self.panel_2.SetScrollRate(10, 10)
+        self.karelscrolledwindow.SetScrollRate(10, 10)
         # end wxGlade
 
     def __do_layout(self):
@@ -117,8 +117,8 @@ class KarelFrame(wx.Frame):
         sizer_3.Add(self.text_ctrl_2, 0, 0, 0)
         sizer_1.Add(sizer_3, 1, wx.EXPAND, 0)
         sizer_5.Add(self.panel_3, 1, wx.EXPAND, 0)
-        self.panel_2.SetSizer(sizer_5)
-        sizer_1.Add(self.panel_2, 1, wx.EXPAND, 0)
+        self.karelscrolledwindow.SetSizer(sizer_5)
+        sizer_1.Add(self.karelscrolledwindow, 1, wx.EXPAND, 0)
         self.panel_1.SetSizer(sizer_1)
         sizer_1.AddGrowableRow(1)
         sizer_1.AddGrowableCol(0)
@@ -127,6 +127,7 @@ class KarelFrame(wx.Frame):
         self.SetSizer(sizer_2)
         self.Layout()
         # end wxGlade
+        self.karelscrolledwindow.Scroll(0, 1900)
 
     def on_exit(self, event):  # wxGlade: KarelFrame.<event_handler>
         print "metodo 'on_exit' no implementado"

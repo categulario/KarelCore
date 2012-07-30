@@ -89,7 +89,7 @@ class MyFrame(wx.Frame):
         self.SetTitle("Pruebas con el mundo de Karel")
         self.SetSize((400, 300))
         #self.mundoGUI.SetMinSize((2040, 2040))
-        self.panel_1.SetScrollRate(10, 10)
+        self.panel_1.SetScrollRate(20, 20)
         # end wxGlade
 
     def __do_layout(self):
@@ -101,6 +101,7 @@ class MyFrame(wx.Frame):
         sizer_1.Add(self.panel_1, 1, wx.EXPAND, 0)
         self.SetSizer(sizer_1)
         self.Layout()
+        self.panel_1.Scroll(0, 1900)
         # end wxGlade
 
 # end of class MyFrame
