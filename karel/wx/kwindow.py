@@ -4,11 +4,12 @@
 
 import wx
 from wx.stc import StyledTextCtrl
+from kworldpanel import kworldpanel
 
 # begin wxGlade: extracode
 # end wxGlade
 
-
+# end of class kworldpanel
 class KarelFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         # begin wxGlade: KarelFrame.__init__
@@ -72,7 +73,7 @@ class KarelFrame(wx.Frame):
         self.label_2 = wx.StaticText(self.panel_1, -1, _(u"Retraso en la ejecución (ms): "))
         self.text_ctrl_2 = wx.TextCtrl(self.panel_1, -1, _("500"))
         self.karelscrolledwindow = wx.ScrolledWindow(self.panel_1, -1, style=wx.TAB_TRAVERSAL)
-        self.panel_3 = wx.Panel(self.karelscrolledwindow, -1)
+        self.mundo_karel = kworldpanel(self.karelscrolledwindow)
 
         self.__set_properties()
         self.__do_layout()
@@ -97,8 +98,6 @@ class KarelFrame(wx.Frame):
         self.kprogram.SetForegroundColour(wx.Colour(3, 12, 87))
         self.kprogram.SetFont(wx.Font(11, wx.SCRIPT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.label_1.SetToolTipString(_("Zumbadores en la mochila de Karel"))
-        self.panel_3.SetMinSize((2040, 2040))
-        self.panel_3.SetBackgroundColour(wx.Colour(142, 35, 35))
         self.karelscrolledwindow.SetScrollRate(10, 10)
         # end wxGlade
 
@@ -116,7 +115,7 @@ class KarelFrame(wx.Frame):
         sizer_3.Add(self.label_2, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         sizer_3.Add(self.text_ctrl_2, 0, 0, 0)
         sizer_1.Add(sizer_3, 1, wx.EXPAND, 0)
-        sizer_5.Add(self.panel_3, 1, wx.EXPAND, 0)
+        sizer_5.Add(self.mundo_karel, 1, wx.EXPAND, 0)
         self.karelscrolledwindow.SetSizer(sizer_5)
         sizer_1.Add(self.karelscrolledwindow, 1, wx.EXPAND, 0)
         self.panel_1.SetSizer(sizer_1)
@@ -127,6 +126,7 @@ class KarelFrame(wx.Frame):
         self.SetSizer(sizer_2)
         self.Layout()
         # end wxGlade
+        #self.mundo_karel.inicializar()
         self.karelscrolledwindow.Scroll(0, 1900)
 
     def on_exit(self, event):  # wxGlade: KarelFrame.<event_handler>

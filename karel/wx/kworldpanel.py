@@ -42,15 +42,18 @@ class kworldpanel(wx.Panel):
         self.pared_h = wx.Bitmap('images/challenger/pared_h.png')
         self.pared_v = wx.Bitmap('images/challenger/pared_v.png')
 
+        self.__inicializar()
+
+    def __inicializar(self):
+        """"""
         for i in xrange(100):
             for j in xrange(100):
                 fondo = wx.StaticBitmap(self, -1, self.bkarel)
                 fondo.SetPosition((i*20+20, j*20+20))
+
         self.norte = wx.StaticBitmap(self, -1, self.knorte)
         self.norte.SetPosition((20, 2000))
-        self.__dibujar_bordes()
 
-    def __dibujar_bordes(self):
         for i in xrange(100):
             pared = wx.StaticBitmap(self, -1, self.pared_h)
             pared.SetPosition((i*20+20, 2018))
@@ -72,45 +75,41 @@ class kworldpanel(wx.Panel):
         self.norte.SetPosition((pos[0], pos[1]-20))
 
 
-class MyFrame(wx.Frame):
-    def __init__(self, *args, **kwds):
-        # begin wxGlade: MyFrame.__init__
-        kwds["style"] = wx.DEFAULT_FRAME_STYLE
-        wx.Frame.__init__(self, *args, **kwds)
-        self.panel_1 = wx.ScrolledWindow(self, -1, style=wx.TAB_TRAVERSAL)
-        self.mundoGUI = kworldpanel(self.panel_1)
-
-        self.__set_properties()
-        self.__do_layout()
-        # end wxGlade
-
-    def __set_properties(self):
-        # begin wxGlade: MyFrame.__set_properties
-        self.SetTitle("Pruebas con el mundo de Karel")
-        self.SetSize((400, 300))
-        #self.mundoGUI.SetMinSize((2040, 2040))
-        self.panel_1.SetScrollRate(20, 20)
-        # end wxGlade
-
-    def __do_layout(self):
-        # begin wxGlade: MyFrame.__do_layout
-        sizer_1 = wx.BoxSizer(wx.VERTICAL)
-        sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_2.Add(self.mundoGUI, 1, wx.EXPAND, 0)
-        self.panel_1.SetSizer(sizer_2)
-        sizer_1.Add(self.panel_1, 1, wx.EXPAND, 0)
-        self.SetSizer(sizer_1)
-        self.Layout()
-        self.panel_1.Scroll(0, 1900)
-        # end wxGlade
-
-# end of class MyFrame
-
-
 if __name__ == '__main__':
+    class MyFrame(wx.Frame):
+        def __init__(self, *args, **kwds):
+            # begin wxGlade: MyFrame.__init__
+            kwds["style"] = wx.DEFAULT_FRAME_STYLE
+            wx.Frame.__init__(self, *args, **kwds)
+            self.panel_1 = wx.ScrolledWindow(self, -1, style=wx.TAB_TRAVERSAL)
+            self.mundoGUI = kworldpanel(self.panel_1)
+
+            self.__set_properties()
+            self.__do_layout()
+            # end wxGlade
+
+        def __set_properties(self):
+            # begin wxGlade: MyFrame.__set_properties
+            self.SetTitle("Pruebas con el mundo de Karel")
+            self.SetSize((400, 300))
+            #self.mundoGUI.SetMinSize((2040, 2040))
+            self.panel_1.SetScrollRate(20, 20)
+            # end wxGlade
+
+        def __do_layout(self):
+            # begin wxGlade: MyFrame.__do_layout
+            sizer_1 = wx.BoxSizer(wx.VERTICAL)
+            sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
+            sizer_2.Add(self.mundoGUI, 1, wx.EXPAND, 0)
+            self.panel_1.SetSizer(sizer_2)
+            sizer_1.Add(self.panel_1, 1, wx.EXPAND, 0)
+            self.SetSizer(sizer_1)
+            self.Layout()
+            self.panel_1.Scroll(0, 1900)
+
+
     app = wx.App()
     frame = MyFrame(None)
-
     frame.mundoGUI.avanza()
 
     frame.Show(True)
