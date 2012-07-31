@@ -39,13 +39,14 @@ Si conoces Karel el robot y tienes códigos escritos en PASCAL (el pascal de Kar
 
 * Probar que los codigos sean correctamente reconocidos por el analizador sintáctico.
 * Hecho lo anterior, poner un error de sintaxis en los códigos y ver si el analizador lo reconoce.
+* También puedes descargar todas las fuentes y probar los componentes, ¡es divertido!
 
 Cualquier irregularidad me avisan a a.wonderful.code@gmail.com, información sobre cómo verificar la sintaxis de los archivos está abajo.
 
 Testing
 -------
 
-Para probar alguno de los componentes hay que ejecutar el archivo `karel` en la carpeta raiz.
+Para probar alguno de los componentes hay que ejecutar el archivo `karel` en la carpeta `bin/` (desde la consola, claro).
 
 Ejemplo:
 
@@ -64,17 +65,16 @@ TODO
 
 Cosas importantes por hacer:
 
-* Asegurar el buen funcionamiento de `sal-de-instruccion` y de `apagate` en `krunner` y `kgrammar`.
+* Asegurar el buen funcionamiento de `sal-de-instruccion`, `apagate` y `sal-de-bucle` en `krunner` y `kgrammar`.
 * Ajustar `ktokenizer.py` para agrupar símbolos como '++', '--', '&&', '||', '==', '//', '/\*', '\*/' etc...
 * Implementar la ejecucion paso a paso o step_run.
-* Implementar la GUI del IDE.
-* Hacer un editor de mundos.
 * Soportar la sintaxis Java de pascal.
 * Extender la ayuda.
 
 Algunas buenas ideas por implementar en este proyecto:
 
 * Poner una sección con un tutorial de Karel a modo de 'misiones'.
+* Crear la sintaxis ruby de Karel.
 
 Notas
 -----
@@ -83,11 +83,10 @@ Notas
 * Trato de hacer los mensajes de error lo más comprensibles posible, se aceptan comentarios.
 * Se pueden hacer comentarios en una línea usando `#`, los comentarios de varias lineas se hacen con `/`, `"` y `'`.
 * Los procedimientos tienen soporte para varias variables, quién sabe, con suerte esto abre las puertas a mas problemas.
-* También en un delirio de locura podría incluir las variables `verdadero` y `falso`, actualmente ya son palabras reservadas.
-* Se usará Scintilla para el editor de código y pygame para el visor del mundo, la interfaz correrá por cuenta de wxPython.
+* Estoy usando Scintilla para el editor de código y la interfaz corre por cuenta de wxPython.
 * Provisionalmente estoy usando JSON para el almacenamiento de los mundos, es la magia de los diccionarios en python.
 * Se implementó la instruccion `sal-de-bucle` que rompe un ciclo, equivalente al `break` en otros lenguajes, para usarse en conjunto con las condiciones `verdadero` y `falso`.
-* En `kgrammar.py` hay una directiva llamada `futuro` en el constructor, que activa las palabras `verdadero`, `falso` y `sal-de-instruccion`.
+* En `kgrammar.py` hay una directiva llamada `futuro` en el constructor, que activa las palabras `verdadero`, `falso`, `sal-de-instruccion` y `sal-de-bucle`.
 
 Todo el desarrollo del proyecto se llevó a cabo en Debian Wheezy, Ubuntu 12.04 y OpenSUSE usando el IDE Geany Tavira. Otras herramientas incluyen Git como sistema de control de versiones, Git-cola como interfaz para Git, y la magia del escritorio Gnome shell!!
 
