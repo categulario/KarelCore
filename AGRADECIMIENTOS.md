@@ -2,11 +2,11 @@ Se agradece la colaboración en este proyecto a:
 -----------------------------------------------
 
 * Alan Arturo Toriz Cruz
+* Daniel García Alvarado
 * Carlos Castro
 * Karla Angélica Hernández Lima
 * Mary Carmen Arellano
 * Aleida Caja de Cereal
-* Daniel García Alvarado
 * Alejandro Maldonado Navarro
 * Chuzpa
 
