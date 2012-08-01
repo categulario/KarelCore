@@ -5,6 +5,8 @@
 import wx
 from wx.stc import StyledTextCtrl
 from kworldpanel import kworldpanel
+import gettext
+gettext.install("Karel") # replace with the appropriate catalog name
 
 # begin wxGlade: extracode
 # end wxGlade
@@ -145,8 +147,8 @@ class KarelWindow(wx.App):
 # end of class KarelWindow
 
 if __name__ == "__main__":
-    import gettext
-    gettext.install("Karel") # replace with the appropriate catalog name
+    #import gettext
+    #gettext.install("Karel") # replace with the appropriate catalog name
 
     Karel = KarelWindow(0)
     Karel.MainLoop()
