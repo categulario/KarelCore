@@ -210,4 +210,6 @@ Copyright (c) 2012 Developingo
                 print info.ayuda('run')
                 print "No se proporciono ningun archivo..."
         else:
-            print info.cmd_help
+            import karel.wx.kwindow
+            Karel = karel.wx.kwindow.KarelWindow(0)
+            Karel.MainLoop()
