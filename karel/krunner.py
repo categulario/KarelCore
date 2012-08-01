@@ -38,7 +38,7 @@ class krunner:
     """ Ejecuta codigos compilados de Karel hasta el final o hasta
     encontrar un error relacionado con las condiciones del mundo. """
 
-    def __init__ (self, programa_compilado, mundo=None, limite_recursion=6500):
+    def __init__ (self, programa_compilado, mundo=None, limite_recursion=6500, limite_iteracion=6500):
         """ Inicializa el ejecutor dados un codigo fuente compilado y un
         mundo, tambien establece el limite para la recursion sobre una
         funcion antes de botar un error stack_overflow."""
@@ -52,6 +52,10 @@ class krunner:
         self.sal_de_instruccion = False
         self.sal_de_bucle = False
         self.limite_recursion = limite_recursion
+        self.limite_iteracion = limite_iteracion
+        #Las anteriores cantidades limitan que tan hondo se puede llegar
+        #mediante recursion, y que tanto puede iterar un bucle, esto para
+        #evitar problemas al evaluar codigos en un servidor.
         self.profundidad = 0 #El punto inicial en la recursion
         self.estado = "Ok" #El estado en que se encuentra
         self.mensaje = "" #Mensaje con que termina la ejecucion
@@ -70,17 +74,25 @@ class krunner:
                     if not self.corriendo or self.sal_de_instruccion or self.sal_de_bucle:
                         return
                 elif instruccion['estructura'] == 'repite':
+                    contador = 0
                     for i in xrange(self.expresion_entera(instruccion['argumento'], diccionario_variables)):
                         self.bloque(instruccion['cola'], diccionario_variables)
                         if not self.corriendo or self.sal_de_instruccion or self.sal_de_bucle:
                             self.sal_de_bucle = False
                             return
+                        contador += 1
+                        if not contador<self.limite_iteracion:
+                            raise KarelException(u"LongIteration! algun bucle se ha ciclado")
                 elif instruccion['estructura'] == 'mientras':
+                    contador = 0
                     while self.termino_logico(instruccion['argumento']['o'], diccionario_variables):
                         self.bloque(instruccion['cola'], diccionario_variables)
                         if not self.corriendo or self.sal_de_instruccion or self.sal_de_bucle:
                             self.sal_de_bucle = False
                             return
+                        contador += 1
+                        if not contador<self.limite_iteracion:
+                            raise KarelException(u"LongIteration! algun bucle se ha ciclado")
                 else:
                     if self.profundidad == self.limite_recursion:
                         raise KarelException(u"StackOverflow! Se ha alcanzado el límite de una recursion")
