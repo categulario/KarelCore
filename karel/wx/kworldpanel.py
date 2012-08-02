@@ -80,11 +80,14 @@ class kworldpanel(wx.Panel):
         item = self.menu_contextual.FindItemById(event.GetId())
         texto = item.GetText()
         if 'zumbador' in texto:
-            wx.MessageBox("Seleccionaste: '%s'" % texto)
+            #wx.MessageBox("Seleccionaste: '%s'" % texto)
+            num_zumbadores = texto.split(' ')[0]
+            if num_zumbadores in '1234':
+                posicion = self.pixeles_a_filas(self.ultima_posicion)
+                self.pon_zumbadores(posicion[1], posicion[0], int(num_zumbadores))
         else:
             casilla = self.pixeles_a_filas(self.ultima_posicion)
-            #wx.MessageBox("Estoy moviendo a Karel a "+str(casilla))
-            self.karel_a_casilla(casilla[0], casilla[1])
+            self.karel_a_casilla(casilla[0], casilla[1], texto.split(' ')[2])
 
     def pixeles_a_filas(self, posicion):
         """Obtiene una tupla en 'posicion' con coordenadas en pixeles y
@@ -177,10 +180,11 @@ class kworldpanel(wx.Panel):
             #Se trata de una pared vertical
             pass
 
-    def karel_a_casilla(self, fila, columna):
+    def karel_a_casilla(self, fila, columna, orientacion='norte'):
         """Manda a karel a una casilla especifica identificada por su
         fila y su columna. """
         self.karel.SetPosition((20+(columna-1)*20, 2000-(fila-1)*20))
+        self.orienta_a_karel(orientacion)
 
     def orienta_a_karel (self, orientacion):
         """ Cambia la orientacion de Karel. """
