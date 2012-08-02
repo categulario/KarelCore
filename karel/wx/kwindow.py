@@ -100,7 +100,7 @@ class KarelFrame(wx.Frame):
         self.kprogram.SetForegroundColour(wx.Colour(3, 12, 87))
         self.kprogram.SetFont(wx.Font(11, wx.SCRIPT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.label_1.SetToolTipString(_("Zumbadores en la mochila de Karel"))
-        self.karelscrolledwindow.SetScrollRate(10, 10)
+        self.karelscrolledwindow.SetScrollRate(20, 20)
         # end wxGlade
 
     def __do_layout(self):
