@@ -48,11 +48,58 @@ class kworldpanel(wx.Panel):
 
         self.pared_h = wx.Bitmap('images/challenger/pared_h.png')
         self.pared_v = wx.Bitmap('images/challenger/pared_v.png')
+        opciones = ['Karel al norte', 'Karel al sur', 'Karel al este', 'Karel al oeste', 'sin zumbadores', '1 zumbador']
+        opciones += [str(i)+' zumbadores' for i in xrange(2, 5)]
+        opciones += ['n zumbadores', 'infinitos zumbadores']
+        self.menu_contextual = wx.Menu()
+        self.ultima_posicion = (0, 0)
+        for text in opciones:
+            item = self.menu_contextual.Append(-1, text)
+            if 'oeste' in text:
+                self.menu_contextual.AppendSeparator()
+            self.Bind(wx.EVT_MENU, self.menu_contextual_item_seleccionado, item)
+
+        self.Bind(wx.EVT_CONTEXT_MENU, self.menu_contextual_evt)
+        self.Bind(wx.EVT_BUTTON, self.click_en_mundo)
 
         self.__inicializar()
 
+    def click_en_mundo (self, event):
+        """ Agrega paredes en ciertas zonas """
+        print "hey!"
+
+    def menu_contextual_evt(self, event):
+        """Muestra el menu contextual de Karel"""
+        pos = event.GetPosition()
+        pos = self.ScreenToClient(pos)
+        self.ultima_posicion = pos
+        self.PopupMenu(self.menu_contextual, pos)
+
+    def menu_contextual_item_seleccionado (self, event):
+        """ Function doc """
+        item = self.menu_contextual.FindItemById(event.GetId())
+        texto = item.GetText()
+        if 'zumbador' in texto:
+            wx.MessageBox("Seleccionaste: '%s'" % texto)
+        else:
+            casilla = self.pixeles_a_filas(self.ultima_posicion)
+            #wx.MessageBox("Estoy moviendo a Karel a "+str(casilla))
+            self.karel_a_casilla(casilla[0], casilla[1])
+
+    def pixeles_a_filas(self, posicion):
+        """Obtiene una tupla en 'posicion' con coordenadas en pixeles y
+        obtiene la fila y la columna a la que corresponde"""
+        return (101-posicion[1]/20, posicion[0]/20)
+
     def __inicializar(self):
         """inicializa el mundo gráfico"""
+        #Numeros de fila y columna
+        fuente = wx.Font(10, wx.SCRIPT, wx.NORMAL, wx.NORMAL)
+        for i in xrange(1, 101):
+            wx.StaticText(self, -1, str(101-i), (2, i*20)).SetFont(fuente)
+        for i in xrange(1, 101):
+            wx.StaticText(self, -1, str(i), (i*20+3, 2022)).SetFont(fuente)
+
         self.casillas = [[wx.StaticBitmap(self, -1, self.bkarel) for i in xrange(100)] for i in xrange(100)]
         i = 0
         j = 0
