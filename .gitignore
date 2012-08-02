@@ -2,6 +2,7 @@
 *.log
 *.geany
 *.txt
+*.class
 
 # Packages
 *.egg
