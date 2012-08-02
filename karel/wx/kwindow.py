@@ -89,7 +89,7 @@ class KarelFrame(wx.Frame):
         _icon = wx.EmptyIcon()
         _icon.CopyFromBitmap(wx.Bitmap("images/logo/karel.png", wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
-        self.SetSize((1038, 638))
+        self.SetSize((1038, 600))
         self.kframe_statusbar.SetStatusWidths([-1, 100, 120])
         # statusbar fields
         kframe_statusbar_fields = [_("Me llamo Karel"), _("Mochila: 0"), _("Estado: OK")]
@@ -147,8 +147,6 @@ class KarelWindow(wx.App):
 # end of class KarelWindow
 
 if __name__ == "__main__":
-    #import gettext
-    #gettext.install("Karel") # replace with the appropriate catalog name
 
     Karel = KarelWindow(0)
     Karel.MainLoop()
