@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  sin título.py
+#  drag.py
 #
 #  Copyright 2012 Developingo <a.wonderful.code@gmail.com>
 #

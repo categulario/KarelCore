@@ -9,44 +9,36 @@
   }, 
   "casillas": [
     {
-      "casilla": {
-        "zumbadores": 0, 
-        "paredes": [
-          "este"
-        ], 
-        "fila": 5, 
-        "columna": 4
-      }
+      "zumbadores": 0, 
+      "paredes": [
+        "este"
+      ], 
+      "fila": 5, 
+      "columna": 4
     }, 
     {
-      "casilla": {
-        "zumbadores": 0, 
-        "paredes": [
-          "sur"
-        ], 
-        "fila": 9, 
-        "columna": 8
-      }
+      "zumbadores": 0, 
+      "paredes": [
+        "sur"
+      ], 
+      "fila": 9, 
+      "columna": 8
     }, 
     {
-      "casilla": {
-        "zumbadores": 0, 
-        "paredes": [
-          "norte"
-        ], 
-        "fila": 8, 
-        "columna": 8
-      }
+      "zumbadores": 0, 
+      "paredes": [
+        "norte"
+      ], 
+      "fila": 8, 
+      "columna": 8
     }, 
     {
-      "casilla": {
-        "zumbadores": 50, 
-        "paredes": [
-          "oeste"
-        ], 
-        "fila": 5, 
-        "columna": 5
-      }
+      "zumbadores": 50, 
+      "paredes": [
+        "oeste"
+      ], 
+      "fila": 5, 
+      "columna": 5
     }
   ], 
   "dimensiones": {

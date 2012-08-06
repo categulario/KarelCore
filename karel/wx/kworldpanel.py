@@ -23,6 +23,7 @@
 #
 
 import wx
+import time
 
 class kworldpanel(wx.Panel):
     """ Define específicamente el área del mundo, de 100 x 100 casillas
@@ -41,6 +42,7 @@ class kworldpanel(wx.Panel):
         self.zumbadores = dict()
         for i in xrange(100):
             self.zumbadores.update({i+1: wx.Bitmap('zumbadores/bkarel_'+str(i+1)+'.png')})
+        self.zumbadores.update({0:self.bkarel})
         self.zumbadores.update({'inf': wx.Bitmap('zumbadores/bkarel_inf.png')})
         #Construcción del mundo
         self.orientacion = 'norte'
@@ -60,13 +62,22 @@ class kworldpanel(wx.Panel):
             self.Bind(wx.EVT_MENU, self.menu_contextual_item_seleccionado, item)
 
         self.Bind(wx.EVT_CONTEXT_MENU, self.menu_contextual_evt)
-        self.Bind(wx.EVT_BUTTON, self.click_en_mundo)
+
+        self.paredes = dict() #Diccionario con las paredes del mundo
 
         self.__inicializar()
 
     def click_en_mundo (self, event):
         """ Agrega paredes en ciertas zonas """
-        print "hey!"
+        casilla = event.GetEventObject()
+        pos = event.GetPosition()
+        orientacion = ''
+        if pos[0] < 6 or pos[0] > 14:
+            orientacion =  "vertical"
+        elif pos[1] < 6 or pos[1] > 14:
+            orientacion "horizontal"
+        #print self.pixeles_a_filas(casilla.GetPosition())
+        #print pos
 
     def menu_contextual_evt(self, event):
         """Muestra el menu contextual de Karel"""
@@ -82,9 +93,25 @@ class kworldpanel(wx.Panel):
         if 'zumbador' in texto:
             #wx.MessageBox("Seleccionaste: '%s'" % texto)
             num_zumbadores = texto.split(' ')[0]
-            if num_zumbadores in '1234':
-                posicion = self.pixeles_a_filas(self.ultima_posicion)
-                self.pon_zumbadores(posicion[1], posicion[0], int(num_zumbadores))
+            cantidad_zumbadores = 0
+            if num_zumbadores in '123456789':
+                cantidad_zumbadores = int(num_zumbadores)
+            elif num_zumbadores == 'infinitos':
+                cantidad_zumbadores = 'inf'
+            elif num_zumbadores == 'n':
+                dlg = wx.TextEntryDialog(None, "Cuantos zumbadores?",'Dame un numero de zumbadores')
+                if dlg.ShowModal() == wx.ID_OK:
+                    try:
+                        cantidad_zumbadores = int(dlg.GetValue())
+                        if cantidad_zumbadores<1 or cantidad_zumbadores>100:
+                            wx.MessageBox("El numero que me diste no esta en el rango de los permitidos")
+                            #obtener numero de zumbadores en casilla actual
+                            cantidad_zumbadores = 0 #TODO quitar
+                    except ValueError:
+                        wx.MessageBox("Vamos, eso no es un numero entero")
+                dlg.Destroy()
+            posicion = self.pixeles_a_filas(self.ultima_posicion)
+            self.pon_zumbadores(posicion[1], posicion[0], cantidad_zumbadores)
         else:
             casilla = self.pixeles_a_filas(self.ultima_posicion)
             self.karel_a_casilla(casilla[0], casilla[1], texto.split(' ')[2])
@@ -99,9 +126,13 @@ class kworldpanel(wx.Panel):
         #Numeros de fila y columna
         fuente = wx.Font(10, wx.SCRIPT, wx.NORMAL, wx.NORMAL)
         for i in xrange(1, 101):
+            #Paredes de las orillas en las filas
             wx.StaticText(self, -1, str(101-i), (2, i*20)).SetFont(fuente)
+            wx.StaticText(self, -1, str(101-i), (2022, i*20)).SetFont(fuente)
         for i in xrange(1, 101):
+            #paredes en las orillas de las columnas
             wx.StaticText(self, -1, str(i), (i*20+3, 2022)).SetFont(fuente)
+            wx.StaticText(self, -1, str(i), (i*20+3, 2)).SetFont(fuente)
 
         self.casillas = [[wx.StaticBitmap(self, -1, self.bkarel) for i in xrange(100)] for i in xrange(100)]
         i = 0
@@ -110,6 +141,7 @@ class kworldpanel(wx.Panel):
             j = 0
             for casilla in fila:
                 casilla.SetPosition((i*20+20, j*20+20))
+                casilla.Bind(wx.EVT_LEFT_UP, self.click_en_mundo)
                 j += 1
             i += 1
 
@@ -169,16 +201,42 @@ class kworldpanel(wx.Panel):
         actual"""
         self.casillas[fila-1][100-columna].SetBitmap(self.zumbadores[cantidad])
 
-    def agrega_pared (self, casilla, orientacion):
+    def conmutar_pared (self, fila, columna, orientacion):
         """ Agrega una pared al mundo y la pinta.
         casilla es una tupla con la fila, columna
         orientacion es la cadena que dice pa'donde' """
         if orientacion == 'norte':
             #Se trata de una pared horizontal
-            pass
+            if self.paredes.has_key((fila, columna)):
+                if self.paredes[(fila, columna)]['norte']:
+                    self.paredes[(fila, columna)]['norte'].Destroy()
+                else:
+                    self.paredes[(fila, columna)]['norte'] = wx.StaticBitmap(self, -1, self.pared_h)
+                    self.paredes[(fila, columna)]['norte'].SetPosition((20+(columna-1)*20, 1998-(fila-1)*20))
+            else:
+                self.paredes.update({
+                    (fila, columna): {
+                        'norte': wx.StaticBitmap(self, -1, self.pared_h),
+                        'este': None
+                    }
+                })
+                self.paredes[(fila, columna)]['norte'].SetPosition((20+(columna-1)*20, 1998-(fila-1)*20))
         elif orientacion == 'este':
             #Se trata de una pared vertical
-            pass
+            if self.paredes.has_key((fila, columna)):
+                if self.paredes[(fila, columna)]['este']:
+                    self.paredes[(fila, columna)]['este'].Destroy()
+                else:
+                    self.paredes[(fila, columna)]['este'] = wx.StaticBitmap(self, -1, self.pared_v)
+                    self.paredes[(fila, columna)]['este'].SetPosition((38+(columna-1)*20, 1998-(fila-1)*20))
+            else:
+                self.paredes.update({
+                    (fila, columna): {
+                        'norte': None,
+                        'este': wx.StaticBitmap(self, -1, self.pared_h)
+                    }
+                })
+                self.paredes[(fila, columna)]['este'].SetPosition((20+(columna-1)*20, 1998-(fila-1)*20))
 
     def karel_a_casilla(self, fila, columna, orientacion='norte'):
         """Manda a karel a una casilla especifica identificada por su
@@ -229,22 +287,17 @@ if __name__ == '__main__':
 
     app = wx.App()
     frame = MyFrame(None)
-    frame.mundoGUI.karel_a_casilla(1, 3)
-
-    frame.mundoGUI.pon_zumbadores(2, 2, 'inf')
-    frame.mundoGUI.pon_zumbadores(8, 2, 100)
-    frame.mundoGUI.pon_zumbadores(2, 8, 45)
-    frame.mundoGUI.pon_zumbadores(3, 5, 1)
-    frame.mundoGUI.pon_zumbadores(6, 7, 19)
+    #frame.mundoGUI.karel_a_casilla(1, 3)
+    for i in xrange(1, 11):
+        frame.mundoGUI.conmutar_pared(i, 1, 'norte')
+        frame.mundoGUI.conmutar_pared(i, 1, 'este')
+    #frame.mundoGUI.pon_zumbadores(2, 2, 'inf')
+    #frame.mundoGUI.pon_zumbadores(8, 2, 100)
+    #frame.mundoGUI.pon_zumbadores(2, 8, 45)
+    #frame.mundoGUI.pon_zumbadores(3, 5, 1)
+    #frame.mundoGUI.pon_zumbadores(6, 7, 19)
 
     #frame.mundoGUI.orienta_a_karel('este')
-
-    #frame.mundoGUI.avanza()
-    #frame.mundoGUI.gira_izquierda()
-    #frame.mundoGUI.gira_izquierda()
-    #frame.mundoGUI.gira_izquierda()
-    #frame.mundoGUI.avanza()
-    #frame.mundoGUI.gira_izquierda()
 
     frame.Show(True)
     app.MainLoop()

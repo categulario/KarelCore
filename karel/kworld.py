@@ -304,12 +304,10 @@ class kworld:
         }
         for llave, valor in self.mundo['casillas'].iteritems():
             mundo['casillas'].append({
-                'casilla': {
-                    'fila': llave[0],
-                    'columna': llave[1],
-                    'zumbadores': valor['zumbadores'],
-                    'paredes': list(valor['paredes'])
-                }
+                'fila': llave[0],
+                'columna': llave[1],
+                'zumbadores': valor['zumbadores'],
+                'paredes': list(valor['paredes'])
             })
         f = file(nombrearchivo, 'w')
         if expandir:
@@ -324,9 +322,9 @@ class kworld:
         try:
             for casilla in casillas:
                 self.mundo['casillas'].update({
-                    (casilla['casilla']['fila'], casilla['casilla']['columna']): {
-                        'zumbadores': casilla['casilla']['zumbadores'],
-                        'paredes': set(casilla['casilla']['paredes'])
+                    (casilla['fila'], casilla['columna']): {
+                        'zumbadores': casilla['zumbadores'],
+                        'paredes': set(casilla['paredes'])
                     }
                 })
         except KeyError:
