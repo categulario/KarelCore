@@ -25,7 +25,42 @@
 import json
 from kutil import KarelException
 
-class kworld:
+def contrario (cardinal):
+    """ Suena ridículo, pero obtiene el punto cardinal contrario al
+    dado. """
+    puntos = {
+        'norte': 'sur',
+        'sur': 'norte',
+        'este': 'oeste',
+        'oeste': 'este'
+    }
+    return puntos[cardinal]
+
+def obten_casilla_avance (casilla, direccion):
+    """ Obtiene una casilla contigua dada una casilla de inicio y
+    una direccion de avance"""
+    if direccion == 'norte':
+        return (casilla[0]+1, casilla[1])
+    elif direccion == 'sur':
+        return (casilla[0]-1, casilla[1])
+    elif direccion == 'este':
+        return (casilla[0], casilla[1]+1)
+    elif direccion == 'oeste':
+        return (casilla[0], casilla[1]-1)
+
+def rotado (cardinal):
+    """ Obtiene la orientación resultado de un gira-izquierda en
+    Karel """
+    puntos = {
+        'norte': 'oeste',
+        'oeste': 'sur',
+        'sur': 'este',
+        'este': 'norte'
+    }
+    return puntos[cardinal]
+
+
+class kworld(object):
     """ Representa el mundo de Karel """
 
     def __init__ (self, filas=100, columnas=100, karel_pos=(1,1), orientacion='norte', mochila=0, casillas=dict(), archivo=None):
@@ -55,44 +90,73 @@ class kworld:
             if not self.carga_archivo(archivo):
                 raise KarelException("El archivo de mundo que me diste esta dañado!")
 
-    def agrega_pared (self, coordenadas, posicion):
+    def conmuta_pared (self, coordenadas, orientacion):
         """ Agrega una pared al mundo, si es que está permitido, el
         atributo 'coordenadas' es una tupla con la fila y columna de la
-        casilla afectada, posicion es una cadena que indica si se pone
+        casilla afectada, orientacion es una cadena que indica si se pone
         arriba, abajo, a la izquierda o a la derecha. """
         if 0<coordenadas[0]<self.mundo['dimensiones']['filas']+1 and 0<coordenadas[1]<self.mundo['dimensiones']['columnas']+1:
-            #Los dats de las coordenadas son validos
-            try:
-                self.mundo['casillas'][coordenadas]['paredes'].add(posicion)
-            except KeyError:
+            agregar = True #Indica si agregamos o quitamos la pared
+            if self.mundo['casillas'].has_key(coordenadas):
+                #Puede existir una pared
+                if orientacion in self.mundo['casillas'][coordenadas]['paredes']:
+                    #Ya existe la pared, la quitamos
+                    self.mundo['casillas'][coordenadas]['paredes'].remove(orientacion)
+                    agregar = False
+                else:
+                    #no existe la pared, la agregamos
+                    self.mundo['casillas'][coordenadas]['paredes'].add(orientacion)
+            else:
+                #No existe el indice, tampoco la pared, asi que se agrega
                 self.mundo['casillas'].update({
                     coordenadas: {
-                        'zumbadores': 0,
-                        'paredes': set([posicion])
+                        'paredes': set([orientacion]),
+                        'zumbadores': 0
                     }
                 })
-            try:
-                self.mundo['casillas'][self.obten_casilla_avance(coordenadas, posicion)]['paredes'].add(self.contrario(posicion))
-            except KeyError:
-                self.mundo['casillas'].update({
-                    self.obten_casilla_avance(coordenadas, posicion): {
-                        'zumbadores': 0,
-                        'paredes': set([self.contrario(posicion)])
-                    }
-                })
+            #Debemos conmutar la pared en la casilla opuesta
+            casilla_opuesta = obten_casilla_avance(coordenadas, orientacion)
+            posicion_opuesta = contrario(orientacion)
+            if 0<casilla_opuesta[0]<self.mundo['dimensiones']['filas']+1 and 0<casilla_opuesta[1]<self.mundo['dimensiones']['columnas']+1:
+                #no es una casilla en los bordes
+                if agregar:
+                    #Agregamos una pared
+                    if self.mundo['casillas'].has_key(casilla_opuesta):
+                        #Del otro lado si existe registro
+                        self.mundo['casillas'][casilla_opuesta]['paredes'].add(posicion_opuesta)
+                    else:
+                        #Tampoco hay registro del otro lado
+                        self.mundo['casillas'].update({
+                            casilla_opuesta: {
+                                'paredes': set([posicion_opuesta]),
+                                'zumbadores': 0
+                            }
+                        })
+                else:
+                    #quitamos una pared, asumimos que existe el registro
+                    #del lado opuesto
+                    self.mundo['casillas'][casilla_opuesta]['paredes'].remove(posicion_opuesta)
+            #Operaciones de limpieza para ahorrar memoria
+            if not (self.mundo['casillas'][coordenadas]['paredes'] or self.mundo['casillas'][coordenadas]['zumbadores']):
+                del self.mundo['casillas'][coordenadas]
+            if not (self.mundo['casillas'][casilla_opuesta]['paredes'] or self.mundo['casillas'][casilla_opuesta]['zumbadores']):
+                del self.mundo['casillas'][casilla_opuesta]
 
-    def agrega_zumbadores (self, posicion, cantidad):
+    def pon_zumbadores (self, posicion, cantidad):
         """ Agrega zumbadores al mundo en la posicion dada """
         if 0<posicion[0]<self.mundo['dimensiones']['filas']+1 and 0<posicion[1]<self.mundo['dimensiones']['columnas']+1:
-            try:
+            if self.mundo['casillas'].has_key(posicion):
                 self.mundo['casillas'][posicion]['zumbadores'] = cantidad
-            except KeyError:
+            else:
                 self.mundo['casillas'].update({
                     posicion: {
                         'zumbadores': cantidad,
                         'paredes': set()
                     }
                 })
+            #Limpiamos la memoria si es necesario
+            if not (self.mundo['casillas'][posicion]['paredes'] or self.mundo['casillas'][posicion]['zumbadores']):
+                del self.mundo['casillas'][posicion]
 
     def avanza (self, test=False):
         """ Determina si puede karel avanzar desde la posición en la que
@@ -100,7 +164,7 @@ class kworld:
         verdadero solo ensaya. """
         #Determino primero si está en los bordes
         if self.frente_libre():
-            self.mundo['karel']['posicion'] = self.obten_casilla_avance(self.mundo['karel']['posicion'], self.mundo['karel']['orientacion'])
+            self.mundo['karel']['posicion'] = obten_casilla_avance(self.mundo['karel']['posicion'], self.mundo['karel']['orientacion'])
             return True
         else:
             return False
@@ -109,7 +173,7 @@ class kworld:
         """ Gira a Karel 90° a la izquierda, obteniendo una nueva
         orientación. Si el parámetro test es verdadero solo ensaya"""
         if not test:
-            self.mundo['karel']['orientacion'] = self.rotado(self.mundo['karel']['orientacion'])
+            self.mundo['karel']['orientacion'] = rotado(self.mundo['karel']['orientacion'])
 
     def coge_zumbador (self, test=False):
         """ Determina si Karel puede coger un zumbador, si es posible lo
@@ -137,12 +201,12 @@ class kworld:
         posicion = self.mundo['karel']['posicion']
         if self.algun_zumbador_en_la_mochila():
             if not test:
-                try:
+                if self.mundo['casillas'].has_key(posicion):
                     if self.mundo['casillas'][posicion]['zumbadores'] != 'inf':
                         self.mundo['casillas'][posicion]['zumbadores'] += 1
                         if self.mundo['karel']['mochila'] != 'inf':
                             self.mundo['karel']['mochila'] -= 1
-                except KeyError:
+                else:
                     self.mundo['casillas'].update({
                         posicion: {
                             'zumbadores': 1,
@@ -151,6 +215,8 @@ class kworld:
                     })
                     if self.mundo['karel']['mochila'] != 'inf':
                         self.mundo['karel']['mochila'] -= 1
+            if not (self.mundo['casillas'][posicion]['paredes'] or self.mundo['casillas'][posicion]['zumbadores']):
+                del self.mundo['casillas'][coordenadas]
             return True
         else:
             return False
@@ -198,7 +264,7 @@ class kworld:
         if not self.mundo['casillas'].has_key(posicion):
             return True #No hay un registro para esta casilla, no hay paredes
         else:
-            if self.rotado(direccion) in self.mundo['casillas'][posicion]['paredes']:
+            if rotado(direccion) in self.mundo['casillas'][posicion]['paredes']:
                 return False
             else:
                 return True
@@ -222,7 +288,7 @@ class kworld:
         if not self.mundo['casillas'].has_key(posicion):
             return True #No hay un registro para esta casilla, no hay paredes extra
         else:
-            if self.rotado(self.rotado(self.rotado(direccion))) in self.mundo['casillas'][posicion]['paredes']:
+            if rotado(rotado(rotado(direccion))) in self.mundo['casillas'][posicion]['paredes']:
                 return False
             else:
                 return True
@@ -252,40 +318,6 @@ class kworld:
             return True
         else:
             return False
-
-    def obten_casilla_avance (self, casilla, direccion):
-        """ Obtiene una casilla contigua dada una casilla de inicio y
-        una direccion de avance"""
-        if direccion == 'norte':
-            return (casilla[0]+1, casilla[1])
-        elif direccion == 'sur':
-            return (casilla[0]-1, casilla[1])
-        elif direccion == 'este':
-            return (casilla[0], casilla[1]+1)
-        elif direccion == 'oeste':
-            return (casilla[0], casilla[1]-1)
-
-    def contrario (self, cardinal):
-        """ Suena ridículo, pero obtiene el punto cardinal contrario al
-        dado. """
-        puntos = {
-            'norte': 'sur',
-            'sur': 'norte',
-            'este': 'oeste',
-            'oeste': 'este'
-        }
-        return puntos[cardinal]
-
-    def rotado (self, cardinal):
-        """ Obtiene la orientación resultado de un gira-izquierda en
-        Karel """
-        puntos = {
-            'norte': 'oeste',
-            'oeste': 'sur',
-            'sur': 'este',
-            'este': 'norte'
-        }
-        return puntos[cardinal]
 
     def exporta_mundo (self, nombrearchivo, expandir=False):
         """ Exporta las condiciones actuales del mundo usando algun
@@ -381,11 +413,6 @@ class kworld:
             'casillas': dict()
         }
 
-    def cumple_condicion (self, condiciones):
-        """ Compara el mundo actual con las condiciones de evaluacion
-        proporcionadas en el diccionario 'resultado' """
-        return False
-
 
 
 if __name__ == '__main__':
@@ -410,22 +437,23 @@ if __name__ == '__main__':
         }
     } #Representa la estructura de un mundo consistente
     mundo = kworld()
-    mundo.exporta_mundo('cosa.json', True)
-    mundo.agrega_pared((8, 8), 'norte')
-    mundo.agrega_pared((5, 5), 'oeste')
-    #mundo.agrega_pared((1, 1), 'norte')
+    #mundo.exporta_mundo('cosa.json', True)
+    mundo.conmuta_pared((8, 8), 'norte')
+    mundo.conmuta_pared((5, 5), 'oeste')
+    mundo.conmuta_pared((8, 8), 'norte')
+    #mundo.conmuta_pared((1, 1), 'norte')
     #mundo.avance_valido()
-    mundo.avanza()
-    mundo.avanza()
-    mundo.avanza()
-    mundo.avanza()
+    #mundo.avanza()
+    #mundo.avanza()
+    #mundo.avanza()
+    #mundo.avanza()
     #print mundo.coge_zumbador()
-    mundo.deja_zumbador()
-    mundo.gira_izquierda()
-    mundo.agrega_zumbadores((5, 5), 50)
+    #mundo.deja_zumbador()
+    #mundo.gira_izquierda()
+    #mundo.pon_zumbadores((5, 5), 50)
 
     #pprint(mundo.mundo)
-    mundo.exporta_mundo('mundo.json', True)
-    mundo.carga_archivo(file('cosa.json'))
+    #mundo.exporta_mundo('mundo.json', True)
+    #mundo.carga_archivo(file('cosa.json'))
     pprint(mundo.mundo)
 
