@@ -34,6 +34,19 @@ import sys
 
 sys.setrecursionlimit(10000) #Ampliamos el limite de recursion del sistema
 
+def merge (self, lista_llaves, lista_valores):
+    """ Combina un par de listas de la misma longitud en un
+    diccionario """
+    d = dict()
+    l_valores = lista_valores[:]
+    #Hacemos una copia de la lista, por que no queremos modificar
+    #la lista original, creeme, no lo queremos...
+    l_valores.reverse()
+    for i in lista_llaves:
+        d.update({i: l_valores.pop()})
+    return d
+
+
 class krunner:
     """ Ejecuta codigos compilados de Karel hasta el final o hasta
     encontrar un error relacionado con las condiciones del mundo. """
@@ -97,7 +110,7 @@ class krunner:
                     if self.profundidad == self.limite_recursion:
                         raise KarelException(u"StackOverflow! Se ha alcanzado el límite de una recursion")
                     self.profundidad += 1
-                    self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'], self.merge(self.arbol['funciones'][instruccion['nombre']]['params'], instruccion['argumento']))
+                    self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'], merge(self.arbol['funciones'][instruccion['nombre']]['params'], instruccion['argumento']))
                     self.profundidad -= 1
                     if self.sal_de_instruccion:
                         self.sal_de_instruccion = False
@@ -228,18 +241,6 @@ class krunner:
         """ Avanza un paso en la ejecucion paso a paso, requiere
         step_run para funcionar. """
         pass
-
-    def merge (self, lista_llaves, lista_valores):
-        """ Combina un par de listas de la misma longitud en un
-        diccionario """
-        d = dict()
-        l_valores = lista_valores[:]
-        #Hacemos una copia de la lista, por que no queremos modificar
-        #la lista original, creeme, no lo queremos...
-        l_valores.reverse()
-        for i in lista_llaves:
-            d.update({i: l_valores.pop()})
-        return d
 
 
 if __name__ == '__main__':
