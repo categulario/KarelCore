@@ -21,6 +21,8 @@
 #  MA 02110-1301, USA.
 #
 #
+import wxversion
+wxversion.select("2.8")
 
 import wx
 import time
@@ -74,6 +76,7 @@ class kworldpanel(wx.Panel, kworld):
         #Utilerías para pintar rápido
         self.brocha_rapida = False #Activa la brocha rápida
         self.valor_brocha = 1 #Indica cuántos zumbadores pinta la brocha
+        self.valores = [i for i in xrange(1, 101)]
         #El valor anterior puede ser 0..100, 'inf' o 'random'
 
         self.__inicializar()
@@ -85,8 +88,7 @@ class kworldpanel(wx.Panel, kworld):
         fila, columna = self.pixeles_a_filas(casilla.GetPosition())
         if self.brocha_rapida:
             if self.valor_brocha == 'random':
-                valores = [i for i in xrange(1, 101)]
-                self.pon_zumbadores(fila, columna, choice(valores))
+                self.pon_zumbadores(fila, columna, choice(self.valores))
             else:
                 self.pon_zumbadores(fila, columna, self.valor_brocha)
         else:
@@ -142,6 +144,7 @@ class kworldpanel(wx.Panel, kworld):
                     if dlg.ShowModal() == wx.ID_OK:
                         if dlg.GetValue() in ['inf', 'random']:
                             self.valor_brocha = dlg.GetValue()
+                            self.brocha_rapida = True
                         else:
                             try:
                                 cantidad_zumbadores = int(dlg.GetValue())
@@ -168,7 +171,7 @@ class kworldpanel(wx.Panel, kworld):
                         wx.MessageBox("Vamos, eso no es un numero entero")
                 dlg.Destroy()
             fila, columna = self.pixeles_a_filas(self.ultima_posicion)
-            if 0<fila<101 and 0<columna<101:
+            if 0<fila<101 and 0<columna<101 and not self.brocha_rapida:
                 self.pon_zumbadores(fila, columna, cantidad_zumbadores)
         else:
             fila, columna = self.pixeles_a_filas(self.ultima_posicion)
@@ -368,8 +371,8 @@ if __name__ == '__main__':
     #~ for i in xrange(1, 11):
         #~ frame.mundoGUI.conmuta_pared(i, 1, 'norte')
         #~ frame.mundoGUI.conmuta_pared(i, 1, 'este')
-    frame.mundoGUI.conmuta_pared(1, 1, 'norte')
-    frame.mundoGUI.conmuta_pared(1, 1, 'norte')
+    #frame.mundoGUI.conmuta_pared(1, 1, 'norte')
+    #frame.mundoGUI.conmuta_pared(1, 1, 'norte')
     #pprint(frame.mundoGUI.mundo)
     #
     #frame.mundoGUI.pon_zumbadores(8, 2, 100)
