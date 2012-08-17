@@ -130,6 +130,9 @@ Copyright (c) 2012 Developingo
                         t_fin = time()
                         print runner.estado, runner.mensaje
                         print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo"
+                        if '--dump' in sys.argv:
+                            #Hay que brincar el mundo
+                            pprint(runner.mundo.mundo)
                 except IndexError:
                     print "Falta el nombre de un archivo despues de '-k' o '-m'"
                 except OSError:
@@ -142,6 +145,7 @@ Copyright (c) 2012 Developingo
                 print info.ayuda('run')
                 print "No se proporciono ningun archivo..."
         elif 'check' in sys.argv:
+            #Verifica la sintaxis de un archivo .karel
             if '-k' in sys.argv:
                 try:
                     arch = sys.argv[sys.argv.index('-k')+1]
@@ -192,6 +196,7 @@ Copyright (c) 2012 Developingo
                             runner.run()
                             if runner.estado == 'OK':
                                 puntaje += caso['puntaje']
+                            #TODO verificar tambien el estado final de los casos
                             suma_puntos += caso['puntaje']
                             print 'caso', num_caso, runner.estado, runner.mensaje, caso['puntaje'], 'puntos'
                         t_fin = time()
