@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  sin título.py
+#  sin tÃ­tulo.py
 #
 #  Copyright 2012 Developingo <a.wonderful.code@gmail.com>
 #
@@ -52,18 +52,26 @@ particular.
 def ayuda(comando):
     """ Proporciona ayuda especifica de un comando en particular """
     comandos = {
-        "run": """Corre un programa en Karel.""",
+        "run": """Corre un programa en Karel.
+Para correr Karel en un mundo vacio prueba:
+$ karel run -k codigo.karel
+
+Para correr karel en un archivo de mundo prueba:
+$ karel run -k codigo.karel -m mundo.nmdo""",
         "check": """Verifica la sintaxis de un programa en Karel""",
         "check_all": """Verifica la sintaxis de todos los codigos dentro
 de una carpeta.""",
         "test": """Prueba un programa de Karel en un mundo de prueba,
-los mundos de prueba tienen la extension .kec""",
+los mundos de prueba tienen la extension .kec
+
+Para ejecutar un test prueba con:
+$ karel test -k codigo.karel -m mundo.nmdo""",
         "contest": """Evalua una carpeta de codigos de Karel dado un
 archivo de condiciones de evaluacion."""
     }
     try:
         return comandos[comando]
-    except:
+    except KeyError:
         return "No existe ayuda para el comando '%s'. O el comando no existe!"%comando
 
 #TODO mejorar la ayuda

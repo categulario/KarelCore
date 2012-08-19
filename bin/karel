@@ -87,7 +87,7 @@ Copyright (c) 2012 Developingo
                     for arch in archivos:
                         if arch.endswith(".txt") or arch.endswith(".karel"):
                             file_count += 1
-                            grammar = kgrammar(flujo=open(carpeta+arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
+                            grammar = kgrammar(flujo=open(carpeta+arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
                             try:
                                 grammar.verificar_sintaxis()
                             except KarelException, ke:
@@ -117,7 +117,7 @@ Copyright (c) 2012 Developingo
                         mun = kworld()
                     arch = sys.argv[sys.argv.index('-k')+1]
                     runner = None
-                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
+                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
                     try:
                         grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
                     except KarelException, ke:
@@ -151,7 +151,7 @@ Copyright (c) 2012 Developingo
                     arch = sys.argv[sys.argv.index('-k')+1]
                     t_inicio = time()
 
-                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
+                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
                     try:
                         grammar.verificar_sintaxis()
                     except KarelException, ke:
@@ -172,16 +172,28 @@ Copyright (c) 2012 Developingo
         elif 'test' in sys.argv:
             if '-k' in sys.argv and '-m' in sys.argv:
                 try:
+                    resultado = { #Almacena el resultado de esta ejecución
+                        "resultado": "OK", #puede ser ERROR_COMPILACION Ó CASOS_INCOMPLETOS
+                        "mensaje": "Ejecución terminada",
+                        "casos": [],
+                        "puntaje": 0,
+                        "total": 0,
+                        "efectividad": 0.0,
+                        "tiempo_ejecucion": 0
+                    }
                     archivomundo = sys.argv[sys.argv.index('-m')+1]
                     f = file(archivomundo)
                     kec = json.load(f) #Tenemos el archivo de condiciones de evaluacion cargado.
                     arch = sys.argv[sys.argv.index('-k')+1]
-                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--future' in sys.argv)
+                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
                     try:
                         grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
                     except KarelException, ke:
-                        print "El archivo %s tiene errores:"%arch
-                        print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
+                        resultado['mensaje'] = "El archivo %s tiene errores: %s cerca de la linea %d"%(arch, ke[0], grammar.tokenizador.lineno)
+                        resultado['resultado'] = "ERROR_COMPILACION"
+                        if '--json' not in sys.argv:
+                            print "El archivo %s tiene errores:"%arch
+                            print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
                     else:
                         t_inicio = time()
                         puntaje = 0
@@ -189,20 +201,64 @@ Copyright (c) 2012 Developingo
                         suma_puntos = 0
                         for caso in kec['casos']:
                             num_caso += 1
-                            #pprint(caso['mundo'])
                             mun = kworld(filas=caso['mundo']['dimensiones']['filas'], columnas=caso['mundo']['dimensiones']['columnas'], karel_pos=tuple(caso['mundo']['karel']['posicion']), orientacion=caso['mundo']['karel']['orientacion'], mochila=caso['mundo']['karel']['mochila'])
                             mun.carga_casillas(caso['mundo']['casillas'])
                             runner = krunner(grammar.arbol, mundo=mun)
                             runner.run()
                             if runner.estado == 'OK':
-                                puntaje += caso['puntaje']
+                                all_ok = True
+                                if caso['resultado'].has_key('karel'):
+                                    #Debemos buscar la posicion de karel o su mochila
+                                    if caso['resultado']['karel'].has_key('posicion'):
+                                        #verificamos la posicion
+                                        if tuple(caso['resultado']['karel']['posicion']) != runner.mundo.mundo['karel']['posicion']:
+                                            all_ok = False
+                                            runner.mensaje = 'La posicion de Karel es incorrecta'
+                                    if caso['resultado']['karel'].has_key('orientacion'):
+                                        #verificamos la posicion
+                                        if caso['resultado']['karel']['orientacion'] != runner.mundo.mundo['karel']['orientacion']:
+                                            all_ok = False
+                                            runner.mensaje = 'La orientacion de Karel es incorrecta'
+                                    if caso['resultado']['karel'].has_key('mochila'):
+                                        #verificamos la posicion
+                                        if caso['resultado']['karel']['mochila'] != runner.mundo.mundo['karel']['mochila']:
+                                            all_ok = False
+                                            runner.mensaje = 'La cantidad de zumbadores en la mochila de Karel es incorrecta'
+                                if caso['resultado'].has_key('casillas'):
+                                    for casilla in caso['resultado']['casillas']:
+                                        fila, columna = casilla['fila'], casilla['columna']
+                                        if runner.mundo.mundo['casillas'].has_key((fila, columna)):
+                                            if runner.mundo.mundo['casillas'][(fila, columna)]['zumbadores'] != casilla['zumbadores']:
+                                                all_ok = False
+                                                runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta'
+                                        else:
+                                            all_ok = False
+                                            runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta'
+                                if all_ok:
+                                    puntaje += caso['puntaje']
+                                else:
+                                    runner.estado = 'ERROR'
+                                    resultado['resultado'] = "CASOS_INCOMPLETOS"
                             #TODO verificar tambien el estado final de los casos
                             suma_puntos += caso['puntaje']
-                            print 'caso', num_caso, runner.estado, runner.mensaje, caso['puntaje'], 'puntos'
+                            resultado['casos'].append({
+                                "terminacion": runner.estado,
+                                "mensaje": runner.mensaje,
+                                "puntos": caso['puntaje']
+                            })
+                            if '--json' not in sys.argv:
+                                print 'caso', num_caso, runner.estado, runner.mensaje, caso['puntaje'], 'puntos'
                         t_fin = time()
-                        print 'puntaje:', puntaje, '/', suma_puntos
-                        print 'efectividad:', puntaje/float(suma_puntos)
-                        print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo"
+                        resultado['puntaje'] = puntaje
+                        resultado['total'] = suma_puntos
+                        resultado['efectividad'] = puntaje/float(suma_puntos)
+                        resultado['tiempo_ejecucion'] = int((t_fin-t_inicio)*1000)
+                        if '--json' not in sys.argv:
+                            print 'puntaje:', puntaje, '/', suma_puntos
+                            print 'efectividad:', puntaje/float(suma_puntos)
+                            print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo"
+                    if '--json' in sys.argv:
+                        print json.dumps(resultado)
                 except IndexError:
                     print "Falta el nombre de un archivo despues de '-k' o '-m'"
                 except OSError:
@@ -213,8 +269,9 @@ Copyright (c) 2012 Developingo
                     print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
             else:
                 print info.ayuda('run')
-                print "No se proporciono ningun archivo..."
+                print
+                print "Son necesarios ambos, el programa y las condiciones de evaluacion..."
         else:
-            import karel.wx.kwindow
-            Karel = karel.wx.kwindow.KarelWindow(0)
+            import karel.kwindow
+            Karel = karel.kwindow.KarelWindow(0)
             Karel.MainLoop()

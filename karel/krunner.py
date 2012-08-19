@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 #  krunner.py
 #
@@ -23,8 +23,10 @@
 #
 """
 Clase capaz de ejecutar archivos de Karel, tomando el resultado de un
-an·lizis sint·ctico, y un mundo.
+an√°lizis sint√°ctico, y un mundo.
 """
+
+__all__ = ['merge', 'krunner']
 
 from kworld import kworld
 from kgrammar import kgrammar
@@ -108,7 +110,7 @@ class krunner:
                             raise KarelException(u"LongIteration! algun bucle se ha ciclado")
                 else:
                     if self.profundidad == self.limite_recursion:
-                        raise KarelException(u"StackOverflow! Se ha alcanzado el lÌmite de una recursion")
+                        raise KarelException(u"StackOverflow! Se ha alcanzado el l√≠mite de una recursion")
                     self.profundidad += 1
                     self.bloque(self.arbol['funciones'][instruccion['nombre']]['cola'], merge(self.arbol['funciones'][instruccion['nombre']]['params'], instruccion['argumento']))
                     self.profundidad -= 1
@@ -164,7 +166,7 @@ class krunner:
             return False
 
     def clausula_y (self, lista_expresiones, diccionario_variables):
-        """ Obtiene el resultado de una comparaciÛn 'y' entre terminos
+        """ Obtiene el resultado de una comparaci√≥n 'y' entre terminos
         logicos """
         for termino in lista_expresiones:
             if not self.clausula_no(termino, diccionario_variables):
@@ -262,7 +264,7 @@ if __name__ == '__main__':
         #grammar.guardar_compilado('codigo.kcmp', True)
         #pprint(grammar.arbol)
     except KarelException, ke:
-        print ke.args[0], "en la lÌnea", grammar.tokenizador.lineno
+        print ke.args[0], "en la l√≠nea", grammar.tokenizador.lineno
     else:
         mundo = kworld(mochila='inf')
         runner = krunner(grammar.arbol, mundo)

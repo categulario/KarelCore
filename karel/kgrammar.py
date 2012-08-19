@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 #  kgrammar.py
 #
@@ -24,6 +24,8 @@
 """
 Define la gramatica de Karel
 """
+
+__all__ = ['kgrammar']
 
 from ktokenizer import ktokenizer
 from kutil import KarelException
@@ -144,8 +146,8 @@ class kgrammar:
         #Toca verificar que todos los prototipos se hayan definido
         for funcion in self.prototipo_funciones.keys():
             if not self.funciones.has_key(funcion):
-                raise KarelException("La instrucciÛn '%s' tiene prototipo pero no fue definida"%funcion)
-        #Sigue el bloque con la lÛgica del programa
+                raise KarelException("La instrucci√≥n '%s' tiene prototipo pero no fue definida"%funcion)
+        #Sigue el bloque con la l√≥gica del programa
         if self.token_actual == 'inicia-ejecucion':
             self.avanza_token()
             if self.gen_arbol:
@@ -153,7 +155,7 @@ class kgrammar:
             else:
                 self.expresion_general([], False, False)
             if self.token_actual != 'termina-ejecucion':
-                raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque lÛgico del programa, encontrÈ '%s'"%self.token_actual)
+                raise KarelException("Se esperaba 'termina-ejecucion' al final del bloque l√≥gico del programa, encontr√© '%s'"%self.token_actual)
             else:
                 self.avanza_token()
 
@@ -285,7 +287,7 @@ class kgrammar:
         nombre_funcion = ''
 
         if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
-            raise KarelException("Se esperaba un nombre de procedimiento v√°lido, '%s' no lo es"%self.token_actual)
+            raise KarelException("Se esperaba un nombre de procedimiento v√É¬°lido, '%s' no lo es"%self.token_actual)
 
         if self.funciones.has_key(self.token_actual):
             raise KarelException("Ya se ha definido una funcion con el nombre '%s'"%self.token_actual)
@@ -310,10 +312,10 @@ class kgrammar:
             requiere_parametros = True
             while True:
                 if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
-                    raise KarelException("Se esperaba un nombre de variable, '%s' no es v·lido"%self.token_actual)
+                    raise KarelException("Se esperaba un nombre de variable, '%s' no es v√°lido"%self.token_actual)
                 else:
                     if self.token_actual in self.funciones[nombre_funcion]:
-                        raise KarelException("La funcion '%s' ya tiene un par·metro con el nombre '%s'"%(nombre_funcion, self.token_actual))
+                        raise KarelException("La funcion '%s' ya tiene un par√°metro con el nombre '%s'"%(nombre_funcion, self.token_actual))
                     else:
                         self.funciones[nombre_funcion].append(self.token_actual)
                         self.avanza_token()
@@ -324,7 +326,7 @@ class kgrammar:
                     elif self.token_actual == ',':
                         self.avanza_token()
                     else:
-                        raise KarelException("Se esperaba ',', encontrÈ '%s'"%self.token_actual)
+                        raise KarelException("Se esperaba ',', encontr√© '%s'"%self.token_actual)
             if self.gen_arbol:
                 self.arbol['funciones'][nombre_funcion]['params'] = self.funciones[nombre_funcion]
         else:
@@ -340,9 +342,9 @@ class kgrammar:
             self.avanza_token()
 
         if self.prototipo_funciones.has_key(nombre_funcion):
-            #Hay que verificar que se defina como se planeÛ
+            #Hay que verificar que se defina como se plane√≥
             if len(self.prototipo_funciones[nombre_funcion]) != len(self.funciones[nombre_funcion]):
-                raise KarelException("La funciÛn '%s' no est· definida como se planeÛ en el prototipo, verifica el n˙mero de variables"%nombre_funcion)
+                raise KarelException("La funci√≥n '%s' no est√° definida como se plane√≥ en el prototipo, verifica el n√∫mero de variables"%nombre_funcion)
 
         if self.gen_arbol:
             self.arbol['funciones'][nombre_funcion]['cola'] = self.expresion(self.funciones[nombre_funcion], True, False)
@@ -364,7 +366,7 @@ class kgrammar:
             DeclaracionDePrototipo ::= "DEFINE-PROTOTIPO-INSTRUCCION" Identificador ["(" Identificador ")"]
         }
         Los prototipos son definiciones de funciones que se hacen previamente
-        para poderse utilizar dentro de una funciÛn declarada antes.
+        para poderse utilizar dentro de una funci√≥n declarada antes.
         """
         if self.debug:
             print "<declaracion_de_prototipo>"
@@ -374,7 +376,7 @@ class kgrammar:
         self.avanza_token()
 
         if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
-            raise KarelException("Se esperaba un nombre de funciÛn, '%s' no es v·lido"%self.token_actual)
+            raise KarelException("Se esperaba un nombre de funci√≥n, '%s' no es v√°lido"%self.token_actual)
         if self.prototipo_funciones.has_key(self.token_actual):
             raise KarelException("Ya se ha definido un prototipo de funcion con el nombre '%s'"%self.token_actual)
         else:
@@ -390,10 +392,10 @@ class kgrammar:
             requiere_parametros = True
             while True:
                 if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
-                    raise KarelException("Se esperaba un nombre de variable, '%s' no es v·lido"%self.token_actual)
+                    raise KarelException("Se esperaba un nombre de variable, '%s' no es v√°lido"%self.token_actual)
                 else:
                     if self.token_actual in self.prototipo_funciones[nombre_funcion]:
-                        raise KarelException("El prototipo de funciÛn '%s' ya tiene un par·metro con el nombre '%s'"%(nombre_funcion, self.token_actual))
+                        raise KarelException("El prototipo de funci√≥n '%s' ya tiene un par√°metro con el nombre '%s'"%(nombre_funcion, self.token_actual))
                     else:
                         self.prototipo_funciones[nombre_funcion].append(self.token_actual)
                         self.avanza_token()
@@ -404,9 +406,9 @@ class kgrammar:
                     elif self.token_actual == ',':
                         self.avanza_token()
                     else:
-                        raise KarelException("Se esperaba ',', encontrÈ '%s'"%self.token_actual)
+                        raise KarelException("Se esperaba ',', encontr√© '%s'"%self.token_actual)
         else:
-            raise KarelException("Se esperaba ';' o un par·metro")
+            raise KarelException("Se esperaba ';' o un par√°metro")
 
         if requiere_parametros:
             self.avanza_token()
@@ -447,7 +449,7 @@ class kgrammar:
                        }{
 
         }
-        Recibe para comprobar una lista con las variables v·lidas en
+        Recibe para comprobar una lista con las variables v√°lidas en
         este contexto, tambien comprueba mediante c_funcion si esta en
         un contexto donde es valido el sal-de-instruccion.
         """
@@ -505,9 +507,9 @@ class kgrammar:
             if self.token_actual == 'fin':
                 self.avanza_token()
             else:
-                raise KarelException("Se esperaba 'fin' para concluir el bloque, encontrÈ '%s'"%self.token_actual)
+                raise KarelException("Se esperaba 'fin' para concluir el bloque, encontr√© '%s'"%self.token_actual)
         elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
-            #Se trata de una instrucciÛn creada por el usuario
+            #Se trata de una instrucci√≥n creada por el usuario
             if self.prototipo_funciones.has_key(self.token_actual) or self.funciones.has_key(self.token_actual):
                 nombre_funcion = self.token_actual
                 if self.gen_arbol:
@@ -533,19 +535,19 @@ class kgrammar:
                         elif self.token_actual == ',':
                             self.avanza_token()
                         else:
-                            raise KarelException("Se esperaba ',', encontrÈ '%s'"%self.token_actual)
+                            raise KarelException("Se esperaba ',', encontr√© '%s'"%self.token_actual)
 
                     if self.prototipo_funciones.has_key(nombre_funcion):
                         if num_parametros != len(self.prototipo_funciones[nombre_funcion]):
-                            raise KarelException("Estas intentando llamar la funcion '%s' con %d par·metros, pero asÌ no fue definida"%(nombre_funcion, num_parametros))
+                            raise KarelException("Estas intentando llamar la funcion '%s' con %d par√°metros, pero as√≠ no fue definida"%(nombre_funcion, num_parametros))
                     else:
                         if num_parametros != len(self.funciones[nombre_funcion]):
-                            raise KarelException("Estas intentando llamar la funcion '%s' con %d par·metros, pero asÌ no fue definida"%(nombre_funcion, num_parametros))
+                            raise KarelException("Estas intentando llamar la funcion '%s' con %d par√°metros, pero as√≠ no fue definida"%(nombre_funcion, num_parametros))
                     self.avanza_token()
             else:
-                raise KarelException("La instrucciÛn '%s' no ha sido previamente definida, pero es utilizada"%self.token_actual)
+                raise KarelException("La instrucci√≥n '%s' no ha sido previamente definida, pero es utilizada"%self.token_actual)
         else:
-            raise KarelException("Se esperaba un procedimiento, '%s' no es v·lido"%self.token_actual)
+            raise KarelException("Se esperaba un procedimiento, '%s' no es v√°lido"%self.token_actual)
 
         if self.debug:
             print "</expresion>"
@@ -593,12 +595,12 @@ class kgrammar:
             elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
                 #Se trata de una variable definida por el usuario
                 if self.token_actual not in lista_variables:
-                    raise KarelException("La variable '%s' no est· definida en este contexto"%self.token_actual)
+                    raise KarelException("La variable '%s' no est√° definida en este contexto"%self.token_actual)
                 if self.gen_arbol:
                     retornar_valor = self.token_actual
                 self.avanza_token()
             else:
-                raise KarelException("Se esperaba un entero, variable, sucede o predece, '%s' no es v·lido"%self.token_actual)
+                raise KarelException("Se esperaba un entero, variable, sucede o predece, '%s' no es v√°lido"%self.token_actual)
         else:
             #Si se pudo convertir, avanzamos
             self.avanza_token()
@@ -612,7 +614,7 @@ class kgrammar:
         """
         Define una expresion general
         { Expresion | ExpresionVacia }
-        Generalmente se trata de una expresiÛn dentro de las etiquetas
+        Generalmente se trata de una expresi√≥n dentro de las etiquetas
         'inicio' y 'fin' o entre 'inicia-ejecucion' y 'termina-ejecucion'
         """
         if self.debug:
@@ -700,7 +702,7 @@ class kgrammar:
             self.expresion_entera(lista_variables)
 
         if self.token_actual != 'veces':
-            raise KarelException("Se esperaba la palabra 'veces', '%s' no es v·lido"%self.token_actual)
+            raise KarelException("Se esperaba la palabra 'veces', '%s' no es v√°lido"%self.token_actual)
 
         self.avanza_token()
         if self.gen_arbol:
@@ -803,7 +805,7 @@ class kgrammar:
                 retornar_valor = self.token_actual
             self.avanza_token()
         else:
-            raise KarelException("Se esperaba una condiciÛn como 'frente-libre', '%s' no es una condiciÛn"%self.token_actual)
+            raise KarelException("Se esperaba una condici√≥n como 'frente-libre', '%s' no es una condici√≥n"%self.token_actual)
 
         if self.debug:
             print "</funcion_booleana>"
@@ -856,13 +858,13 @@ class kgrammar:
         osea que puede ser usado en el nombre de una variable, las
         reglas son:
         * Debe comenzar en una letra
-        * SÛlo puede tener letras, n˙meros, '-' y '_' """
+        * S√≥lo puede tener letras, n√∫meros, '-' y '_' """
         es_valido = True
         i = 0
         for caracter in token:
             if i == 0:
                 if caracter not in 'abcdefghijklmnopqrstuvwxyz':
-                    #Un identificador v·lido comienza con una letra
+                    #Un identificador v√°lido comienza con una letra
                     es_valido = False
                     break
             else:
@@ -903,7 +905,7 @@ if __name__ == "__main__":
         #grammar.guardar_compilado('codigo.kcmp', True)
         pprint(grammar.arbol)
     except KarelException, ke:
-        print ke.args[0], "en la lÌnea", grammar.tokenizador.lineno
+        print ke.args[0], "en la l√≠nea", grammar.tokenizador.lineno
         print
         print "<syntax status='bad'/>"
     else:

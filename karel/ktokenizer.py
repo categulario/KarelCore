@@ -1,7 +1,25 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#
 """
-Un analizador lexico para archivos Karel, basado en el módulo shlex de python
+Un analizador lexico para archivos Karel, basado en el mÃ³dulo shlex de python
 """
+
+__all__ = ['ktokenizer']
+
 #TODO Hacer que agrupe los simbolos al escanear
 import os.path
 import sys
@@ -14,8 +32,8 @@ except ImportError:
     from StringIO import StringIO
 
 class ktokenizer:
-    """ Un tokenizador diseñado para la sintaxis de Karel el Robot,
-    osea un analizador léxico"""
+    """ Un tokenizador diseÃ±ado para la sintaxis de Karel el Robot,
+    osea un analizador lÃ©xico"""
     def __init__(self, instream=None, infile=None):
         if isinstance(instream, basestring):
             instream = StringIO(instream)
@@ -47,7 +65,7 @@ class ktokenizer:
                   % (self.instream, self.lineno)
 
     def push_token(self, tok):
-        "Pone un token en la pila obtenido por el método get_token"
+        "Pone un token en la pila obtenido por el mÃ©todo get_token"
         if self.debug >= 1:
             print "shlex: pushing token " + repr(tok)
         self.pushback.appendleft(tok)
@@ -176,7 +194,7 @@ class ktokenizer:
                     if self.debug >= 2:
                         print "shlex: I see EOF in escape state"
                     # XXX what error should be raised here?
-                    raise KarelException("Se colocó caracter de escape, pero no hay de dónde escapar =)")
+                    raise KarelException("Se colocÃ³ caracter de escape, pero no hay de dÃ³nde escapar =)")
                 # character may be escaped within quotes.
                 if escapedstate in self.quotes and \
                    nextchar != self.state and nextchar != escapedstate:

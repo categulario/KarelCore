@@ -21,6 +21,10 @@
 #  MA 02110-1301, USA.
 #
 #
+"""
+Construccion de el mundo de Karel
+"""
+__all__ = ['contrario', 'obten_casilla_avance', 'rotado', 'kworld']
 
 import json
 from kutil import KarelException
@@ -351,6 +355,7 @@ class kworld(object):
     def carga_casillas (self, casillas):
         """ Carga las casillas de un diccionario dado. """
         self.mundo_backup_c = self.mundo
+        self.mundo['casillas'] = dict()
         try:
             for casilla in casillas:
                 self.mundo['casillas'].update({
