@@ -14,30 +14,6 @@ gettext.install("Karel") # replace with the appropriate catalog name
 # begin wxGlade: extracode
 # end wxGlade
 
-# end of class kworldpanel
-
-class kworldpanel(wx.Panel):
-    def __init__(self, *args, **kwds):
-        # begin wxGlade: kworldpanel.__init__
-        kwds["style"] = wx.TAB_TRAVERSAL
-        wx.Panel.__init__(self, *args, **kwds)
-
-        self.__set_properties()
-        self.__do_layout()
-        # end wxGlade
-
-    def __set_properties(self):
-        # begin wxGlade: kworldpanel.__set_properties
-        self.SetMinSize((2040, 2040))
-        # end wxGlade
-
-    def __do_layout(self):
-        # begin wxGlade: kworldpanel.__do_layout
-        pass
-        # end wxGlade
-
-# end of class kworldpanel
-
 class LicenciaFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         # begin wxGlade: LicenciaFrame.__init__
@@ -51,8 +27,8 @@ class LicenciaFrame(wx.Frame):
         self.__set_properties()
         self.__do_layout()
 
-        self.Bind(wx.EVT_BUTTON, self.ok_btn_pressed, id=wx.ID_OK)
-        self.Bind(wx.EVT_BUTTON, self.save_btn_pressed, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_BUTTON, self.ok_btn_pressed, id=wxID_OK)
+        self.Bind(wx.EVT_BUTTON, self.save_btn_pressed, id=wxID_SAVE)
         # end wxGlade
 
     def __set_properties(self):
@@ -101,7 +77,7 @@ class KarelFrame(wx.Frame):
         wxglade_tmp_menu.Append(11, _(u"Configuración..."), "", wx.ITEM_NORMAL)
         wxglade_tmp_menu.AppendSeparator()
         wxglade_tmp_menu.Append(1, _("Salir"), _("Sair del programa por completo"), wx.ITEM_NORMAL)
-        self.kframe_menubar.Append(wxglade_tmp_menu, _("&Karel"))
+        self.kframe_menubar.Append(wxglade_tmp_menu, _("Karel"))
         wxglade_tmp_menu = wx.Menu()
         wxglade_tmp_menu.Append(21, _("Nuevo"), _("Crea un nuevo programa"), wx.ITEM_NORMAL)
         wxglade_tmp_menu.Append(22, _("Abrir..."), _(u"Abre un código de Karel"), wx.ITEM_NORMAL)
@@ -124,7 +100,7 @@ class KarelFrame(wx.Frame):
         self.SetMenuBar(self.kframe_menubar)
         # Menu Bar end
         self.kframe_statusbar = self.CreateStatusBar(3, 0)
-        self.licencia_frame = LicenciaFrame(self)
+
         # Tool Bar
         self.kframe_toolbar = wx.ToolBar(self, -1, style=wx.TB_HORIZONTAL | wx.TB_DOCKABLE | wx.TB_3DBUTTONS)
         self.SetToolBar(self.kframe_toolbar)
@@ -181,6 +157,7 @@ class KarelFrame(wx.Frame):
         self.kprogram.SetForegroundColour(wx.Colour(3, 12, 87))
         self.kprogram.SetFont(wx.Font(11, wx.SCRIPT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.label_1.SetToolTipString(_("Zumbadores en la mochila de Karel"))
+        self.mundo_karel.SetMinSize((2040, 2040))
         self.karelscrolledwindow.SetScrollRate(10, 10)
         # end wxGlade
 
@@ -191,7 +168,6 @@ class KarelFrame(wx.Frame):
         sizer_5 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_3 = wx.FlexGridSizer(1, 4, 0, 0)
         self.notebook_1.AddPage(self.notebook_1_pane_1, _("Pila"))
-        self.notebook_1.AddPage(self.notebook_1_pane_2, _("Consola"))
         self.keditorzone.SplitHorizontally(self.kprogram, self.notebook_1, -200)
         sizer_3.Add(self.label_1, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         sizer_3.Add(self.text_ctrl_1, 0, 0, 0)
