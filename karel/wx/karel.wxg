@@ -277,6 +277,9 @@
                             <tabs>
                                 <tab window="notebook_1_pane_1">Pila</tab>
                             </tabs>
+                            <tabs>
+                                <tab window="notebook_1_pane_2">Pila</tab>
+                            </tabs>
                             <object class="wxPanel" name="notebook_1_pane_1" base="EditPanel">
                                 <style>wxTAB_TRAVERSAL</style>
                             </object>
