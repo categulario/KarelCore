@@ -262,13 +262,6 @@ class ktokenizer:
             raise StopIteration
         return token
 
-def split(s, comments=False):
-    lex = ktokenizer(s)
-    lex.whitespace_split = True
-    if not comments:
-        lex.commenters = ''
-    return list(lex)
-
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         lexer = ktokenizer()

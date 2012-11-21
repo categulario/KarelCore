@@ -124,6 +124,7 @@ Copyright (c) 2012 Developingo
                         print "El archivo %s tiene errores:"%arch
                         print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
                     else:
+                        #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
                         runner = krunner(grammar.arbol, mundo=mun)
                         t_inicio = time()
                         runner.run()
@@ -272,6 +273,7 @@ Copyright (c) 2012 Developingo
                 print
                 print "Son necesarios ambos, el programa y las condiciones de evaluacion..."
         else:
-            import karel.kwindow
-            Karel = karel.kwindow.KarelWindow(0)
-            Karel.MainLoop()
+            print "nada que hacer "
+            #~ import karel.kwindow
+            #~ Karel = karel.kwindow.KarelWindow(0)
+            #~ Karel.MainLoop()
