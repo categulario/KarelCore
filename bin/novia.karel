@@ -1,0 +1,14 @@
+iniciar-programa
+    inicia-ejecucion
+        mientras no-orientado-al-sur hacer gira-izquierda;
+        mientras frente-libre hacer avanza;
+        repetir 3 veces gira-izquierda;
+        mientras frente-libre hacer avanza;
+        repetir 3 veces gira-izquierda; #En este momento estamos en la 1, 1, al norte
+        
+        #hay que hacer la busqueda
+        
+        
+        apagate;
+    termina-ejecucion
+finalizar-programa

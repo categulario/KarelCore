@@ -3,6 +3,7 @@ iniciar-programa
         mientras frente-libre hacer avanza;
         coge-zumbador;
         repite 2 veces gira-izquierda;
+        si junto-a-zumbador entonces avanza sino apagate;
         mientras frente-libre hacer avanza;
         deja-zumbador;
         apagate;
