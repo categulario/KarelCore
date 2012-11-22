@@ -17,11 +17,9 @@ Consideraciones
 ---------------
 
 * Karel necesita recursión para poder resolver problemas.
-* Las estructuras se heredan del lenguaje en que es programado.
 * Karel se lleva muy bien con los pingüinos.
 * Un autómata finito o máquina de estado finito es un modelo computacional que realiza cómputos en forma automática sobre una entrada para producir una salida.
 * No importa la posición ni orientación final de Karel.
-* Solo tienes el verano para hacerlo.
 
 Proyecto
 --------
@@ -30,7 +28,7 @@ Karel el robot, escrito completamente en python. Por [@Categulario](https://twit
 
 El objetivo de este proyecto es ofrecer el lenguaje ''Karel'' orientado al aprendizaje de la programación para todas las plataformas y sin requerir librerías privativas.
 
-Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos cambios en la sintaxis pueden haber sido influenciados por la sintaxis de Python, sin embargo cualquier código en la sintaxis original de Karel será reconocido (Excepto por los códigos con comentarios de una sola línea con `//`).
+Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos cambios en la sintaxis pueden haber sido influenciados por la sintaxis de Python, sin embargo cualquier código en la sintaxis original de Karel será reconocido.
 
 Necesito ayuda!
 ---------------
@@ -66,7 +64,6 @@ TODO
 Cosas importantes por hacer:
 
 * Asegurar el buen funcionamiento de `sal-de-instruccion`, `apagate` y `sal-de-bucle` en `krunner` y `kgrammar`.
-* Ajustar `ktokenizer.py` para agrupar símbolos como '++', '--', '&&', '||', '==', '//', '/\*', '\*/' etc...
 * Implementar la ejecucion paso a paso o step_run.
 * Soportar la sintaxis Java de pascal.
 * Extender la ayuda.
@@ -81,12 +78,12 @@ Notas
 
 * Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan. (Cuando competí en la OMI no saben cuánta lata me dio esto :) )
 * Trato de hacer los mensajes de error lo más comprensibles posible, se aceptan comentarios.
-* Se pueden hacer comentarios en una línea usando `#`, los comentarios de varias lineas se hacen con `/`, `"` y `'`.
+* Ya están soportados los comentarios de la sintaxis original de Karel.
 * Los procedimientos tienen soporte para varias variables, quién sabe, con suerte esto abre las puertas a mas problemas.
 * Estoy usando Scintilla para el editor de código y la interfaz corre por cuenta de wxPython.
 * Provisionalmente estoy usando JSON para el almacenamiento de los mundos, es la magia de los diccionarios en python.
 * Se implementó la instruccion `sal-de-bucle` que rompe un ciclo, equivalente al `break` en otros lenguajes, para usarse en conjunto con las condiciones `verdadero` y `falso`.
 * En `kgrammar.py` hay una directiva llamada `futuro` en el constructor, que activa las palabras `verdadero`, `falso`, `sal-de-instruccion` y `sal-de-bucle`.
 
-Todo el desarrollo del proyecto se llevó a cabo en Debian Wheezy, Ubuntu 12.04 y OpenSUSE usando el IDE Geany Tavira. Otras herramientas incluyen Git como sistema de control de versiones, Git-cola como interfaz para Git, y la magia del escritorio Gnome shell!!
+Todo el desarrollo del proyecto se llevó a cabo en Debian Wheezy, Ubuntu 12.04 y OpenSUSE usando el IDE Geany (Tavira, Gromia). Otras herramientas incluyen Git como sistema de control de versiones, Git-cola como interfaz para Git, y la magia del escritorio Gnome shell!!
 
