@@ -27,9 +27,10 @@ Define la gramatica de Karel
 
 __all__ = ['kgrammar']
 
-from ktokenizer import ktokenizer
+from klexer import klexer
 from kutil import KarelException
 from kutil import xml_prepare
+from string import ascii_letters
 import json
 import sys
 
@@ -93,8 +94,8 @@ class kgrammar:
             "sino"
         ] + self.instrucciones + self.condiciones + self.expresiones_enteras + self.estructuras
         self.debug = debug
-        self.tokenizador = ktokenizer(flujo, archivo)
-        self.token_actual = self.tokenizador.get_token().lower()
+        self.lexer = klexer(flujo, archivo)
+        self.token_actual = self.lexer.get_token().lower()
         self.prototipo_funciones = dict()
         self.funciones = dict()
         self.gen_arbol = False #Indica si se debe generar un arbol con las instrucciones
@@ -106,13 +107,13 @@ class kgrammar:
         # y que tiene por valores listas con las variables de dichas
         # funciones
         if self.debug:
-            print "<avanza_token new_token='%s' line='%d' />"%(self.token_actual, self.tokenizador.lineno)
+            print "<avanza_token new_token='%s' line='%d' col='%d' />"%(self.token_actual, self.lexer.linea, self.lexer.columna)
 
     def avanza_token (self):
         """ Avanza un token en el archivo """
-        siguiente_token = self.tokenizador.get_token().lower()
+        siguiente_token = self.lexer.get_token().lower()
         if self.debug:
-            print "<avanza_token new_token='%s' line='%d' />"%(siguiente_token, self.tokenizador.lineno)
+            print "<avanza_token new_token='%s' line='%d' col='%d' />"%(siguiente_token, self.lexer.linea, self.lexer.columna)
 
         if siguiente_token:
             self.token_actual = siguiente_token
@@ -321,7 +322,7 @@ class kgrammar:
                         self.avanza_token()
 
                     if self.token_actual == ')':
-                        self.tokenizador.push_token(')') #Devolvemos el token a la pila
+                        self.lexer.push_token(')') #Devolvemos el token a la pila
                         break
                     elif self.token_actual == ',':
                         self.avanza_token()
@@ -401,7 +402,7 @@ class kgrammar:
                         self.avanza_token()
 
                     if self.token_actual == ')':
-                        self.tokenizador.push_token(')') #Devolvemos el token a la pila
+                        self.lexer.push_token(')') #Devolvemos el token a la pila
                         break
                     elif self.token_actual == ',':
                         self.avanza_token()
@@ -530,7 +531,7 @@ class kgrammar:
                             self.expresion_entera(lista_variables)
                         num_parametros += 1
                         if self.token_actual == ')':
-                            #self.tokenizador.push_token(')') #Devolvemos el token a la pila
+                            #self.lexer.push_token(')') #Devolvemos el token a la pila
                             break
                         elif self.token_actual == ',':
                             self.avanza_token()
@@ -863,12 +864,12 @@ class kgrammar:
         i = 0
         for caracter in token:
             if i == 0:
-                if caracter not in 'abcdefghijklmnopqrstuvwxyz':
+                if caracter not in ascii_letters:
                     #Un identificador válido comienza con una letra
                     es_valido = False
                     break
             else:
-                if caracter not in self.tokenizador.wordchars:
+                if caracter not in self.lexer.palabras+self.lexer.numeros:
                     es_valido = False
                     break
             i += 1
