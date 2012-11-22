@@ -621,7 +621,7 @@ class kgrammar:
         if self.debug:
             print "<expresion_general params='%s'>"%xml_prepare(lista_variables)
         if self.gen_arbol:
-            retornar_valor = []
+            retornar_valor = [] #Una lista de funciones
 
         while self.token_actual != 'fin' and self.token_actual != 'termina-ejecucion':
             if self.gen_arbol:

@@ -33,6 +33,7 @@ from kgrammar import kgrammar
 from kutil import KarelException
 from ktokenizer import ktokenizer
 import sys
+from collections import deque
 
 sys.setrecursionlimit(10000) #Ampliamos el limite de recursion del sistema
 
@@ -68,6 +69,7 @@ class krunner:
         self.sal_de_bucle = False
         self.limite_recursion = limite_recursion
         self.limite_iteracion = limite_iteracion
+        self.pila_funciones = deque() #La pila de llamadas a funciones
         #Las anteriores cantidades limitan que tan hondo se puede llegar
         #mediante recursion, y que tanto puede iterar un bucle, esto para
         #evitar problemas al evaluar codigos en un servidor.
@@ -108,7 +110,7 @@ class krunner:
                         contador += 1
                         if not contador<self.limite_iteracion:
                             raise KarelException(u"LongIteration! algun bucle se ha ciclado")
-                else:
+                else: #Se trata de una función
                     if self.profundidad == self.limite_recursion:
                         raise KarelException(u"StackOverflow! Se ha alcanzado el límite de una recursion")
                     self.profundidad += 1
