@@ -268,12 +268,15 @@ if __name__ == '__main__':
     else:
         fil = sys.argv[1]
         lexer = ktokenizer(open(fil), fil)
+    i = 0
     while True:
         tt = lexer.get_token()
         if tt:
             print "Token: " + repr(tt), "\t\t","Line: " + str(lexer.lineno)
         else:
             break
+        i += 1
+    print "Hubo", i, "tokens"
 
 """
 FIN @Categulario
