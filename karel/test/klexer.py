@@ -51,6 +51,18 @@ class klexer(object):
             self.ultimo_caracter = self.caracter_actual
             return self.archivo.read(1)
 
+    def get_token(self):
+        """Obtiene el siguiente token. Si la pila tiene tokens le quita
+        uno, si no, obtiene el siguiente token del archivo"""
+        if len(self.pila_tokens)>0:
+            return self.pila_tokens.pop()
+        else:
+            return self.lee_token()
+
+    def push_token(self, token):
+        """Empuja un token en la pila"""
+        self.pila_tokens.append(token)
+
     def push_char(self, char):
         """Pone un caracter en la pila de caracteres"""
         self.pila_chars.append(char)
@@ -63,6 +75,9 @@ class klexer(object):
             self.columna += 1
             if not self.caracter_actual:
                 break
+            if self.tiene_cambio_de_linea:
+                self.linea += 1
+                self.tiene_cambio_de_linea = False
             if self.estado == self.ESTADO_COMENTARIO:
                 if self.debug:
                     print "Encontré", repr(self.caracter_actual), "en estado comentario"
@@ -72,7 +87,7 @@ class klexer(object):
                     if self.caracter_actual == '}' and self.abrir_comentario == '{':
                         self.estado = self.ESTADO_ESPACIO
                 elif self.caracter_actual == '\n':
-                    self.linea += 1
+                    self.tiene_cambio_de_linea = True
                     self.columna = 0
             elif self.estado == self.ESTADO_ESPACIO:
                 if self.debug:
@@ -89,7 +104,7 @@ class klexer(object):
                     self.push_char(self.caracter_actual) #Podria ser algo valido como ();,
                     self.estado = self.ESTADO_SIMBOLO
                 elif self.caracter_actual == '\n':
-                    self.linea += 1
+                    self.tiene_cambio_de_linea = True
                     self.columna = 0
             elif self.estado == self.ESTADO_NUMERO:
                 if self.debug:
@@ -105,6 +120,9 @@ class klexer(object):
                     self.push_char(self.caracter_actual)
                     break
                 elif self.caracter_actual in self.espacios:
+                    if self.caracter_actual == '\n':
+                        self.tiene_cambio_de_linea = True
+                        self.columna = 0
                     self.estado = self.ESTADO_ESPACIO
                     break #Terminamos este token
             elif self.estado == self.ESTADO_PALABRA:
@@ -120,7 +138,7 @@ class klexer(object):
                     break
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
-                        self.linea += 1
+                        self.tiene_cambio_de_linea = True
                         self.columna = 0
                     self.estado = self.ESTADO_ESPACIO
                     break #Terminamos este token
@@ -139,7 +157,8 @@ class klexer(object):
                 elif self.caracter_actual in self.palabras:
                     self.estado = self.ESTADO_PALABRA
                     self.push_char(self.caracter_actual)
-                    #break
+                    if self.token:
+                        break
                 elif self.caracter_actual in self.simbolos:
                     if self.ultimo_caracter == "(" and self.caracter_actual == '*':
                         self.token = ''
@@ -149,31 +168,41 @@ class klexer(object):
                         self.token += self.caracter_actual
                         #  self.push_char(self.caracter_actual)
                         break
+                    else:
+                        self.token += self.caracter_actual
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
-                        self.linea += 1
+                        self.tiene_cambio_de_linea = True
                         self.columna = 0
                     self.estado = self.ESTADO_ESPACIO
-                    break #Terminamos este token
+                    #break #Terminamos este token
         token = self.token
         self.token = ''
         return token
 
+    def __iter__(self):
+        return self
+
+    def next(self):
+        """Devuelve un token de la pila si no está vacía o devuelve el
+        siguiente token del archivo, esta función sirve al iterador de
+        tokens"""
+        token = self.get_token()
+        if token == '':
+            raise StopIteration
+        return token
+
 
 if __name__ == '__main__':
-    debug=1
-    if '--no-debug' in sys.argv:
-        debug=0
+    debug=0
+    if '-d' in sys.argv:
+        debug=1
     if len(sys.argv)>1:
         lexer = klexer(open(sys.argv[1]), sys.argv[1], debug=debug)
     else:
         lexer = klexer(sys.stdin, debug=debug)
     i=0
-    while True:
-        token = lexer.lee_token()
-        if token:
-            print repr(token)
-        else:
-            break
-        if i==5: break
+    for token in lexer:
+        print "Token:", repr(token), "\t\tLine:", lexer.linea
         i += 1
+    print "Hubo", i, "tokens"
