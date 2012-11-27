@@ -187,6 +187,7 @@ class klexer(object):
                         break
                     else:
                         self.token += self.caracter_actual
+                        break
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
                         self.tiene_cambio_de_linea = True
