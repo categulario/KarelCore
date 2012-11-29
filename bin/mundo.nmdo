@@ -16,7 +16,7 @@
         }
     ],
     "dimensiones": {
-    "columnas": 100,
-    "filas": 100
+        "columnas": 100,
+        "filas": 100
     }
 }

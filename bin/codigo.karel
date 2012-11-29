@@ -1,11 +1,20 @@
 iniciar-programa
+    define-nueva-instruccion cosa(m) como avanza;
+    define-nueva-instruccion verde como inicio
+    	repetir 5 veces gira-izquierda;
+    	si frente-libre entonces avanza;
+    	mientras frente-libre hacer avanza;
+    	cosa(5);
+    fin;
     inicia-ejecucion
-        mientras frente-libre hacer avanza;
-        coge-zumbador;
-        repite 2 veces gira-izquierda;
-        si junto-a-zumbador entonces avanza sino apagate;
-        mientras frente-libre hacer avanza;
-        deja-zumbador;
-        apagate;
+    	avanza;
+    	gira-izquierda;
+    	si frente-libre entonces inicio
+    		avanza;
+    	fin sino inicio
+    		gira-izquierda;
+    	fin;
+        apagate; (*un paso a la vez....*)
+        cosa(8);
     termina-ejecucion
 finalizar-programa

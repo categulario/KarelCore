@@ -1,0 +1,32 @@
+{
+  "karel": {
+    "posicion": [
+      1, 
+      1
+    ], 
+    "orientacion": "norte", 
+    "mochila": 0
+  }, 
+  "casillas": [
+    {
+      "zumbadores": 0, 
+      "paredes": [
+        "este"
+      ], 
+      "fila": 5, 
+      "columna": 4
+    }, 
+    {
+      "zumbadores": "inf", 
+      "paredes": [
+        "oeste"
+      ], 
+      "fila": 5, 
+      "columna": 5
+    }
+  ], 
+  "dimensiones": {
+    "columnas": 100, 
+    "filas": 100
+  }
+}
