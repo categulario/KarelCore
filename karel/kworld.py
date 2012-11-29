@@ -455,10 +455,10 @@ if __name__ == '__main__':
     #print mundo.coge_zumbador()
     #mundo.deja_zumbador()
     #mundo.gira_izquierda()
-    #mundo.pon_zumbadores((5, 5), 50)
+    mundo.pon_zumbadores((5, 5), 'inf')
 
     #pprint(mundo.mundo)
     #mundo.exporta_mundo('mundo.json', True)
     #mundo.carga_archivo(file('cosa.json'))
-    pprint(mundo.mundo)
+    mundo.exporta_mundo('cosa.json', True)
 
