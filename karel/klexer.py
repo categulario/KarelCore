@@ -15,7 +15,7 @@
 #  MA 02110-1301, USA.
 #
 import sys
-from kutil import KarelException
+from kutil import KarelException, ktoken
 
 """
 El analizador léxico de Karel completamente reescrito por mi para la
@@ -29,7 +29,7 @@ class klexer(object):
     ESTADO_COMENTARIO = '#'
     ESTADO_NUMERO = '0'
     ESTADO_SIMBOLO = '+'
-    def __init__(self, archivo, nombre_archivo='', debug=False):
+    def __init__(self, archivo=sys.stdin, nombre_archivo='', debug=False):
         """Se construye el analizador con el nombre del archivo"""
         self.archivo = archivo
         self.nombre_archivo = nombre_archivo
@@ -54,6 +54,7 @@ class klexer(object):
         self.tiene_cambio_de_linea = False
         self.token = ''
         self.estado = self.ESTADO_ESPACIO
+        self.posicion = ktoken.POSICION_INICIO
 
         self.debug = debug
         if self.debug:
@@ -94,6 +95,7 @@ class klexer(object):
                 break
             if self.tiene_cambio_de_linea:
                 self.linea += 1
+                self.columna = 0
                 self.tiene_cambio_de_linea = False
             if self.estado == self.ESTADO_COMENTARIO:
                 if self.debug:
@@ -105,7 +107,6 @@ class klexer(object):
                         self.estado = self.ESTADO_ESPACIO
                 elif self.caracter_actual == '\n':
                     self.tiene_cambio_de_linea = True
-                    self.columna = 0
             elif self.estado == self.ESTADO_ESPACIO:
                 if self.debug:
                     print "Encontré", repr(self.caracter_actual), "en estado espacio"
@@ -122,7 +123,6 @@ class klexer(object):
                     self.estado = self.ESTADO_SIMBOLO
                 elif self.caracter_actual == '\n':
                     self.tiene_cambio_de_linea = True
-                    self.columna = 0
             elif self.estado == self.ESTADO_NUMERO:
                 if self.debug:
                     print "Encontré", repr(self.caracter_actual), "en estado número"
@@ -139,7 +139,6 @@ class klexer(object):
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
                         self.tiene_cambio_de_linea = True
-                        self.columna = 0
                     self.estado = self.ESTADO_ESPACIO
                     break #Terminamos este token
             elif self.estado == self.ESTADO_PALABRA:
@@ -156,7 +155,6 @@ class klexer(object):
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
                         self.tiene_cambio_de_linea = True
-                        self.columna = 0
                     self.estado = self.ESTADO_ESPACIO
                     break #Terminamos este token
             elif self.estado == self.ESTADO_SIMBOLO:
@@ -170,33 +168,40 @@ class klexer(object):
                 elif self.caracter_actual in self.numeros:
                     self.estado = self.ESTADO_NUMERO
                     self.push_char(self.caracter_actual)
-                    break
+                    if self.token:
+                        break
+                    else:
+                        continue
                 elif self.caracter_actual in self.palabras:
                     self.estado = self.ESTADO_PALABRA
                     self.push_char(self.caracter_actual)
                     if self.token:
                         break
                 elif self.caracter_actual in self.simbolos:
-                    if self.ultimo_caracter == "(" and self.caracter_actual == '*':
-                        self.token = ''
-                        self.estado = self.ESTADO_COMENTARIO
-                        self.abrir_comentario = '(*'
+                    if self.ultimo_caracter == "(":
+                        if self.caracter_actual == '*':
+                            self.token = ''
+                            self.estado = self.ESTADO_COMENTARIO
+                            self.abrir_comentario = '(*'
+                            continue
+                        else:
+                            self.push_char(self.caracter_actual)
+                            break
                     elif self.caracter_actual != '(': #el único símbolo con continuación
                         self.token += self.caracter_actual
                         #  self.push_char(self.caracter_actual)
                         break
                     else:
                         self.token += self.caracter_actual
-                        break
+                        continue
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
                         self.tiene_cambio_de_linea = True
-                        self.columna = 0
                     self.estado = self.ESTADO_ESPACIO
                     #break #Terminamos este token
         token = self.token
         self.token = ''
-        return token
+        return ktoken(token, self.linea, self.columna, self.posicion)
 
     def __iter__(self):
         return self
@@ -218,9 +223,9 @@ if __name__ == '__main__':
     if len(sys.argv)>1:
         lexer = klexer(open(sys.argv[1]), sys.argv[1], debug=debug)
     else:
-        lexer = klexer(sys.stdin, debug=debug)
+        lexer = klexer(debug=debug)
     i=0
     for token in lexer:
-        print "Token:", repr(token), "\t\tLine:", lexer.linea
+        print "Token:", repr(token), "\t\tLine:", token.linea, "\t\tCol:", token.columna
         i += 1
     print "Hubo", i, "tokens"
