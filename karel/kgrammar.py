@@ -31,6 +31,7 @@ from klexer import klexer
 from kutil import KarelException
 from kutil import xml_prepare
 from string import ascii_letters
+from collections import deque
 import json
 import sys
 
@@ -38,7 +39,7 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=None, archivo=None, debug=False, futuro=False):
+    def __init__(self, flujo=sys.stdin, archivo='', debug=False, futuro=False):
         """ Inicializa la gramatica:
         flujo       indica el torrente de entrada
         archivo     es el nombre del archivo fuente, si existe
@@ -95,7 +96,7 @@ class kgrammar:
         ] + self.instrucciones + self.condiciones + self.expresiones_enteras + self.estructuras
         self.debug = debug
         self.lexer = klexer(flujo, archivo)
-        self.token_actual = self.lexer.get_token().lower()
+        self.token_actual = self.lexer.get_token()
         self.prototipo_funciones = dict()
         self.funciones = dict()
         self.gen_arbol = False #Indica si se debe generar un arbol con las instrucciones
@@ -106,12 +107,20 @@ class kgrammar:
         # Un diccionario que tiene por llaves los nombres de las funciones
         # y que tiene por valores listas con las variables de dichas
         # funciones
+        self.lista_programa = deque()
+        self.ejecutable = {
+            'lista': deque(),
+            'indice_funciones': dict(),
+            'main': 0
+        }
+        # Una lista que puede contener el árbol expandido con las instrucciones
+        # del programa de forma adecuada
         if self.debug:
             print "<avanza_token new_token='%s' line='%d' col='%d' />"%(self.token_actual, self.lexer.linea, self.lexer.columna)
 
     def avanza_token (self):
         """ Avanza un token en el archivo """
-        siguiente_token = self.lexer.get_token().lower()
+        siguiente_token = self.lexer.get_token()
         if self.debug:
             print "<avanza_token new_token='%s' line='%d' col='%d' />"%(siguiente_token, self.lexer.linea, self.lexer.columna)
 
@@ -448,7 +457,6 @@ class kgrammar:
                               ExpresionGeneral [";" ExpresionGeneral] ...
                           "fin"
                        }{
-
         }
         Recibe para comprobar una lista con las variables válidas en
         este contexto, tambien comprueba mediante c_funcion si esta en
@@ -570,9 +578,9 @@ class kgrammar:
         try:
             #Intentamos convertir el numero
             if self.gen_arbol:
-                retornar_valor = int(self.token_actual, 10)
+                retornar_valor = int(self.token_actual)
             else:
-                int(self.token_actual, 10)
+                int(self.token_actual) #De todas formas necesitamos validar si es un entero
         except ValueError:
             #No era un entero
             if self.token_actual in self.expresiones_enteras:
@@ -885,6 +893,94 @@ class kgrammar:
             f.write(json.dumps(self.arbol))
         f.close()
 
+    def expandir_arbol(self):
+        """Expande el árbol de instrucciones para ser usado por krunner
+        durante la ejecución"""
+        for funcion in self.arbol['funciones']:#Itera sobre llaves
+            nueva_funcion = {
+                funcion: {
+                    'params': self.arbol['funciones'][funcion]['params']
+                }
+            }
+            self.lista_programa.append(nueva_funcion)
+            posicion_inicio = len(self.lista_programa)-1
+
+            self.ejecutable['indice_funciones'].update({
+                funcion: posicion_inicio
+            })
+            self.expandir_arbol_recursivo(self.arbol['funciones'][funcion]['cola'])
+            self.lista_programa.append({
+                'fin': {
+                    'estructura': 'instruccion',
+                    'nombre': funcion,
+                    'inicio': posicion_inicio
+                }
+            })
+        self.ejecutable['main'] = len(self.lista_programa)
+        self.expandir_arbol_recursivo(self.arbol['main'])
+        self.ejecutable['lista'] = self.lista_programa
+        return self.ejecutable
+
+    def expandir_arbol_recursivo(self, cola):
+        """Toma un arbol y lo expande"""
+        for elem in cola: #Expande cada uno de los elementos de una cola
+            if elem in self.instrucciones:
+                self.lista_programa.append(elem)
+            else:#Se trata de un diccionario
+                if elem['estructura'] in ['repite', 'mientras']:
+                    nueva_estructura = {
+                        elem['estructura']: {
+                            'argumento': elem['argumento']
+                        }
+                    }
+                    posicion_inicio = len(self.lista_programa)
+
+                    self.lista_programa.append(nueva_estructura)
+                    self.expandir_arbol_recursivo(elem['cola'])
+                    self.lista_programa.append(self.lista_programa.append({
+                        'fin': {
+                            'estructura': elem['estructura'],
+                            'inicio': posicion_inicio
+                        }
+                    }))
+                elif elem['estructura'] == 'si':
+                    nueva_estructura = {
+                        elem['estructura']: {
+                            'argumento': elem['argumento']
+                        }
+                    }
+                    posicion_inicio = len(self.lista_programa)
+
+                    self.lista_programa.append(nueva_estructura)
+                    self.expandir_arbol_recursivo(elem['cola'])
+                    self.lista_programa.append({
+                        'fin': {
+                            'estructura': elem['estructura'],
+                            'inicio': posicion_inicio
+                        }
+                    })
+                    if elem.has_key('sino-cola'):
+                        nueva_estructura = {
+                            'sino': {}
+                        }
+                        posicion_sino = len(self.lista_programa)
+                        self.lista_programa.append(nueva_estructura)
+                        self.expandir_arbol_recursivo(elem['sino-cola'])
+                        self.lista_programa.append({
+                            'fin': {
+                                'estructura': 'sino',
+                                'inicio': posicion_inicio
+                            }
+                        })
+                        self.lista_programa[posicion_inicio]['si'].update({'sino': posicion_sino})
+                else:
+                    nueva_estructura = {
+                        elem['estructura']: {
+                            'argumento': elem['argumento'],
+                            'nombre': elem['nombre']
+                        }
+                    }
+                    self.lista_programa.append(nueva_estructura)
 
 if __name__ == "__main__":
     #Cosas para pruebas
@@ -901,16 +997,23 @@ if __name__ == "__main__":
     else:
         fil = sys.argv[1]
         grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb, futuro=True)
+    #grammar.verificar_sintaxis( gen_arbol=True )
     try:
         grammar.verificar_sintaxis( gen_arbol=True )
         #grammar.guardar_compilado('codigo.kcmp', True)
-        pprint(grammar.arbol)
     except KarelException, ke:
-        print ke.args[0], "en la línea", grammar.tokenizador.lineno
+        print ke.args[0], "en la línea", grammar.lexer.linea, "columna", grammar.lexer.columna
         print
         print "<syntax status='bad'/>"
     else:
         print "<syntax status='good'/>"
+    finally:
+        pprint(grammar.arbol)
+        grammar.expandir_arbol()
+        print "----------"
+        for i in xrange(len(grammar.lista_programa)):
+            print i,grammar.lista_programa[i]
+        print "----------"
     if deb:
         print "</xml>"
     fin = time()
