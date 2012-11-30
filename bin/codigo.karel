@@ -1,7 +1,7 @@
 iniciar-programa
     define-nueva-instruccion cosa(m) como avanza;
     define-nueva-instruccion verde como inicio
-    	repetir -5 veces gira-izquierda;
+    	repetir 5 veces gira-izquierda;
     	si frente-libre entonces avanza;
     	mientras frente-libre hacer avanza;
     	cosa(5);
