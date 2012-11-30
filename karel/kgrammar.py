@@ -575,13 +575,15 @@ class kgrammar:
         if self.gen_arbol:
             retornar_valor = None
         #En este punto hay que verificar que se trate de un numero entero
-        try:
+        es_numero = False
+        if self.es_numero(self.token_actual):
             #Intentamos convertir el numero
             if self.gen_arbol:
                 retornar_valor = int(self.token_actual)
             else:
                 int(self.token_actual) #De todas formas necesitamos validar si es un entero
-        except ValueError:
+            es_numero = True
+        else:
             #No era un entero
             if self.token_actual in self.expresiones_enteras:
                 if self.gen_arbol:
@@ -610,7 +612,7 @@ class kgrammar:
                 self.avanza_token()
             else:
                 raise KarelException("Se esperaba un entero, variable, sucede o predece, '%s' no es válido"%self.token_actual)
-        else:
+        if es_numero:
             #Si se pudo convertir, avanzamos
             self.avanza_token()
 
@@ -883,6 +885,13 @@ class kgrammar:
             i += 1
         return es_valido
 
+    def es_numero(self, token):
+        """Determina si un token es un numero"""
+        for caracter in token:
+            if caracter not in self.lexer.numeros:
+                return False #Encontramos algo que no es numero
+        return True
+
     def guardar_compilado (self, nombrearchivo, expandir=False):
         """ Guarda el resultado de una compilacion de codigo Karel a el
         archivo especificado """
@@ -937,12 +946,14 @@ class kgrammar:
 
                     self.lista_programa.append(nueva_estructura)
                     self.expandir_arbol_recursivo(elem['cola'])
-                    self.lista_programa.append(self.lista_programa.append({
+                    posicion_fin = len(self.lista_programa)
+                    self.lista_programa.append({
                         'fin': {
                             'estructura': elem['estructura'],
                             'inicio': posicion_inicio
                         }
-                    }))
+                    })
+                    self.lista_programa[posicion_inicio][elem['estructura']].update({'fin': posicion_fin})
                 elif elem['estructura'] == 'si':
                     nueva_estructura = {
                         elem['estructura']: {
@@ -953,10 +964,11 @@ class kgrammar:
 
                     self.lista_programa.append(nueva_estructura)
                     self.expandir_arbol_recursivo(elem['cola'])
+                    posicion_fin = len(self.lista_programa)
                     self.lista_programa.append({
                         'fin': {
                             'estructura': elem['estructura'],
-                            'inicio': posicion_inicio
+                            'inicio': posicion_inicio,
                         }
                     })
                     if elem.has_key('sino-cola'):
@@ -966,6 +978,7 @@ class kgrammar:
                         posicion_sino = len(self.lista_programa)
                         self.lista_programa.append(nueva_estructura)
                         self.expandir_arbol_recursivo(elem['sino-cola'])
+                        fin_sino = len(self.lista_programa)
                         self.lista_programa.append({
                             'fin': {
                                 'estructura': 'sino',
@@ -973,6 +986,7 @@ class kgrammar:
                             }
                         })
                         self.lista_programa[posicion_inicio]['si'].update({'sino': posicion_sino})
+                        self.lista_programa[posicion_fin]['fin'].update({'fin': fin_sino})
                 else:
                     nueva_estructura = {
                         elem['estructura']: {
