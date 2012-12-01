@@ -1,0 +1,30 @@
+iniciar-programa
+	define-prototipo-instruccion b(n);
+	define-nueva-instruccion A(b) como inicio
+		repetir b veces inicio
+			avanza;
+		fin;
+		si no si-es-cero(b) entonces apagate;
+		b(precede(b));
+	fin;
+	define-nueva-instruccion B(a) como inicio
+		a(a);
+	fin;
+	define-nueva-instruccion gira-derecha como repetir 3 veces gira-izquierda;
+	define-nueva-instruccion verde como verde;
+	inicia-ejecucion
+		{a(65)}
+		(*mientras verdadero hacer inicio
+			avanza;
+			repetir 11 veces
+				si frente-bloqueado entonces inicio
+					gira-derecha;
+					sal-de-bucle;
+					gira-derecha;
+				fin;
+		fin;*)
+		{verde;}
+		mientras frente-libre hacer avanza;
+		apagate;
+	termina-ejecucion
+finalizar-programa

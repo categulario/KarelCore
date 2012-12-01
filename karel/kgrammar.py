@@ -115,6 +115,7 @@ class kgrammar:
         }
         # Una lista que puede contener el árbol expandido con las instrucciones
         # del programa de forma adecuada
+        self.futuro = futuro
         if self.debug:
             print "<avanza_token new_token='%s' line='%d' col='%d' />"%(self.token_actual, self.lexer.linea, self.lexer.columna)
 
@@ -545,7 +546,8 @@ class kgrammar:
                             self.avanza_token()
                         else:
                             raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
-
+                    if not self.futuro and num_parametros>1:
+                        raise KarelException("No están habilitadas las funciones con varios parámetros")
                     if self.prototipo_funciones.has_key(nombre_funcion):
                         if num_parametros != len(self.prototipo_funciones[nombre_funcion]):
                             raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
@@ -927,6 +929,7 @@ class kgrammar:
             })
         self.ejecutable['main'] = len(self.lista_programa)
         self.expandir_arbol_recursivo(self.arbol['main'])
+        self.lista_programa.append('fin') #Marca de fin del programa
         self.ejecutable['lista'] = self.lista_programa
         return self.ejecutable
 
@@ -937,12 +940,13 @@ class kgrammar:
                 self.lista_programa.append(elem)
             else:#Se trata de un diccionario
                 if elem['estructura'] in ['repite', 'mientras']:
+                    posicion_inicio = len(self.lista_programa)
                     nueva_estructura = {
                         elem['estructura']: {
-                            'argumento': elem['argumento']
+                            'argumento': elem['argumento'],
+                            'id': posicion_inicio
                         }
                     }
-                    posicion_inicio = len(self.lista_programa)
 
                     self.lista_programa.append(nueva_estructura)
                     self.expandir_arbol_recursivo(elem['cola'])
@@ -955,12 +959,13 @@ class kgrammar:
                     })
                     self.lista_programa[posicion_inicio][elem['estructura']].update({'fin': posicion_fin})
                 elif elem['estructura'] == 'si':
+                    posicion_inicio = len(self.lista_programa)
                     nueva_estructura = {
                         elem['estructura']: {
-                            'argumento': elem['argumento']
+                            'argumento': elem['argumento'],
+                            'id' : posicion_inicio
                         }
                     }
-                    posicion_inicio = len(self.lista_programa)
 
                     self.lista_programa.append(nueva_estructura)
                     self.expandir_arbol_recursivo(elem['cola'])
@@ -969,25 +974,24 @@ class kgrammar:
                         'fin': {
                             'estructura': elem['estructura'],
                             'inicio': posicion_inicio,
+                            'fin':posicion_fin+1
                         }
                     })
+                    self.lista_programa[posicion_inicio]['si'].update({'fin': posicion_fin})
                     if elem.has_key('sino-cola'):
                         nueva_estructura = {
                             'sino': {}
                         }
-                        posicion_sino = len(self.lista_programa)
                         self.lista_programa.append(nueva_estructura)
                         self.expandir_arbol_recursivo(elem['sino-cola'])
                         fin_sino = len(self.lista_programa)
                         self.lista_programa.append({
                             'fin': {
-                                'estructura': 'sino',
-                                'inicio': posicion_inicio
+                                'estructura': 'sino'
                             }
                         })
-                        self.lista_programa[posicion_inicio]['si'].update({'sino': posicion_sino})
-                        self.lista_programa[posicion_fin]['fin'].update({'fin': fin_sino})
-                else:
+                        self.lista_programa[posicion_fin]['fin']['fin'] = fin_sino
+                else:#Se trata de la llamada a una función
                     nueva_estructura = {
                         elem['estructura']: {
                             'argumento': elem['argumento'],
@@ -1020,7 +1024,8 @@ if __name__ == "__main__":
         print
         print "<syntax status='bad'/>"
     else:
-        print "<syntax status='good'/>"
+        print "Sintaxis correcta"
+        print "----------"
     finally:
         pprint(grammar.arbol)
         grammar.expandir_arbol()

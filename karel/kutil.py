@@ -3,12 +3,14 @@
 Clases y funciones utiles para Karel
 """
 
+from collections import deque
+
 __all__ = ['KarelException', 'xml_prepare']
 
 class ktoken(object): #TODO determinar usabilidad
     """Define un token de la gramática de karel. Esencialmente un token
     es un trozo de cadena, sin embargo para esta gramática podría ser un"""
-    #TODO probablemente necesite una función hash
+    #TODO implementar la posición del token
     POSICION_INICIO = 'ini'
     POSICION_FIN = 'fin'
     POSICION_MEDIO = 'med'
@@ -18,6 +20,9 @@ class ktoken(object): #TODO determinar usabilidad
         self.linea = linea
         self.columna = columna
         self.posicion = posicion
+
+    def startswith(self, cad):
+        return self.token.startswith(cad)
 
     def __str__(self):
         return self.token
@@ -39,6 +44,26 @@ class ktoken(object): #TODO determinar usabilidad
 
     def __hash__(self):
         return hash(self.token)
+
+    def __getitem__(self, index):
+        return self.token.__getitem__(index)
+
+class kstack(deque):
+    """Una pila eficiente para karel el robot"""
+    def top(self):
+        """Devuelve el tope de la pila"""
+        return self[-1]
+
+    def is_empty(self):
+        """indica cuando la pila está vacía"""
+        return len(self)==0
+
+    def en_tope(self, id):
+        """indica si el id indicado está en el tope de la pila"""
+        if self.is_empty():
+            return False
+        for i in self.top():#itera sobre la única llave
+            return self.top()[i]['id'] == id
 
 class KarelException(Exception):
     """ Define un error sintactico de Karel """
