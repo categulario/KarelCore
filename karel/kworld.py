@@ -451,18 +451,33 @@ class kworld(object):
             s += "\n  %d |"%i
             for j in xrange(1, 13):
                 if self.mundo['karel']['posicion'] == (i, j):
-                    s+= " %s  "%karel[self.mundo['karel']['orientacion']]
+                    if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
+                        s+= " %s |"%karel[self.mundo['karel']['orientacion']]
+                    else:
+                        s+= " %s  "%karel[self.mundo['karel']['orientacion']]
                 elif self.mundo['casillas'].has_key((i, j)):
                     if self.mundo['casillas'][(i, j)]['zumbadores']:
                         digitos = num_digits(self.mundo['casillas'][(i, j)]['zumbadores'])
                         if digitos  == 1:
-                            s += " %d  "%self.mundo['casillas'][(i, j)]['zumbadores']
+                            if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
+                                s += " %d |"%self.mundo['casillas'][(i, j)]['zumbadores']
+                            else:
+                                s += " %d  "%self.mundo['casillas'][(i, j)]['zumbadores']
                         elif digitos == 2:
-                            s += " %d "%self.mundo['casillas'][(i, j)]['zumbadores']
+                            if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
+                                s += " %d|"%self.mundo['casillas'][(i, j)]['zumbadores']
+                            else:
+                                s += " %d "%self.mundo['casillas'][(i, j)]['zumbadores']
                         else:
-                            s += " ∞  "
+                            if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
+                                s += " ∞ |"
+                            else:
+                                s += " ∞  "
                     else:
-                        s += "    "
+                        if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
+                            s += "   |"
+                        else:
+                            s += "    "
                 else:
                     s += "    "
         s += "\n    +" + "---+"*12
@@ -498,9 +513,9 @@ if __name__ == '__main__':
     } #Representa la estructura de un mundo consistente
     mundo = kworld()
     #mundo.exporta_mundo('cosa.json', True)
-    mundo.conmuta_pared((8, 1), 'norte')
-    mundo.conmuta_pared((5, 5), 'oeste')
-    mundo.conmuta_pared((8, 8), 'norte')
+    mundo.conmuta_pared((1, 1), 'norte')
+    mundo.conmuta_pared((1, 1), 'este')
+    #mundo.conmuta_pared((8, 8), 'norte')
     #mundo.conmuta_pared((1, 1), 'norte')
     #mundo.avance_valido()
     #mundo.avanza()
