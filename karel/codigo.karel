@@ -11,7 +11,7 @@ iniciar-programa
 		a(a);
 	fin;
 	define-nueva-instruccion gira-derecha como repetir 3 veces gira-izquierda;
-	define-nueva-instruccion verde como verde;
+	define-nueva-instruccion verde(j) como verde(sucede(j));
 	inicia-ejecucion
 		{a(65)}
 		(*mientras verdadero hacer inicio
@@ -23,8 +23,14 @@ iniciar-programa
 					gira-derecha;
 				fin;
 		fin;*)
-		{verde;}
-		mientras frente-libre hacer avanza;
+		verde(0);
+		mientras algun-zumbador-en-la-mochila hacer inicio
+			si frente-bloqueado entonces sal-de-bucle;
+			deja-zumbador;
+			avanza;
+		fin;
+		deja-zumbador;
+		gira-derecha;
 		apagate;
 	termina-ejecucion
 finalizar-programa
