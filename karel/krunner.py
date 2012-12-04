@@ -301,11 +301,11 @@ if __name__ == '__main__':
     else:
         casillas_prueba = {
             (1, 1) : {
-                'zumbadores': 'inf',
+                'zumbadores': 0,
                 'paredes': set()
             }
         }
-        mundo = kworld(casillas = casillas_prueba)
+        mundo = kworld(casillas = casillas_prueba, mochila='inf')
         runner = krunner(grammar.ejecutable, mundo)
 
         inicio = time()
