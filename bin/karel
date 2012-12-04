@@ -234,6 +234,10 @@ Copyright (c) 2012 Developingo
                 print info.ayuda('run')
                 print
                 print "Son necesarios ambos, el programa y las condiciones de evaluacion..."
+        elif 'render' in sys.argv:
+            archivomundo = sys.argv[sys.argv.index('render')+1]
+            mun = kworld(archivo=file(archivomundo))
+            print mun
         else:
             try:
                 if '-m' in sys.argv:
@@ -260,7 +264,7 @@ Copyright (c) 2012 Developingo
                     print "Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo"
                     if '--dump' in sys.argv:
                         #Hay que brincar el mundo
-                        pprint(runner.mundo.mundo)
+                        print runner.mundo
             except IndexError:
                 print "Falta el nombre de un archivo despues de '-k' o '-m'"
             except OSError:
