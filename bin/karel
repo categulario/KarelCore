@@ -120,12 +120,13 @@ Copyright (c) 2012 Developingo
                     grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
                     try:
                         grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
+                        grammar.expandir_arbol()
                     except KarelException, ke:
                         print "El archivo %s tiene errores:"%arch
                         print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
                     else:
                         #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
-                        runner = krunner(grammar.arbol, mundo=mun)
+                        runner = krunner(grammar.ejecutable, mundo=mun)
                         t_inicio = time()
                         runner.run()
                         t_fin = time()
