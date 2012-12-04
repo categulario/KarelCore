@@ -451,8 +451,11 @@ class kworld(object):
             s += "\n  %d |"%i
             for j in xrange(1, 13):
                 if self.mundo['karel']['posicion'] == (i, j):
-                    if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
-                        s+= " %s |"%karel[self.mundo['karel']['orientacion']]
+                    if self.mundo['casillas'].has_key((i, j)):
+                        if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
+                            s+= " %s |"%karel[self.mundo['karel']['orientacion']]
+                        else:
+                            s+= " %s  "%karel[self.mundo['karel']['orientacion']]
                     else:
                         s+= " %s  "%karel[self.mundo['karel']['orientacion']]
                 elif self.mundo['casillas'].has_key((i, j)):
