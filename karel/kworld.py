@@ -536,5 +536,5 @@ if __name__ == '__main__':
     #pprint(mundo.mundo)
     #mundo.exporta_mundo('mundo.json', True)
     #mundo.carga_archivo(file('cosa.json'))
-    mundo.exporta_mundo('cosa.json', True)
+    #mundo.exporta_mundo('cosa.json', True)
     print mundo
