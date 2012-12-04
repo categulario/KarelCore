@@ -123,7 +123,7 @@ Copyright (c) 2012 Developingo
                         grammar.expandir_arbol()
                     except KarelException, ke:
                         print "El archivo %s tiene errores:"%arch
-                        print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
+                        print "\t", ke[0], "en la linea", grammar.lexer.linea
                     else:
                         #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
                         runner = krunner(grammar.ejecutable, mundo=mun)
