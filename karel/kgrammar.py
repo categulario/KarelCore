@@ -548,13 +548,13 @@ class kgrammar:
                             raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
                     if not self.futuro and num_parametros>1:
                         raise KarelException("No están habilitadas las funciones con varios parámetros")
-                    if self.prototipo_funciones.has_key(nombre_funcion):
-                        if num_parametros != len(self.prototipo_funciones[nombre_funcion]):
-                            raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
-                    else:
-                        if num_parametros != len(self.funciones[nombre_funcion]):
-                            raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
                     self.avanza_token()
+                if self.prototipo_funciones.has_key(nombre_funcion):
+                    if num_parametros != len(self.prototipo_funciones[nombre_funcion]):
+                        raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
+                else:
+                    if num_parametros != len(self.funciones[nombre_funcion]):
+                        raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
             else:
                 raise KarelException("La instrucción '%s' no ha sido previamente definida, pero es utilizada"%self.token_actual)
         else:
