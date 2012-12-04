@@ -107,45 +107,6 @@ Copyright (c) 2012 Developingo
             else:
                 print info.ayuda('check_all')
                 print "No se proporciono ninguna carpeta..."
-        elif 'run' in sys.argv:
-            if '-k' in sys.argv:
-                try:
-                    if '-m' in sys.argv:
-                        archivomundo = sys.argv[sys.argv.index('-m')+1]
-                        mun = kworld(archivo=file(archivomundo))
-                    else:
-                        mun = kworld()
-                    arch = sys.argv[sys.argv.index('-k')+1]
-                    runner = None
-                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
-                    try:
-                        grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
-                        grammar.expandir_arbol()
-                    except KarelException, ke:
-                        print "El archivo %s tiene errores:"%arch
-                        print "\t", ke[0], "en la linea", grammar.lexer.linea
-                    else:
-                        #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
-                        runner = krunner(grammar.ejecutable, mundo=mun)
-                        t_inicio = time()
-                        runner.run()
-                        t_fin = time()
-                        print runner.estado, runner.mensaje
-                        print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo"
-                        if '--dump' in sys.argv:
-                            #Hay que brincar el mundo
-                            pprint(runner.mundo.mundo)
-                except IndexError:
-                    print "Falta el nombre de un archivo despues de '-k' o '-m'"
-                except OSError:
-                    print "No existe el archivo '%s'"%arch
-                except IOError:
-                    print "No existe el archivo '%s'"%archivomundo
-                #except ValueError:
-                    #print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
-            else:
-                print info.ayuda('run')
-                print "No se proporciono ningun archivo..."
         elif 'check' in sys.argv:
             #Verifica la sintaxis de un archivo .karel
             if '-k' in sys.argv:
@@ -274,7 +235,35 @@ Copyright (c) 2012 Developingo
                 print
                 print "Son necesarios ambos, el programa y las condiciones de evaluacion..."
         else:
-            print "nada que hacer "
-            #~ import karel.kwindow
-            #~ Karel = karel.kwindow.KarelWindow(0)
-            #~ Karel.MainLoop()
+            try:
+                if '-m' in sys.argv:
+                    archivomundo = sys.argv[sys.argv.index('-m')+1]
+                    mun = kworld(archivo=file(archivomundo))
+                else:
+                    mun = kworld()
+                arch = sys.argv[1]
+                runner = None
+                grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
+                try:
+                    grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
+                    grammar.expandir_arbol()
+                except KarelException, ke:
+                    print "El archivo %s tiene errores:"%arch
+                    print "\t", ke[0], "en la linea", grammar.lexer.linea
+                else:
+                    #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
+                    runner = krunner(grammar.ejecutable, mundo=mun)
+                    t_inicio = time()
+                    runner.run()
+                    t_fin = time()
+                    print runner.estado, runner.mensaje
+                    print "Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo"
+                    if '--dump' in sys.argv:
+                        #Hay que brincar el mundo
+                        pprint(runner.mundo.mundo)
+            except IndexError:
+                print "Falta el nombre de un archivo despues de '-k' o '-m'"
+            except OSError:
+                print "No existe el archivo '%s'"%arch
+            except IOError:
+                print "No existe el archivo '%s'"%archivomundo
