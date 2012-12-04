@@ -194,6 +194,9 @@ class kworld(object):
                     if self.mundo['karel']['mochila'] != 'inf':
                         self.mundo['karel']['mochila'] += 1
                     self.mundo['casillas'][posicion]['zumbadores'] -= 1
+            #Limpiamos la memoria si es necesario
+            if not (self.mundo['casillas'][posicion]['paredes'] or self.mundo['casillas'][posicion]['zumbadores']):
+                del self.mundo['casillas'][posicion]
             return True
         else:
             return False
@@ -219,8 +222,6 @@ class kworld(object):
                     })
                     if self.mundo['karel']['mochila'] != 'inf':
                         self.mundo['karel']['mochila'] -= 1
-            if not (self.mundo['casillas'][posicion]['paredes'] or self.mundo['casillas'][posicion]['zumbadores']):
-                del self.mundo['casillas'][coordenadas]
             return True
         else:
             return False
