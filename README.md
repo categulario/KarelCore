@@ -52,7 +52,7 @@ Ejemplo:
 
 O también
 
-`$ python karel run -k archivo.karel`
+`$ python karel archivo.karel`
 
 Es posible obtener una poca de ayuda con:
 
