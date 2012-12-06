@@ -262,9 +262,7 @@ Copyright (c) 2012 Developingo
                     t_fin = time()
                     print runner.estado, runner.mensaje
                     print "Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo"
-                    if '--dump' in sys.argv:
-                        #Hay que brincar el mundo
-                        print runner.mundo
+                    print runner.mundo
             except IndexError:
                 print "Falta el nombre de un archivo despues de '-k' o '-m'"
             except OSError:
