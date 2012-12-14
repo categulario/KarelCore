@@ -23,7 +23,8 @@
 #
 
 """
-Controlador principal de Karel el Robot
+Controlador principal de Karel el Robot, se encarga de ofrecer la
+interfaz de línea de comandos
 """
 
 import os
