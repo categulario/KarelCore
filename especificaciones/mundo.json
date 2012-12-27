@@ -2,7 +2,7 @@
   "karel": {
     "posicion": [1, 1],
     "orientacion": "norte",
-    "mochila": "inf"
+    "mochila": -1
   },
   "casillas": [
     {
@@ -14,7 +14,7 @@
     {
         "fila": 1,
         "columna": 2,
-        "zumbadores": "inf",
+        "zumbadores": -1,
         "paredes": ["oeste"]
     },
     {
