@@ -6,20 +6,20 @@
   },
   "casillas": [
     {
-        "fila": 1,
-        "columna": 1,
+        "fila": 5,
+        "columna": 5,
         "zumbadores": 2,
         "paredes": ["norte", "este"]
     },
     {
-        "fila": 1,
-        "columna": 2,
+        "fila": 5,
+        "columna": 6,
         "zumbadores": -1,
         "paredes": ["oeste"]
     },
     {
-        "fila": 2,
-        "columna": 1,
+        "fila": 6,
+        "columna": 5,
         "zumbadores": 2,
         "paredes": ["sur"]
     }
