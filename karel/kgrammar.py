@@ -81,7 +81,7 @@ class kgrammar:
             "iniciar-programa",
             "inicia-ejecucion",
             "termina-ejecucion",
-            "finalizar-programa"
+            "finalizar-programa",
             "no",
             "y",
             "o",
