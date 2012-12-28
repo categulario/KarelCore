@@ -78,63 +78,55 @@ Copyright (c) 2012 Developingo
         elif 'check_all' in sys.argv:
             #Opcion para checar la sintaxis de una carpeta llena de
             #archivos de Karel
-            if '-d' in sys.argv:
-                try:
-                    carpeta = sys.argv[sys.argv.index('-d')+1]
-                    archivos = listdir(carpeta)
-                    err_count = 0
-                    file_count = 0
-                    t_inicio = time()
-                    for arch in archivos:
-                        if arch.endswith(".txt") or arch.endswith(".karel"):
-                            file_count += 1
-                            grammar = kgrammar(flujo=open(carpeta+arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
-                            try:
-                                grammar.verificar_sintaxis()
-                            except KarelException, ke:
-                                print "El archivo %s tiene errores:"%arch
-                                print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
-                                err_count += 1
-                    t_fin = time()
-                    if err_count == 0:
-                        print "Todos los archivos estan correctos"
-                    else:
-                        print "Se encontraron", err_count, "errores"
-                    print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar", file_count, "archivos"
-                except IndexError:
-                    print "Falta el nombre de una carpeta despues de '-d'"
-                except OSError:
-                    print "No existe la carpeta '%s'"%carpeta
-            else:
-                print info.ayuda('check_all')
-                print "No se proporciono ninguna carpeta..."
+            try:
+                carpeta = sys.argv[2]
+                archivos = listdir(carpeta)
+                err_count = 0
+                file_count = 0
+                t_inicio = time()
+                for arch in archivos:
+                    if arch.endswith(".txt") or arch.endswith(".karel") or arch.endswith('.TXT'):
+                        file_count += 1
+                        grammar = kgrammar(flujo=open(carpeta+arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
+                        try:
+                            grammar.verificar_sintaxis()
+                        except KarelException, ke:
+                            print "El archivo %s tiene errores:"%arch
+                            print "\t", ke[0], "en la linea", grammar.lexer.linea
+                            err_count += 1
+                t_fin = time()
+                if err_count == 0:
+                    print "Todos los archivos estan correctos"
+                else:
+                    print "Se encontraron", err_count, "errores"
+                print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar", file_count, "archivos"
+            except IndexError:
+                print "Falta el nombre de una carpeta despues de '-d'"
+            except OSError:
+                print "No existe la carpeta '%s'"%carpeta
         elif 'check' in sys.argv:
             #Verifica la sintaxis de un archivo .karel
-            if '-k' in sys.argv:
+            try:
+                arch = sys.argv[1]
+                t_inicio = time()
+
+                grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
                 try:
-                    arch = sys.argv[sys.argv.index('-k')+1]
-                    t_inicio = time()
+                    grammar.verificar_sintaxis()
+                except KarelException, ke:
+                    print "El archivo %s tiene errores:"%arch
+                    print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
+                else:
+                    print "Sintaxis verificada, todo bien"
 
-                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
-                    try:
-                        grammar.verificar_sintaxis()
-                    except KarelException, ke:
-                        print "El archivo %s tiene errores:"%arch
-                        print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
-                    else:
-                        print "Sintaxis verificada, todo bien"
-
-                    t_fin = time()
-                    print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar el archivo"
-                except IndexError:
-                    print "Falta el nombre de un archivo despues de '-k'"
-                except OSError:
-                    print "No existe el archivo '%s'"%arch
-            else:
-                print info.ayuda('check')
-                print "No se proporciono ningun archivo..."
+                t_fin = time()
+                print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar el archivo"
+            except IndexError:
+                print "Falta el nombre de un archivo"
+            except OSError:
+                print "No existe el archivo '%s'"%arch
         elif 'test' in sys.argv:
-            if '-k' in sys.argv and '-m' in sys.argv:
+            if '-m' in sys.argv:
                 try:
                     resultado = { #Almacena el resultado de esta ejecución
                         "resultado": "OK", #puede ser ERROR_COMPILACION Ó CASOS_INCOMPLETOS
@@ -148,7 +140,7 @@ Copyright (c) 2012 Developingo
                     archivomundo = sys.argv[sys.argv.index('-m')+1]
                     f = file(archivomundo)
                     kec = json.load(f) #Tenemos el archivo de condiciones de evaluacion cargado.
-                    arch = sys.argv[sys.argv.index('-k')+1]
+                    arch = sys.argv[1]
                     grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
                     try:
                         grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
@@ -232,7 +224,7 @@ Copyright (c) 2012 Developingo
                 except ValueError:
                     print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
             else:
-                print info.ayuda('run')
+                print info.ayuda('test')
                 print
                 print "Son necesarios ambos, el programa y las condiciones de evaluacion..."
         elif 'render' in sys.argv:
