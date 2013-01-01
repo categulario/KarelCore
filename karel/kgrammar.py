@@ -159,7 +159,6 @@ class kgrammar:
             else:
                 self.avanza_token()
 
-
     def clausula_atomica(self, lista_variables):
         """
         Define una clausila atomica
@@ -309,7 +308,6 @@ class kgrammar:
         else:
             self.avanza_token()
 
-
     def declaracion_de_prototipo(self):
         """
         Define una declaracion de prototipo
@@ -367,7 +365,6 @@ class kgrammar:
             if self.token_actual != ';':
                 raise KarelException("Se esperaba ';'")
             self.avanza_token()
-
 
     def declaracion_de_enlace (self):
         """ Se utilizara para tomar funciones de librerias externas,
