@@ -204,7 +204,7 @@ class krunner:
                             self.pila_estructuras.append(instruccion)
                     elif instruccion.has_key('mientras'):
                         if self.pila_estructuras.en_tope(instruccion['mientras']['id']):#Se está llegando a la estructura al menos por segunda vez
-                            if self.termino_logico(instruccion['mientras']['argumento']['o'], dict()):#Se cumple la condición del mientras
+                            if self.termino_logico(instruccion['mientras']['argumento']['o'], diccionario_variables):#Se cumple la condición del mientras
                                 if self.pila_estructuras[-1]['mientras']['cuenta'] == self.limite_iteracion:
                                     raise KarelException('LoopLimitExceded: hay un bucle que se cicla')
                                 indice += 1
