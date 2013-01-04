@@ -185,13 +185,13 @@ class kworld(object):
         verdadero solo ensaya. """
         posicion = self.mundo['karel']['posicion']
         if self.junto_a_zumbador():
-            if self.mundo['casillas'][posicion]['zumbadores'] == 'inf':
+            if self.mundo['casillas'][posicion]['zumbadores'] == -1:
                 if not test:
-                    if self.mundo['karel']['mochila'] != 'inf':
+                    if self.mundo['karel']['mochila'] != -1:
                         self.mundo['karel']['mochila'] += 1
             elif self.mundo['casillas'][posicion]['zumbadores']>0:
                 if not test:
-                    if self.mundo['karel']['mochila'] != 'inf':
+                    if self.mundo['karel']['mochila'] != -1:
                         self.mundo['karel']['mochila'] += 1
                     self.mundo['casillas'][posicion]['zumbadores'] -= 1
             #Limpiamos la memoria si es necesario
@@ -209,10 +209,8 @@ class kworld(object):
         if self.algun_zumbador_en_la_mochila():
             if not test:
                 if self.mundo['casillas'].has_key(posicion):
-                    if self.mundo['casillas'][posicion]['zumbadores'] != 'inf':
+                    if self.mundo['casillas'][posicion]['zumbadores'] != -1:
                         self.mundo['casillas'][posicion]['zumbadores'] += 1
-                        if self.mundo['karel']['mochila'] != 'inf':
-                            self.mundo['karel']['mochila'] -= 1
                 else:
                     self.mundo['casillas'].update({
                         posicion: {
@@ -220,8 +218,8 @@ class kworld(object):
                             'paredes': set()
                         }
                     })
-                    if self.mundo['karel']['mochila'] != 'inf':
-                        self.mundo['karel']['mochila'] -= 1
+                if self.mundo['karel']['mochila'] != -1:
+                    self.mundo['karel']['mochila'] -= 1
             return True
         else:
             return False
@@ -301,7 +299,7 @@ class kworld(object):
     def junto_a_zumbador (self):
         """ Determina si Karel esta junto a un zumbador. """
         if self.mundo['casillas'].has_key(self.mundo['karel']['posicion']):
-            if self.mundo['casillas'][self.mundo['karel']['posicion']]['zumbadores'] == 'inf':
+            if self.mundo['casillas'][self.mundo['karel']['posicion']]['zumbadores'] == -1:
                 return True
             elif self.mundo['casillas'][self.mundo['karel']['posicion']]['zumbadores'] > 0:
                 return True
@@ -422,7 +420,7 @@ class kworld(object):
     def __str__ (self):
         """Imprime bien bonito la primera porción de mundo"""
         def num_digits(a):
-            if a == 'inf':
+            if a == -1:
                 return 3
             elif 0<=a <= 9:
                 return 1
@@ -498,7 +496,7 @@ if __name__ == '__main__':
     from pprint import pprint
     casillas_prueba = {
         (1, 1) : {
-            'zumbadores': 'inf',
+            'zumbadores': -1,
             'paredes': set(['este'])
         },
         (1, 2): {
@@ -506,7 +504,7 @@ if __name__ == '__main__':
             'paredes': set(['oeste'])
         },
         (5, 5): {
-            'zumbadores': 'inf',
+            'zumbadores': -1,
             'paredes': set()
         },
         (2, 1): {
@@ -528,7 +526,7 @@ if __name__ == '__main__':
     #print mundo.coge_zumbador()
     #mundo.deja_zumbador()
     #mundo.gira_izquierda()
-    mundo.pon_zumbadores((5, 5), 'inf')
+    mundo.pon_zumbadores((5, 5), -1)
     mundo.pon_zumbadores((2, 1), 15)
     mundo.pon_zumbadores((1, 1), 7)
     mundo.avanza()
