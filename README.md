@@ -64,6 +64,7 @@ TODO
 Cosas importantes por hacer:
 
 * Asegurar el buen funcionamiento de `sal-de-instruccion`, `apagate` y `sal-de-bucle` en `krunner` y `kgrammar`.
+* Añadir instruccion `continua-bucle`
 * Implementar la ejecucion paso a paso o step_run.
 * Soportar la sintaxis Java de pascal.
 * Extender la ayuda.
