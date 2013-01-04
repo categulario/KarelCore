@@ -264,7 +264,9 @@ class krunner:
                     elif instruccion == 'apagate':
                         break #Fin de la ejecución
                     elif instruccion == 'sal-de-instruccion':
-                        indice +=1
+                        nota = self.pila_funciones.pop()#Obtenemos la nota de donde nos hemos quedado
+                        indice = nota['posicion']+1
+                        diccionario_variables = nota['diccionario_variables']
                     elif instruccion == 'sal-de-bucle':
                         bucle = self.pila_estructuras.pop()
                         indice = bucle[bucle.keys()[0]]['fin']+1
