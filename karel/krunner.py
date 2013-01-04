@@ -184,20 +184,22 @@ class krunner:
                         indice += 1
                     elif instruccion.has_key('repite'):
                         if self.pila_estructuras.en_tope(instruccion['repite']['id']):#Se está llegando a la estructura al menos por segunda vez
-                            if self.pila_estructuras.top()['repite']['cuenta']>0:
+                            if self.pila_estructuras.top()['repite']['argumento']>0:
                                 if self.pila_estructuras[-1]['repite']['cuenta'] == self.limite_iteracion:
                                     raise KarelException('LoopLimitExceded: hay un bucle que se cicla')
                                 indice += 1
-                                self.pila_estructuras[-1]['repite']['cuenta'] -= 1
+                                self.pila_estructuras[-1]['repite']['argumento'] -= 1
+                                self.pila_estructuras[-1]['repite']['cuenta'] += 1
                             else:#nos vamos al final y extraemos el repite de la pila
                                 indice = self.pila_estructuras.top()['repite']['fin']+1
                                 self.pila_estructuras.pop()
                         else:#primera llamada de la estructura, no movemos el cabezal, solo la agregamos a la pila
-                            cuenta = self.expresion_entera(instruccion['repite']['argumento'], diccionario_variables)
-                            if cuenta < 0:
+                            argumento = self.expresion_entera(instruccion['repite']['argumento'], diccionario_variables)
+                            if argumento < 0:
                                 raise KarelException(u"WeirdNumberException: Estás intentando que karel repita un número negativo de veces")
                             instruccion['repite'].update({
-                                'cuenta': cuenta
+                                'cuenta': 0,
+                                'argumento': cuenta
                             })
                             self.pila_estructuras.append(instruccion)
                     elif instruccion.has_key('mientras'):
