@@ -199,7 +199,7 @@ class krunner:
                                 raise KarelException(u"WeirdNumberException: Estás intentando que karel repita un número negativo de veces")
                             instruccion['repite'].update({
                                 'cuenta': 0,
-                                'argumento': cuenta
+                                'argumento': argumento
                             })
                             self.pila_estructuras.append(instruccion)
                     elif instruccion.has_key('mientras'):
