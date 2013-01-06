@@ -180,8 +180,10 @@ class krunner:
                             indice += 1 #Avanzamos a la siguiente posicion en la cinta
                         else:#nos saltamos el si, vamos a la siguiente casilla, que debe ser un sino o la siguiente instruccion
                             indice = instruccion['si']['fin']+1
+                        ejecucion += 1
                     elif instruccion.has_key('sino'): #Llegamos a un sino, procedemos, no hay de otra
                         indice += 1
+                        ejecucion += 1
                     elif instruccion.has_key('repite'):
                         if self.pila_estructuras.en_tope(instruccion['repite']['id']):#Se está llegando a la estructura al menos por segunda vez
                             if self.pila_estructuras.top()['repite']['argumento']>0:
@@ -193,6 +195,7 @@ class krunner:
                             else:#nos vamos al final y extraemos el repite de la pila
                                 indice = self.pila_estructuras.top()['repite']['fin']+1
                                 self.pila_estructuras.pop()
+                            ejecucion += 1
                         else:#primera llamada de la estructura, no movemos el cabezal, solo la agregamos a la pila
                             argumento = self.expresion_entera(instruccion['repite']['argumento'], diccionario_variables)
                             if argumento < 0:
@@ -212,6 +215,7 @@ class krunner:
                             else:#nos vamos al final
                                 indice = self.pila_estructuras.top()['mientras']['fin']+1
                                 self.pila_estructuras.pop()
+                            ejecucion += 1
                         else:#primera llamada de la estructura, no movemos el cabezal, solo la agregamos a la pila
                             instruccion['mientras'].update({
                                 'cuenta': 0
@@ -246,6 +250,7 @@ class krunner:
                             self.ejecutable['lista'][indice-1][instruccion['instruccion']['nombre']]['params'],
                             valores
                         )
+                        ejecucion += 1
                 else:
                     #Es una instruccion predefinida de Karel
                     if instruccion == 'avanza':
@@ -274,7 +279,7 @@ class krunner:
                         indice = bucle[bucle.keys()[0]]['fin']+1
                     else:#FIN
                         raise KarelException(u"HanoiTowerException: Tu programa excede el límite de ejecución ¿Usaste 'apagate'?")
-                ejecucion += 1
+                    ejecucion += 1
         except KarelException, kre:
             self.estado = 'ERROR'
             self.mensaje = kre.args[0]
