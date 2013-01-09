@@ -4,7 +4,7 @@ PyRel
 Xalapa, Ver. 2012
 
 Descripción
------------
+----------
 
 Te gustaba tanto jugar con Karel que decidiste que lo querías en tu plataforma favorita: Linux, así que programaste como poseído en python hasta lograr que Karel corra en Linux, Windows, Mac, Solaris y cualquier otra bestia...
 
@@ -31,7 +31,7 @@ El objetivo de este proyecto es ofrecer el lenguaje ''Karel'' orientado al apren
 Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos cambios en la sintaxis pueden haber sido influenciados por la sintaxis de Python, sin embargo cualquier código en la sintaxis original de Karel será reconocido.
 
 Necesito ayuda!
----------------
+-------------
 
 Si conoces Karel el robot y tienes códigos escritos en PASCAL (el pascal de Karel) puedes hacer dos cosas por mi:
 
