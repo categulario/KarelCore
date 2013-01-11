@@ -63,6 +63,10 @@ class krunner:
         else:
             self.mundo = kworld() #En la 1,1 orientado al norte
         self.corriendo = True
+        self.indice = 0 #Marcador con la posición en la cinta de ejecución
+        self.ejecucion = 0 #Contador del número de instrucciones que se han ejecutado
+        self.diccionario_variables = dict()
+
         self.sal_de_instruccion = False
         self.sal_de_bucle = False
         self.limite_recursion = limite_recursion
@@ -165,39 +169,39 @@ class krunner:
         proporcionado, comenzando por el bloque 'main' o estructura
         principal. """
         try:
-            indice = self.ejecutable['main'] #El cabezal de esta máquina de turing
-            ejecucion = 0
-            diccionario_variables = dict()
+            self.indice = self.ejecutable['main'] #El cabezal de esta máquina de turing
+            self.ejecucion = 0
+            self.diccionario_variables = dict()
             while True:
-                if ejecucion >= self.limite_ejecucion:
+                if self.ejecucion >= self.limite_ejecucion:
                     raise KarelException(u"HanoiTowerException: Tu programa nunca termina ¿Usaste 'apagate'?")
                 #Hay que ejecutar la función en turno en el índice actual
-                instruccion = self.ejecutable['lista'][indice]
+                instruccion = self.ejecutable['lista'][self.indice]
                 if type(instruccion) == dict:
                     #Se trata de una estructura de control o una funcion definida
                     if instruccion.has_key('si'):
-                        if self.termino_logico(instruccion['si']['argumento']['o'], diccionario_variables):
-                            indice += 1 #Avanzamos a la siguiente posicion en la cinta
+                        if self.termino_logico(instruccion['si']['argumento']['o'], self.diccionario_variables):
+                            self.indice += 1 #Avanzamos a la siguiente posicion en la cinta
                         else:#nos saltamos el si, vamos a la siguiente casilla, que debe ser un sino o la siguiente instruccion
-                            indice = instruccion['si']['fin']+1
-                        ejecucion += 1
+                            self.indice = instruccion['si']['fin']+1
+                        self.ejecucion += 1
                     elif instruccion.has_key('sino'): #Llegamos a un sino, procedemos, no hay de otra
-                        indice += 1
-                        ejecucion += 1
+                        self.indice += 1
+                        self.ejecucion += 1
                     elif instruccion.has_key('repite'):
                         if self.pila_estructuras.en_tope(instruccion['repite']['id']):#Se está llegando a la estructura al menos por segunda vez
                             if self.pila_estructuras.top()['repite']['argumento']>0:
                                 if self.pila_estructuras[-1]['repite']['cuenta'] == self.limite_iteracion:
                                     raise KarelException('LoopLimitExceded: hay un bucle que se cicla')
-                                indice += 1
+                                self.indice += 1
                                 self.pila_estructuras[-1]['repite']['argumento'] -= 1
                                 self.pila_estructuras[-1]['repite']['cuenta'] += 1
                             else:#nos vamos al final y extraemos el repite de la pila
-                                indice = self.pila_estructuras.top()['repite']['fin']+1
+                                self.indice = self.pila_estructuras.top()['repite']['fin']+1
                                 self.pila_estructuras.pop()
-                            ejecucion += 1
+                            self.ejecucion += 1
                         else:#primera llamada de la estructura, no movemos el cabezal, solo la agregamos a la pila
-                            argumento = self.expresion_entera(instruccion['repite']['argumento'], diccionario_variables)
+                            argumento = self.expresion_entera(instruccion['repite']['argumento'], self.diccionario_variables)
                             if argumento < 0:
                                 raise KarelException(u"WeirdNumberException: Estás intentando que karel repita un número negativo de veces")
                             instruccion['repite'].update({
@@ -207,15 +211,15 @@ class krunner:
                             self.pila_estructuras.append(instruccion)
                     elif instruccion.has_key('mientras'):
                         if self.pila_estructuras.en_tope(instruccion['mientras']['id']):#Se está llegando a la estructura al menos por segunda vez
-                            if self.termino_logico(instruccion['mientras']['argumento']['o'], diccionario_variables):#Se cumple la condición del mientras
+                            if self.termino_logico(instruccion['mientras']['argumento']['o'], self.diccionario_variables):#Se cumple la condición del mientras
                                 if self.pila_estructuras[-1]['mientras']['cuenta'] == self.limite_iteracion:
                                     raise KarelException('LoopLimitExceded: hay un bucle que se cicla')
-                                indice += 1
+                                self.indice += 1
                                 self.pila_estructuras[-1]['mientras']['cuenta'] += 1
                             else:#nos vamos al final
-                                indice = self.pila_estructuras.top()['mientras']['fin']+1
+                                self.indice = self.pila_estructuras.top()['mientras']['fin']+1
                                 self.pila_estructuras.pop()
-                            ejecucion += 1
+                            self.ejecucion += 1
                         else:#primera llamada de la estructura, no movemos el cabezal, solo la agregamos a la pila
                             instruccion['mientras'].update({
                                 'cuenta': 0
@@ -223,63 +227,63 @@ class krunner:
                             self.pila_estructuras.append(instruccion)
                     elif instruccion.has_key('fin'):#Algo termina aqui
                         if instruccion['fin']['estructura'] in ['mientras', 'repite']:
-                            indice = instruccion['fin']['inicio']
+                            self.indice = instruccion['fin']['inicio']
                         elif instruccion['fin']['estructura'] == 'si':
-                            indice = instruccion['fin']['fin']
+                            self.indice = instruccion['fin']['fin']
                         elif instruccion['fin']['estructura'] == 'sino':
-                            indice += 1
+                            self.indice += 1
                         else:#fin de una funcion
                             nota = self.pila_funciones.pop()#Obtenemos la nota de donde nos hemos quedado
-                            indice = nota['posicion']+1
-                            diccionario_variables = nota['diccionario_variables']
+                            self.indice = nota['posicion']+1
+                            self.diccionario_variables = nota['self.diccionario_variables']
                     else: #Se trata la llamada a una función
                         if len(self.pila_funciones) == self.limite_recursion:
                             raise KarelException('StackOverflow: Karel ha excedido el límite de recursión')
                         #Hay que guardar la posición actual y el diccionario de variables en uso
                         self.pila_funciones.append({
-                            'posicion': indice,
-                            'diccionario_variables': diccionario_variables
+                            'posicion': self.indice,
+                            'self.diccionario_variables': self.diccionario_variables
                         })
                         # Lo que prosigue es ir a la definición de la función
-                        indice = self.ejecutable['indice_funciones'][instruccion['instruccion']['nombre']]+1
+                        self.indice = self.ejecutable['indice_funciones'][instruccion['instruccion']['nombre']]+1
                         # recalcular el diccionario de variables
                         valores = []
                         for i in instruccion['instruccion']['argumento']:
-                            valores.append(self.expresion_entera(i, diccionario_variables))
-                        diccionario_variables = merge(
-                            self.ejecutable['lista'][indice-1][instruccion['instruccion']['nombre']]['params'],
+                            valores.append(self.expresion_entera(i, self.diccionario_variables))
+                        self.diccionario_variables = merge(
+                            self.ejecutable['lista'][self.indice-1][instruccion['instruccion']['nombre']]['params'],
                             valores
                         )
-                        ejecucion += 1
+                        self.ejecucion += 1
                 else:
                     #Es una instruccion predefinida de Karel
                     if instruccion == 'avanza':
                         if not self.mundo.avanza():
                             raise KarelException('Karel se ha estrellado con una pared!')
-                        indice +=1
+                        self.indice +=1
                     elif instruccion == 'gira-izquierda':
                         self.mundo.gira_izquierda()
-                        indice +=1
+                        self.indice +=1
                     elif instruccion == 'coge-zumbador':
                         if not self.mundo.coge_zumbador():
                             raise KarelException('Karel quizo coger un zumbador pero no habia en su posicion')
-                        indice +=1
+                        self.indice +=1
                     elif instruccion == 'deja-zumbador':
                         if not self.mundo.deja_zumbador():
                             raise KarelException('Karel quizo dejar un zumbador pero su mochila estaba vacia')
-                        indice +=1
+                        self.indice +=1
                     elif instruccion == 'apagate':
                         break #Fin de la ejecución
                     elif instruccion == 'sal-de-instruccion':
                         nota = self.pila_funciones.pop()#Obtenemos la nota de donde nos hemos quedado
-                        indice = nota['posicion']+1
-                        diccionario_variables = nota['diccionario_variables']
+                        self.indice = nota['posicion']+1
+                        self.diccionario_variables = nota['self.diccionario_variables']
                     elif instruccion == 'sal-de-bucle':
                         bucle = self.pila_estructuras.pop()
-                        indice = bucle[bucle.keys()[0]]['fin']+1
+                        self.indice = bucle[bucle.keys()[0]]['fin']+1
                     else:#FIN
                         raise KarelException(u"HanoiTowerException: Tu programa excede el límite de ejecución ¿Usaste 'apagate'?")
-                    ejecucion += 1
+                    self.ejecucion += 1
         except KarelException, kre:
             self.estado = 'ERROR'
             self.mensaje = kre.args[0]
@@ -287,6 +291,8 @@ class krunner:
             self.estado = 'OK'
             self.mensaje = 'Ejecucion terminada'
 
+    def next(self):
+        """Da un paso en la cinta de ejecución de Karel"""
 
 if __name__ == '__main__':
     from pprint import pprint
