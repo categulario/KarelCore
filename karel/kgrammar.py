@@ -39,7 +39,7 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=sys.stdin, archivo='', futuro=False):
+    def __init__(self, flujo=sys.stdin, archivo='', strict=False, futuro=False):
         """ Inicializa la gramatica:
         flujo       indica el torrente de entrada
         archivo     es el nombre del archivo fuente, si existe
@@ -47,6 +47,8 @@ class kgrammar:
         gen_arbol   indica si hay que compilar
         futuro      indica si se pueden usar caracteristicas del futuro
                     de Karel como las condiciones 'falso' y 'verdadero'"""
+        self.strict = strict
+        self.tiene_apagate = False
         self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate', 'sal-de-instruccion', 'sal-de-bucle']
         #La instruccion sirve para combinarse con el bucle mientras y la condicion verdadero
         self.condiciones = [
@@ -410,6 +412,8 @@ class kgrammar:
                 else:
                     raise KarelException("No es posible usar 'sal-de-bucle' fuera de un bucle :)")
             else:
+                if self.token_actual == 'apagate':
+                    self.tiene_apagate = True
                 retornar_valor = [self.token_actual]
                 self.avanza_token()
         elif self.token_actual == 'si':
@@ -682,6 +686,8 @@ class kgrammar:
                 raise KarelException("Codigo mal formado")
         else:
             raise KarelException("Se esperaba 'iniciar-programa' al inicio del programa")
+        if self.strict and (not self.tiene_apagate):
+            raise KarelException("Tu código no tiene 'apagate', esto no es permitido en el modo estricto")
 
     def es_identificador_valido(self, token):
         """ Identifica cuando una cadena es un identificador valido,
