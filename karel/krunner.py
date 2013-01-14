@@ -297,10 +297,12 @@ class krunner:
             else:
                 self.estado = 'OK'
                 self.mensaje = 'Ejecucion terminada'
+                self.corriendo = False
                 return 'TERMINADO'
         except KarelException, kre:
             self.estado = 'ERROR'
             self.mensaje = kre.args[0]
+            self.corriendo = False
             return 'ERROR'
         else:
             self.estado = 'OK'
