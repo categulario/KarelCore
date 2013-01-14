@@ -291,6 +291,8 @@ class krunner:
                     elif instruccion == 'sal-de-bucle':
                         bucle = self.pila_estructuras.pop()
                         self.indice = bucle[bucle.keys()[0]]['fin']+1
+                    elif instruccion == 'continua-bucle':
+                        self.indice = self.ejecutable['lista'][self.pila_estructuras.top()['mientras']['fin']]['fin']['inicio']
                     else:#FIN
                         raise KarelException(u"HanoiTowerException: Tu programa excede el límite de ejecución ¿Usaste 'apagate'?")
                     self.ejecucion += 1

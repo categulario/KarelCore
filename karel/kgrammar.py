@@ -49,7 +49,7 @@ class kgrammar:
                     de Karel como las condiciones 'falso' y 'verdadero'"""
         self.strict = strict
         self.tiene_apagate = False
-        self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate', 'sal-de-instruccion', 'sal-de-bucle']
+        self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate', 'sal-de-instruccion', 'sal-de-bucle', 'continua-bucle']
         #La instruccion sirve para combinarse con el bucle mientras y la condicion verdadero
         self.condiciones = [
             'frente-libre',
@@ -76,7 +76,7 @@ class kgrammar:
         ]
         if not futuro:
             self.condiciones = self.condiciones[:-2]
-            self.instrucciones = self.instrucciones[:-1]
+            self.instrucciones = self.instrucciones[:-2]
         self.expresiones_enteras = ['sucede', 'precede']
         self.estructuras = ['si', 'mientras', 'repite', 'repetir']
         self.palabras_reservadas = [
@@ -405,12 +405,12 @@ class kgrammar:
                     self.avanza_token()
                 else:
                     raise KarelException("No es posible usar 'sal-de-instruccion' fuera de una instruccion :)")
-            elif self.token_actual == 'sal-de-bucle':
+            elif self.token_actual == 'sal-de-bucle' or self.token_actual == 'continua-bucle':
                 if c_bucle:
                     retornar_valor = [self.token_actual]
                     self.avanza_token()
                 else:
-                    raise KarelException("No es posible usar 'sal-de-bucle' fuera de un bucle :)")
+                    raise KarelException("No es posible usar '"+self.token_actual+"' fuera de un bucle :)")
             else:
                 if self.token_actual == 'apagate':
                     self.tiene_apagate = True
