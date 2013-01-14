@@ -410,7 +410,7 @@ class kgrammar:
                     retornar_valor = [self.token_actual]
                     self.avanza_token()
                 else:
-                    raise KarelException("No es posible usar '"+self.token_actual+"' fuera de un bucle :)")
+                    raise KarelException("No es posible usar '"+self.token_actual.token+"' fuera de un bucle :)")
             else:
                 if self.token_actual == 'apagate':
                     self.tiene_apagate = True
