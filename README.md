@@ -1,5 +1,5 @@
-PyRel
-=====
+El núcleo de Karel
+==================
 
 Xalapa, Ver. 2012
 
