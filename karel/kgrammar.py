@@ -44,7 +44,6 @@ class kgrammar:
         flujo       indica el torrente de entrada
         archivo     es el nombre del archivo fuente, si existe
         debug       indica si es necesario imprimir mensajes para debug
-        gen_arbol   indica si hay que compilar
         futuro      indica si se pueden usar caracteristicas del futuro
                     de Karel como las condiciones 'falso' y 'verdadero'"""
         self.strict = strict
@@ -838,7 +837,6 @@ if __name__ == "__main__":
     else:
         fil = sys.argv[1]
         grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb, futuro=True)
-    #grammar.verificar_sintaxis( gen_arbol=True )
     try:
         grammar.verificar_sintaxis()
         #grammar.guardar_compilado('codigo.kcmp', True)
