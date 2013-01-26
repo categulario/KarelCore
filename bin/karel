@@ -27,6 +27,7 @@ Controlador principal de Karel el Robot, se encarga de ofrecer la
 interfaz de línea de comandos
 """
 
+import re
 import os
 import sys
 from os import listdir
@@ -231,6 +232,55 @@ Copyright (c) 2012 Developingo
             archivomundo = sys.argv[sys.argv.index('render')+1]
             mun = kworld(archivo=file(archivomundo))
             print mun
+        elif 'edit' in sys.argv:
+            archivomundo = sys.argv[sys.argv.index('edit')+1]
+            mun = kworld(archivo=file(archivomundo))
+            print mun
+            while True: #Bucle para editar el mundo
+                try:
+                    entrada = re.split('\s+', raw_input('kcmd> '))
+                except EOFError:
+                    break
+                if entrada[0] == 'salir' or entrada == 'exit':
+                    break
+                elif entrada[0] == 'mostrar':
+                    print mun
+                elif entrada[0] == 'mochila':
+                    try:
+                        mochila = int(entrada[1])
+                        mun.establece_mochila(mochila)
+                    except ValueError:
+                        if entrada[1] == 'inf':
+                            mun.establece_mochila(entrada[1])
+                elif entrada[0] == 'karel':
+                    fila = int(entrada[1])
+                    columna = int(entrada[2])
+                    orientacion = entrada[3]
+                    if 1<=fila<=100 and 1<=columna<=100 and orientacion in ['norte', 'sur', 'este', 'oeste']:
+                        mun.establece_karel((fila, columna), orientacion)
+                elif entrada[0] == 'pared':
+                    fila = int(entrada[1])
+                    columna = int(entrada[2])
+                    orientacion = entrada[3]
+                    mun.conmuta_pared((fila, columna), orientacion)
+                elif entrada[0] == 'zumbador':
+                    fila = int(entrada[1])
+                    columna = int(entrada[2])
+                    cantidad = 0
+                    try:
+                        cantidad = int(entrada[3])
+                    except ValueError:
+                        if entrada[3] == 'inf':
+                            cantidad = -1
+                    print cantidad
+                    mun.pon_zumbadores((fila, columna), cantidad)
+                elif entrada[0] == 'guarda' or entrada[0] == 'guardar':
+                    if len(entrada) == 2:
+                        mun.exporta_mundo(entrada[1])
+                    else:
+                        mun.exporta_mundo(archivomundo)
+                print mun
+            print "Nos vemos pronto!"
         else:
             try:
                 if '-m' in sys.argv:

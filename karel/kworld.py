@@ -94,6 +94,27 @@ class kworld(object):
             if not self.carga_archivo(archivo):
                 raise KarelException("El archivo de mundo que me diste esta dañado!")
 
+    def establece_karel(self, posicion=(1, 1), orientacion='norte'):
+        """pone a karel en algun lugar especifico"""
+        self.mundo['karel']['posicion'] = posicion
+        self.mundo['karel']['orientacion'] = orientacion
+
+    def establece_mochila(self, cantidad):
+        """Establece los zumbadores en la mochila de karel a cierta cantidad"""
+        if cantidad == 'inf' or cantidad == '-1':
+            self.mundo['karel']['mochila'] = -1
+        elif type(cantidad) == int:
+            if cantidad >= 0:
+                self.mundo['karel']['mochila'] = cantidad
+            else:
+                raise KarelException('Esta no es una cantidad apropiada de zumbadores')
+        else:
+            raise KarelException('Deberías consultar a un psiquiatra')
+
+    def obten_mochila(self):
+        """Obtiene la cantidad de zumbadores en la mochila de karel"""
+        return self.mundo['karel']['mochila']
+
     def conmuta_pared (self, coordenadas, orientacion):
         """ Agrega una pared al mundo, si es que está permitido, el
         atributo 'coordenadas' es una tupla con la fila y columna de la
@@ -488,6 +509,10 @@ class kworld(object):
                 s += " %d  "%i
             else:
                 s += "%d  "%i
+        if self.obten_mochila() == -1:
+            s += '\n mochila: infititos'
+        else:
+            s += '\n mochila: %d'%self.obten_mochila()
         return s
 
 
