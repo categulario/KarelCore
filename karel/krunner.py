@@ -202,11 +202,15 @@ class krunner:
                             argumento = self.expresion_entera(instruccion['repite']['argumento'], self.diccionario_variables)
                             if argumento < 0:
                                 raise KarelException(u"WeirdNumberException: Estás intentando que karel repita un número negativo de veces")
-                            instruccion['repite'].update({
-                                'cuenta': 0,
-                                'argumento': argumento
-                            })
-                            self.pila_estructuras.append(instruccion)
+                            bucle = {
+                                'repite': {
+                                    'cuenta': 0,
+                                    'argumento': argumento,
+                                    'id': instruccion['repite']['id'],
+                                    'fin': instruccion['repite']['fin']
+                                }
+                            }
+                            self.pila_estructuras.append(bucle)
                         if self.pila_estructuras.top()['repite']['argumento']>0:
                             if self.pila_estructuras[-1]['repite']['cuenta'] == self.limite_iteracion:
                                 raise KarelException('LoopLimitExceded: hay un bucle que se cicla')
@@ -242,14 +246,14 @@ class krunner:
                         else:#fin de una funcion
                             nota = self.pila_funciones.pop()#Obtenemos la nota de donde nos hemos quedado
                             self.indice = nota['posicion']+1
-                            self.diccionario_variables = nota['self.diccionario_variables']
+                            self.diccionario_variables = nota['diccionario_variables']
                     else: #Se trata la llamada a una función
                         if len(self.pila_funciones) == self.limite_recursion:
                             raise KarelException('StackOverflow: Karel ha excedido el límite de recursión')
                         #Hay que guardar la posición actual y el diccionario de variables en uso
                         self.pila_funciones.append({
                             'posicion': self.indice,
-                            'self.diccionario_variables': self.diccionario_variables
+                            'diccionario_variables': self.diccionario_variables
                         })
                         # Lo que prosigue es ir a la definición de la función
                         self.indice = self.ejecutable['indice_funciones'][instruccion['instruccion']['nombre']]+1
@@ -287,7 +291,7 @@ class krunner:
                     elif instruccion == 'sal-de-instruccion':
                         nota = self.pila_funciones.pop()#Obtenemos la nota de donde nos hemos quedado
                         self.indice = nota['posicion']+1
-                        self.diccionario_variables = nota['self.diccionario_variables']
+                        self.diccionario_variables = nota['diccionario_variables']
                     elif instruccion == 'sal-de-bucle':
                         bucle = self.pila_estructuras.pop()
                         self.indice = bucle[bucle.keys()[0]]['fin']+1
