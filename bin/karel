@@ -231,7 +231,13 @@ Copyright (c) 2012 Developingo
         elif 'render' in sys.argv:
             archivomundo = sys.argv[sys.argv.index('render')+1]
             mun = kworld(archivo=file(archivomundo))
-            print mun
+            if 'dim' in sys.argv:
+                filas = int(sys.argv[sys.argv.index('dim')+1])
+                columnas = int(sys.argv[sys.argv.index('dim')+2])
+                if 1<=filas<=100 and 1<=columnas<=100:
+                    print mun.__str__(filas, columnas)
+            else:
+                print mun
         elif 'edit' in sys.argv:
             archivomundo = sys.argv[sys.argv.index('edit')+1]
             mun = kworld(archivo=file(archivomundo))
@@ -243,27 +249,25 @@ Copyright (c) 2012 Developingo
                     break
                 if entrada[0] == 'salir' or entrada == 'exit':
                     break
-                elif entrada[0] == 'mostrar':
-                    print mun
-                elif entrada[0] == 'mochila':
+                elif entrada[0] == 'mochila' or entrada[0] == 'm':
                     try:
                         mochila = int(entrada[1])
                         mun.establece_mochila(mochila)
                     except ValueError:
                         if entrada[1] == 'inf':
                             mun.establece_mochila(entrada[1])
-                elif entrada[0] == 'karel':
+                elif entrada[0] == 'karel' or entrada[0] == 'k':
                     fila = int(entrada[1])
                     columna = int(entrada[2])
                     orientacion = entrada[3]
                     if 1<=fila<=100 and 1<=columna<=100 and orientacion in ['norte', 'sur', 'este', 'oeste']:
                         mun.establece_karel((fila, columna), orientacion)
-                elif entrada[0] == 'pared':
+                elif entrada[0] == 'pared' or entrada[0] == 'p':
                     fila = int(entrada[1])
                     columna = int(entrada[2])
                     orientacion = entrada[3]
                     mun.conmuta_pared((fila, columna), orientacion)
-                elif entrada[0] == 'zumbador':
+                elif entrada[0] == 'zumbador' or entrada[0] == 'z':
                     fila = int(entrada[1])
                     columna = int(entrada[2])
                     cantidad = 0
@@ -274,13 +278,29 @@ Copyright (c) 2012 Developingo
                             cantidad = -1
                     print cantidad
                     mun.pon_zumbadores((fila, columna), cantidad)
-                elif entrada[0] == 'guarda' or entrada[0] == 'guardar':
+                elif entrada[0] == 'guarda' or entrada[0] == 'guardar' or entrada[0] == 'g':
                     if len(entrada) == 2:
                         mun.exporta_mundo(entrada[1])
                     else:
                         mun.exporta_mundo(archivomundo)
+                    print "Guardado!"
+                    continue
                 print mun
             print "Nos vemos pronto!"
+        elif 'new' in sys.argv:
+            if 'world' in sys.argv:
+                mundo = kworld()
+                mundo.exporta_mundo(sys.argv[sys.argv.index('world')+1], '--expand' in sys.argv)
+            elif 'code' in sys.argv:
+                f = file(sys.argv[sys.argv.index('code')+1], 'w')
+                f.write("""iniciar-programa
+    inicia-ejecucion
+        {TODO escribe un poco de algo}
+        apagate;
+    termina-ejecucion
+finalizar-programa
+""")
+                f.close()
         else:
             try:
                 if '-m' in sys.argv:
@@ -305,10 +325,16 @@ Copyright (c) 2012 Developingo
                     t_fin = time()
                     print runner.estado, runner.mensaje
                     print "Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo"
-                    print runner.mundo
+                    if 'dim' in sys.argv:
+                        filas = int(sys.argv[sys.argv.index('dim')+1])
+                        columnas = int(sys.argv[sys.argv.index('dim')+2])
+                        if 1<=filas<=100 and 1<=columnas<=100:
+                            print runner.mundo.__str__(filas, columnas)
+                    else:
+                        print runner.mundo
             except IndexError:
                 print "Falta el nombre de un archivo despues de '-k' o '-m'"
             except OSError:
                 print "No existe el archivo '%s'"%arch
             except IOError:
-                print "No existe el archivo '%s'"%archivomundo
+                print "No existe el archivo '%s'"%arch

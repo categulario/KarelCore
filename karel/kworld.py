@@ -338,7 +338,7 @@ class kworld(object):
 
     def algun_zumbador_en_la_mochila(self):
         """ Determina si karel tiene algun zumbador en la mochila """
-        if self.mundo['karel']['mochila'] > 0:
+        if self.mundo['karel']['mochila'] > 0 or self.mundo['karel']['mochila'] == -1:
             return True
         else:
             return False
@@ -438,7 +438,7 @@ class kworld(object):
             'casillas': dict()
         }
 
-    def __str__ (self):
+    def __str__ (self, filas=8, columnas=12):
         """Imprime bien bonito la primera porción de mundo"""
         def num_digits(a):
             if a == -1:
@@ -449,6 +449,14 @@ class kworld(object):
                 return 2
             else:
                 return 3
+        def num(numero):
+            if 0<=numero<=9:
+                return " %d "%numero
+            elif 10<=numero<=99:
+                return " %d"%numero
+            else:
+                "%d"%numero
+        columnas+=1
         karel  = {
             'norte': '^',
             'este': '>',
@@ -457,9 +465,9 @@ class kworld(object):
         }
         #s = " " + "   +"*13
         s = ""
-        for i in xrange(8, 0, -1):
+        for i in xrange(filas, 0, -1):
             s += "\n    +"
-            for j in xrange(1, 13):
+            for j in xrange(1, columnas):
                 if self.mundo['casillas'].has_key((i, j)):
                     if 'norte' in self.mundo['casillas'][(i,j)]['paredes']:
                         s += "---+"
@@ -467,8 +475,8 @@ class kworld(object):
                         s += "   +"
                 else:
                     s += "   +"
-            s += "\n  %d |"%i
-            for j in xrange(1, 13):
+            s += "\n %s|"%num(i)
+            for j in xrange(1, columnas):
                 if self.mundo['karel']['posicion'] == (i, j):
                     if self.mundo['casillas'].has_key((i, j)):
                         if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
@@ -502,9 +510,9 @@ class kworld(object):
                             s += "    "
                 else:
                     s += "    "
-        s += "\n    +" + "---+"*12
+        s += "\n    +" + "---+"*(columnas-1)
         s += '\n     '
-        for i in xrange(1, 13):
+        for i in xrange(1, columnas):
             if num_digits(i)==1:
                 s += " %d  "%i
             else:
