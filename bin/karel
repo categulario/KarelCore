@@ -141,10 +141,11 @@ Copyright (c) 2012 Developingo
                     archivomundo = sys.argv[sys.argv.index('-m')+1]
                     f = file(archivomundo)
                     kec = json.load(f) #Tenemos el archivo de condiciones de evaluacion cargado.
-                    arch = sys.argv[1]
-                    grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
+                    arch = sys.argv[sys.argv.index('test')+1]
+                    grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv)
                     try:
-                        grammar.verificar_sintaxis(gen_arbol=True) #Pedimos que genere el arbol de instrucciones
+                        grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
+                        grammar.expandir_arbol()
                     except KarelException, ke:
                         resultado['mensaje'] = "El archivo %s tiene errores: %s cerca de la linea %d"%(arch, ke[0], grammar.tokenizador.lineno)
                         resultado['resultado'] = "ERROR_COMPILACION"
@@ -160,7 +161,7 @@ Copyright (c) 2012 Developingo
                             num_caso += 1
                             mun = kworld(filas=caso['mundo']['dimensiones']['filas'], columnas=caso['mundo']['dimensiones']['columnas'], karel_pos=tuple(caso['mundo']['karel']['posicion']), orientacion=caso['mundo']['karel']['orientacion'], mochila=caso['mundo']['karel']['mochila'])
                             mun.carga_casillas(caso['mundo']['casillas'])
-                            runner = krunner(grammar.arbol, mundo=mun)
+                            runner = krunner(grammar.ejecutable, mundo=mun)
                             runner.run()
                             if runner.estado == 'OK':
                                 all_ok = True
@@ -221,7 +222,7 @@ Copyright (c) 2012 Developingo
                 except OSError:
                     print "No existe el archivo '%s'"%arch
                 except IOError:
-                    print "No existe el archivo '%s'"%archivomundo
+                    print "No existe el archivo de mundo '%s'"%archivomundo
                 except ValueError:
                     print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
             else:
@@ -247,7 +248,7 @@ Copyright (c) 2012 Developingo
                     entrada = re.split('\s+', raw_input('kcmd> '))
                 except EOFError:
                     break
-                if entrada[0] == 'salir' or entrada == 'exit':
+                if entrada[0] == 'salir' or entrada[0] == 'exit' or entrada[0] == 'quit' or entrada[0] == 'q':
                     break
                 elif entrada[0] == 'mochila' or entrada[0] == 'm':
                     try:
@@ -295,7 +296,7 @@ Copyright (c) 2012 Developingo
                 f = file(sys.argv[sys.argv.index('code')+1], 'w')
                 f.write("""iniciar-programa
     inicia-ejecucion
-        {TODO escribe un poco de algo}
+        {TODO escribe un poco de codigo}
         apagate;
     termina-ejecucion
 finalizar-programa
