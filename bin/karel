@@ -147,7 +147,7 @@ Copyright (c) 2012 Developingo
                         grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
                         grammar.expandir_arbol()
                     except KarelException, ke:
-                        resultado['mensaje'] = "El archivo %s tiene errores: %s cerca de la linea %d"%(arch, ke[0], grammar.tokenizador.lineno)
+                        resultado['mensaje'] = "El archivo %s tiene errores: %s cerca de la linea %d"%(arch, ke[0], grammar.lexer.linea)
                         resultado['resultado'] = "ERROR_COMPILACION"
                         if '--json' not in sys.argv:
                             print "El archivo %s tiene errores:"%arch
