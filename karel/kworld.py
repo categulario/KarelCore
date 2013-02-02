@@ -375,6 +375,17 @@ class kworld(object):
         else:
             return mundo
 
+    def exporta_casillas(self):
+        casillas = []
+        for llave, valor in self.mundo['casillas'].iteritems():
+            casillas.append({
+                    'fila': llave[0],
+                    'columna': llave[1],
+                    'zumbadores': valor['zumbadores'],
+                    'paredes': list(valor['paredes'])
+                })
+        return casillas
+
     def carga_casillas (self, casillas):
         """ Carga las casillas de un diccionario dado. """
         self.mundo_backup_c = self.mundo
@@ -441,7 +452,7 @@ class kworld(object):
             'casillas': dict()
         }
 
-    def __str__ (self, filas=8, columnas=12):
+    def __str__ (self, filas=16, columnas=35):
         """Imprime bien bonito la primera porción de mundo"""
         def num_digits(a):
             if a == -1:

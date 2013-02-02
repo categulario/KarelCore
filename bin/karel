@@ -35,28 +35,33 @@ from time import time
 import json
 from pprint import pprint
 
-def karel_init():
-    """Provee acceso a los modulos de Karel"""
-    # Try to detect where it is run from and set prefix and the search path.
-    # It is assumed that the user installed Cola using the --prefix= option
-    prefix = os.path.dirname(os.path.dirname(
-        os.path.realpath(os.path.abspath(__file__))))
+"""Provee acceso a los modulos de Karel"""
+# Try to detect where it is run from and set prefix and the search path.
+# It is assumed that the user installed Cola using the --prefix= option
+prefix = os.path.dirname(os.path.dirname(
+    os.path.realpath(os.path.abspath(__file__))))
 
-    # Look for modules in the source or install trees
-    cola_mod = os.path.join(prefix, 'karel', '__init__.py')
-    if os.path.exists(cola_mod):
-        # Source tree
-        sys.path.insert(1, prefix)
-    else:
-        # Install tree
-        install_lib = os.path.join(prefix, 'share', 'karel', 'lib')
-        sys.path.insert(1, install_lib)
+# Look for modules in the source or install trees
+cola_mod = os.path.join(prefix, 'karel', '__init__.py')
+if os.path.exists(cola_mod):
+    # Source tree
+    sys.path.insert(1, prefix)
+else:
+    # Install tree
+    install_lib = os.path.join(prefix, 'share', 'karel', 'lib')
+    sys.path.insert(1, install_lib)
 
-def mundo_editar(archivomundo=False):
+from karel.util import info
+from karel.kgrammar import kgrammar
+from karel.krunner import krunner
+from karel.kworld import kworld
+from karel.kutil import KarelException
+
+def mundo_editar(archivomundo=False, mundo=kworld()):
     if archivomundo:
         mun = kworld(archivo=file(archivomundo))
     else:
-        mun = kworld()
+        mun = mundo
     print mun
     while True: #Bucle para editar el mundo
         try:
@@ -105,13 +110,7 @@ def mundo_editar(archivomundo=False):
     return mun
 
 if __name__ == '__main__':
-    karel_init()#Inicializamos las rutas
-
-    from karel.util import info
-    from karel.kgrammar import kgrammar
-    from karel.krunner import krunner
-    from karel.kworld import kworld
-    from karel.kutil import KarelException
+    #karel_init()#Inicializamos las rutas
 
     if len(sys.argv) == 1:
         print info.cmd_help
@@ -316,17 +315,66 @@ finalizar-programa
                 f.close()
         elif 'testcase' in sys.argv: #Suite para construir casos de prueba
             num_casos = input("Cuantos casos se van a evaluar? ")
+            importa_posicion = raw_input('Importa la posicion final de karel? S/n: ').lower() == 's'
+            importa_orientacion = raw_input('Importa orientacion de karel? S/n: ').lower() == 's'
+            importa_mochila = raw_input('Importa la mochila de karel? S/n: ').lower() == 's'
+            importa_casillas = raw_input('Importan las casillas del mundo? S/n: ').lower() == 's'
             resultado = {
                 "casos": []
             }
             for i in xrange(num_casos):
+                print "vas a editar el mundo del caso %d"%(i+1)
+                raw_input('listo?')
                 caso = {
-                    "mundo": mundo_editar().exporta_mundo(),
+                    "mundo": mundo_editar(mundo = kworld()).exporta_mundo(),
                     "resultado": dict(),
                     "puntaje": raw_input("Caso %d\nCuantos puntos vale este caso? "%(i+1))
                 }
-                #Primero fabricamos el mundo inicial
-                pprint(caso)
+                comparativo = dict()
+                if importa_posicion:
+                    print "Posicion final de karel en el mundo %d"%(i+1)
+                    comparativo.update({
+                        'karel': {
+                            'posicion': [input('fila? '), input('columna? ')]
+                        }
+                    })
+                if importa_orientacion:
+                    print "Orientacion final de karel en el mundo %d"%(i+1)
+                    if comparativo.has_key('karel'):
+                        comparativo['karel'].update({
+                            'orientacion': raw_input('Orientacion? ')
+                        })
+                    else:
+                        comparativo.update({
+                            'karel':{
+                                'orientacion': raw_input('Orientacion? ')
+                            }
+                        })
+                if importa_mochila:
+                    print "Mochila final de karel en el mundo %d"%(i+1)
+                    if comparativo.has_key('karel'):
+                        comparativo['karel'].update({
+                            'mochila': input('mochila? ')
+                        })
+                    else:
+                        comparativo.update({
+                            'karel':{
+                                'mochila': input('Orientacion? ')
+                            }
+                        })
+                if importa_casillas:
+                    print "Casillas de comparacion para el mundo %d"%(i+1)
+                    raw_input('listo?')
+                    comparativo.update({
+                        'casillas': mundo_editar(mundo = kworld(karel_pos=(100, 100))).exporta_casillas()
+                    })
+                caso['resultado'] = comparativo
+                resultado['casos'].append(caso)
+                print "termina caso %d"%(i+1)
+                print "---------------"
+            f = file(raw_input('Nombre del archivo? '), 'w')
+            f.write(json.dumps(resultado, indent=2))
+            f.close()
         else:
             try:
                 if '-m' in sys.argv:
