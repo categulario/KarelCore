@@ -343,7 +343,7 @@ class kworld(object):
         else:
             return False
 
-    def exporta_mundo (self, nombrearchivo, expandir=False):
+    def exporta_mundo (self, nombrearchivo=False, expandir=False):
         """ Exporta las condiciones actuales del mundo usando algun
         lenguaje de marcado """
         mundo = {
@@ -365,12 +365,15 @@ class kworld(object):
                 'zumbadores': valor['zumbadores'],
                 'paredes': list(valor['paredes'])
             })
-        f = file(nombrearchivo, 'w')
-        if expandir:
-            f.write(json.dumps(mundo, indent=2))
+        if nombrearchivo:
+            f = file(nombrearchivo, 'w')
+            if expandir:
+                f.write(json.dumps(mundo, indent=2))
+            else:
+                f.write(json.dumps(mundo))
+            f.close()
         else:
-            f.write(json.dumps(mundo))
-        f.close()
+            return mundo
 
     def carga_casillas (self, casillas):
         """ Carga las casillas de un diccionario dado. """
