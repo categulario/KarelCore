@@ -142,7 +142,7 @@ Copyright (c) 2012 Developingo
                     f = file(archivomundo)
                     kec = json.load(f) #Tenemos el archivo de condiciones de evaluacion cargado.
                     arch = sys.argv[sys.argv.index('test')+1]
-                    grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv)
+                    grammar = kgrammar(flujo=open(arch), archivo=arch, strict=True,futuro='--futuro' in sys.argv)
                     try:
                         grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
                         grammar.expandir_arbol()
@@ -163,8 +163,8 @@ Copyright (c) 2012 Developingo
                             mun.carga_casillas(caso['mundo']['casillas'])
                             runner = krunner(grammar.ejecutable, mundo=mun)
                             runner.run()
+                            all_ok = True
                             if runner.estado == 'OK':
-                                all_ok = True
                                 if caso['resultado'].has_key('karel'):
                                     #Debemos buscar la posicion de karel o su mochila
                                     if caso['resultado']['karel'].has_key('posicion'):
@@ -197,12 +197,16 @@ Copyright (c) 2012 Developingo
                                 else:
                                     runner.estado = 'ERROR'
                                     resultado['resultado'] = "CASOS_INCOMPLETOS"
-                            #TODO verificar tambien el estado final de los casos
+                                    resultado['mensaje'] = "Tu codigo no funciona en todos los casos"
+                            else:
+                                resultado['resultado'] = "CASOS_INCOMPLETOS"
+                                resultado['mensaje'] = 'Tu codigo no funciona en todos los casos'
                             suma_puntos += caso['puntaje']
                             resultado['casos'].append({
                                 "terminacion": runner.estado,
                                 "mensaje": runner.mensaje,
-                                "puntos": caso['puntaje']
+                                "puntos": caso['puntaje'],
+                                "obtenidos": [0, caso['puntaje']][all_ok]
                             })
                             if '--json' not in sys.argv:
                                 print 'caso', num_caso, runner.estado, runner.mensaje, caso['puntaje'], 'puntos'
@@ -221,7 +225,8 @@ Copyright (c) 2012 Developingo
                     print "Falta el nombre de un archivo despues de '-k' o '-m'"
                 except OSError:
                     print "No existe el archivo '%s'"%arch
-                except IOError:
+                except IOError, e:
+                    print e
                     print "No existe el archivo de mundo '%s'"%archivomundo
                 except ValueError:
                     print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
