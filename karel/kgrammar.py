@@ -39,7 +39,7 @@ class kgrammar:
     """
     Clase que contiene y conoce la gramatica de karel
     """
-    def __init__(self, flujo=sys.stdin, archivo='', strict=True, futuro=False):
+    def __init__(self, flujo=sys.stdin, archivo='', strict=True, futuro=False, strong_logic=False):
         """ Inicializa la gramatica:
         flujo       indica el torrente de entrada
         archivo     es el nombre del archivo fuente, si existe
@@ -52,27 +52,29 @@ class kgrammar:
         #La instruccion sirve para combinarse con el bucle mientras y la condicion verdadero
         self.condiciones = [
             'frente-libre',
-            'frente-bloqueado',
             'derecha-libre',
-            'derecha-bloqueada',
             'izquierda-libre',
-            'izquierda-bloqueada',
             'junto-a-zumbador',
-            'no-junto-a-zumbador',
             'algun-zumbador-en-la-mochila',
-            'ningun-zumbador-en-la-mochila',
             "orientado-al-norte",
-            "no-orientado-al-norte",
             "orientado-al-este",
-            "no-orientado-al-este",
             "orientado-al-sur",
-            "no-orientado-al-sur",
             "orientado-al-oeste",
             "no-orientado-al-oeste",
+            "no-orientado-al-norte",
+            "no-orientado-al-sur",
+            "no-orientado-al-este",
+            'no-junto-a-zumbador',
+            'derecha-bloqueada',
+            'frente-bloqueado',
+            'izquierda-bloqueada',
+            'ningun-zumbador-en-la-mochila',
             "si-es-cero",
             "verdadero", #Reservadas para futuros usos
             "falso" #reservadas para futuros usos
         ]
+        if strong_logic: #Se eliminan las negaciones del lenguaje de Karel
+            self.condiciones = self.condiciones[:9] + self.condiciones[18:]
         if not futuro:
             self.condiciones = self.condiciones[:-2]
             self.instrucciones = self.instrucciones[:-2]
