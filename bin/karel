@@ -215,9 +215,9 @@ Copyright (c) 2012 Developingo
                             runner = krunner(
                                 grammar.ejecutable,
                                 mundo=mun,
-                                [limite_recursion=65000, sys.argv.index('--limite_recursion')+1]['--limite_recursion' in sys.argv],
-                                [limite_iteracion=65000, sys.argv.index('--limite_iteracion')+1]['--limite_iteracion' in sys.argv],
-                                [limite_ejecucion=200000, sys.argv.index('--limite_ejecucion')+1]['--limite_ejecucion' in sys.argv]
+                                limite_recursion=[65000, sys.argv.index('--limite_recursion')+1]['--limite_recursion' in sys.argv],
+                                limite_iteracion=[65000, sys.argv.index('--limite_iteracion')+1]['--limite_iteracion' in sys.argv],
+                                limite_ejecucion=[200000, sys.argv.index('--limite_ejecucion')+1]['--limite_ejecucion' in sys.argv]
                             )
                             runner.run()
                             all_ok = True
