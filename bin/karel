@@ -192,7 +192,7 @@ Copyright (c) 2012 Developingo
                     archivomundo = sys.argv[sys.argv.index('-m')+1]
                     f = file(archivomundo)
                     kec = json.load(f) #Tenemos el archivo de condiciones de evaluacion cargado.
-                    arch = sys.argv[sys.argv.index('test')+1]
+                    arch = sys.argv[sys.argv.index('test')+1] #Programa a evaluar
                     grammar = kgrammar(flujo=open(arch), archivo=arch, strict=True,futuro='--futuro' in sys.argv)
                     try:
                         grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
@@ -212,7 +212,13 @@ Copyright (c) 2012 Developingo
                             num_caso += 1
                             mun = kworld(filas=caso['mundo']['dimensiones']['filas'], columnas=caso['mundo']['dimensiones']['columnas'], karel_pos=tuple(caso['mundo']['karel']['posicion']), orientacion=caso['mundo']['karel']['orientacion'], mochila=caso['mundo']['karel']['mochila'])
                             mun.carga_casillas(caso['mundo']['casillas'])
-                            runner = krunner(grammar.ejecutable, mundo=mun)
+                            runner = krunner(
+                                grammar.ejecutable,
+                                mundo=mun,
+                                [limite_recursion=65000, sys.argv.index('--limite_recursion')+1]['--limite_recursion' in sys.argv],
+                                [limite_iteracion=65000, sys.argv.index('--limite_iteracion')+1]['--limite_iteracion' in sys.argv],
+                                [limite_ejecucion=200000, sys.argv.index('--limite_ejecucion')+1]['--limite_ejecucion' in sys.argv]
+                            )
                             runner.run()
                             all_ok = True
                             if runner.estado == 'OK':

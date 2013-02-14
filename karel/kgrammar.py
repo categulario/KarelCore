@@ -41,11 +41,14 @@ class kgrammar:
     """
     def __init__(self, flujo=sys.stdin, archivo='', strict=True, futuro=False, strong_logic=False):
         """ Inicializa la gramatica:
-        flujo       indica el torrente de entrada
-        archivo     es el nombre del archivo fuente, si existe
-        debug       indica si es necesario imprimir mensajes para debug
-        futuro      indica si se pueden usar caracteristicas del futuro
-                    de Karel como las condiciones 'falso' y 'verdadero'"""
+        flujo           indica el torrente de entrada
+        archivo         es el nombre del archivo fuente, si existe
+        strict          Marca una sintaxis más 'estricta' que impide no usar la sentencia apágate
+        futuro          indica si se pueden usar caracteristicas del futuro
+                        de Karel como las condiciones 'falso' y 'verdadero'
+        strong_logic    Elimina las negaciones del lenguaje de karel, propiciando el uso de la
+                        palabra 'no' para negar enunciados
+        """
         self.strict = strict
         self.tiene_apagate = False
         self.instrucciones = ['avanza', 'gira-izquierda', 'coge-zumbador', 'deja-zumbador', 'apagate', 'sal-de-instruccion', 'sal-de-bucle', 'continua-bucle']
