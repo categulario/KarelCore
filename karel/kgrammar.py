@@ -175,18 +175,88 @@ class kgrammar:
             return False
 
     def class_body(self):
-        if self.token_actual == '{':
-            while self.token_actual == 'void' or self.token_actual == 'define':
-                self.declaracion_de_procedimiento_java()
-
-            if self.token_actual == self.nombre_clase: #Constructor de la clase
-                self.avanza_token()
-                self.empty_arguments()
-                self.arbol['main'] = self.block([], False, False)
-            else:
-                raise KarelException('%s no es un nombre de constructor válido, debe coincidir con el nombre de la clase')
-        else:
+        if self.token_actual != '{':
             raise KarelException("Se esperaba '{' para iniciar la declaración de la clase")
+
+        while self.token_actual == 'void' or self.token_actual == 'define':
+            self.method_declaration()
+
+        if self.token_actual == self.nombre_clase: #Constructor de la clase
+            self.avanza_token()
+            self.empty_arguments()
+            self.arbol['main'] = self.block([], False, False)
+        else:
+            raise KarelException('%s no es un nombre de constructor válido, debe coincidir con el nombre de la clase'%self.token_actual)
+
+        while self.token_actual == 'void' or self.token_actual == 'define':
+            self.method_declaration()
+
+        if self.token_actual != '}':
+            raise KarelException("Se esperaba '}' para iniciar la declaración de la clase")
+
+    def method_declaration(self):
+        self.avanza_token()
+
+        requiere_parametros = False #Indica si la funcion a definir tiene parametros
+        nombre_funcion = ''
+
+        if self.token_actual in self.palabras_reservadas_java or not self.es_identificador_valido(self.token_actual):
+            raise KarelException("Se esperaba un nombre de método válido, '%s' no lo es"%self.token_actual)
+
+        if self.funciones.has_key(self.token_actual):
+            raise KarelException("Ya se ha definido una funcion con el nombre '%s'"%self.token_actual)
+        else:
+            self.funciones.update({self.token_actual: []})
+            nombre_funcion = self.token_actual
+
+        self.arbol['funciones'].update({
+            nombre_funcion : {
+                'params': [],
+                'cola': []
+            }
+        })
+
+        self.avanza_token()
+
+        if self.token_actual == '(':
+            self.avanza_token()
+            requiere_parametros = True
+            while True:
+                if self.token_actual in self.palabras_reservadas_java or not self.es_identificador_valido(self.token_actual):
+                    raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
+                else:
+                    if self.token_actual in self.funciones[nombre_funcion]:
+                        raise KarelException("El método '%s' ya tiene un parámetro con el nombre '%s'"%(nombre_funcion, self.token_actual))
+                    else:
+                        self.funciones[nombre_funcion].append(self.token_actual)
+                        self.avanza_token()
+
+                    if self.token_actual == ')':
+                        self.lexer.push_token(')') #Devolvemos el token a la pila
+                        break
+                    elif self.token_actual == ',':
+                        self.avanza_token()
+                    else:
+                        raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
+            self.arbol['funciones'][nombre_funcion]['params'] = self.funciones[nombre_funcion]
+        else:
+            raise KarelException("Se esperaba '('")
+
+        if requiere_parametros:
+            self.avanza_token()
+            if self.token_actual != ')':
+                raise KarelException("Se esperaba ')'")
+            self.avanza_token()
+            if self.token_actual != 'como':
+                raise KarelException("se esperaba la palabra clave 'como'")
+            self.avanza_token()
+
+        self.arbol['funciones'][nombre_funcion]['cola'] = self.statement(self.funciones[nombre_funcion], True, False)
+
+        if self.token_actual != ';':
+            raise KarelException("Se esperaba ';'")
+        else:
+            self.avanza_token()
 
     def empty_arguments(self):
         if self.token_actual == '(':
@@ -1022,6 +1092,7 @@ class kgrammar:
                 if self.avanza_token():
                     if self.es_identificador_valido(self.token_actual):
                         self.nombre_clase = self.token_actual
+                        self.avanza_token()
                         self.class_body()
 
                         #toca revisar las llamadas a funciones hechas durante el programa

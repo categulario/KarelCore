@@ -56,7 +56,7 @@ class klexer(object):
         self.estado = self.ESTADO_ESPACIO
         self.posicion = ktoken.POSICION_INICIO
 
-        self.sintaxis = 'pascal' #para la gestion de los comentarios
+        self.sintaxis = 'java' #para la gestion de los comentarios
 
         self.debug = debug
         if self.debug:
