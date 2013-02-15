@@ -65,10 +65,10 @@ class klexer(object):
     def lee_caracter(self):
         """Lee un caracter de la fuente o devuelve uno de la pila si no
         está vacía"""
+        self.ultimo_caracter = self.caracter_actual
         if len(self.pila_chars)!=0:
             return self.pila_chars.pop()
         else:
-            self.ultimo_caracter = self.caracter_actual
             return self.archivo.read(1)
 
     def get_token(self):
@@ -174,8 +174,6 @@ class klexer(object):
                     self.push_char(self.caracter_actual)
                     if self.token:
                         break
-                    else:
-                        continue
                 elif self.caracter_actual in self.palabras:
                     self.estado = self.ESTADO_PALABRA
                     self.push_char(self.caracter_actual)
@@ -210,7 +208,6 @@ class klexer(object):
                         break
                     else:
                         self.token += self.caracter_actual
-                        continue
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
                         self.tiene_cambio_de_linea = True
@@ -238,7 +235,7 @@ if __name__ == '__main__':
     debug=0
     if '-d' in sys.argv:
         debug=1
-    if len(sys.argv)>1:
+    if len(sys.argv)>1 and sys.argv[1] != '-d':
         lexer = klexer(open(sys.argv[1]), sys.argv[1], debug=debug)
     else:
         lexer = klexer(debug=debug)
