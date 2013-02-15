@@ -218,45 +218,35 @@ class kgrammar:
 
         self.avanza_token()
 
-        if self.token_actual == '(':
-            self.avanza_token()
-            requiere_parametros = True
-            while True:
-                if self.token_actual in self.palabras_reservadas_java or not self.es_identificador_valido(self.token_actual):
-                    raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
-                else:
-                    if self.token_actual in self.funciones[nombre_funcion]:
-                        raise KarelException("El método '%s' ya tiene un parámetro con el nombre '%s'"%(nombre_funcion, self.token_actual))
-                    else:
-                        self.funciones[nombre_funcion].append(self.token_actual)
-                        self.avanza_token()
-
-                    if self.token_actual == ')':
-                        self.lexer.push_token(')') #Devolvemos el token a la pila
-                        break
-                    elif self.token_actual == ',':
-                        self.avanza_token()
-                    else:
-                        raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
-            self.arbol['funciones'][nombre_funcion]['params'] = self.funciones[nombre_funcion]
-        else:
+        if self.token_actual != '(':
             raise KarelException("Se esperaba '('")
 
-        if requiere_parametros:
-            self.avanza_token()
-            if self.token_actual != ')':
-                raise KarelException("Se esperaba ')'")
-            self.avanza_token()
-            if self.token_actual != 'como':
-                raise KarelException("se esperaba la palabra clave 'como'")
-            self.avanza_token()
+        self.avanza_token()
+        while self.token_actual != ')':
+            if self.token_actual in self.palabras_reservadas_java or not self.es_identificador_valido(self.token_actual):
+                raise KarelException("Se esperaba un nombre de variable, '%s' no es válido"%self.token_actual)
+            else:
+                if self.token_actual in self.funciones[nombre_funcion]:
+                    raise KarelException("El método '%s' ya tiene un parámetro con el nombre '%s'"%(nombre_funcion, self.token_actual))
+                else:
+                    self.funciones[nombre_funcion].append(self.token_actual)
+                    self.avanza_token()
+
+                if self.token_actual == ',':
+                    self.avanza_token()
+                elif self.token_actual == ')':
+                    break
+                else:
+                    raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
+
+        self.arbol['funciones'][nombre_funcion]['params'] = self.funciones[nombre_funcion]
+
+        self.avanza_token()
+        if self.token_actual != ')':
+            raise KarelException("Se esperaba ')'")
+        self.avanza_token()
 
         self.arbol['funciones'][nombre_funcion]['cola'] = self.statement(self.funciones[nombre_funcion], True, False)
-
-        if self.token_actual != ';':
-            raise KarelException("Se esperaba ';'")
-        else:
-            self.avanza_token()
 
     def empty_arguments(self):
         if self.token_actual == '(':
