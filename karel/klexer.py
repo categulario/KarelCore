@@ -59,6 +59,7 @@ class klexer(object):
         self.sintaxis = 'java' #para la gestion de los comentarios
 
         self.debug = debug
+        self.caracter_actual = self.lee_caracter()
         if self.debug:
             print "leyendo archivo '%s'"%self.nombre_archivo
 
@@ -91,7 +92,6 @@ class klexer(object):
     def lee_token(self):
         """Lee un token del archivo"""
         while True:
-            self.caracter_actual = self.lee_caracter()
             self.columna += 1
             if not self.caracter_actual:
                 break
@@ -123,8 +123,8 @@ class klexer(object):
                     self.token += self.caracter_actual
                     self.estado = self.ESTADO_PALABRA
                 elif self.caracter_actual in self.simbolos:
-                    self.push_char(self.caracter_actual) #Podria ser algo valido como ();,
                     self.estado = self.ESTADO_SIMBOLO
+                    continue
                 elif self.caracter_actual == '\n':
                     self.tiene_cambio_de_linea = True
             elif self.estado == self.ESTADO_NUMERO:
@@ -138,7 +138,6 @@ class klexer(object):
                     raise KarelException("Este token no parece valido, linea %d columna %d"%(self.linea, self.columna))
                 elif self.caracter_actual in self.simbolos:
                     self.estado = self.ESTADO_SIMBOLO
-                    self.push_char(self.caracter_actual)
                     break
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
@@ -154,7 +153,6 @@ class klexer(object):
                     self.token += self.caracter_actual
                 elif self.caracter_actual in self.simbolos:
                     self.estado = self.ESTADO_SIMBOLO
-                    self.push_char(self.caracter_actual)
                     break
                 elif self.caracter_actual in self.espacios:
                     if self.caracter_actual == '\n':
@@ -169,42 +167,39 @@ class klexer(object):
                 if self.caracter_actual == '{' and self.sintaxis=='pascal':
                     self.abrir_comentario = '{'
                     self.estado = self.ESTADO_COMENTARIO
+                    if self.token:
+                        break
                 elif self.caracter_actual in self.numeros:
                     self.estado = self.ESTADO_NUMERO
-                    self.push_char(self.caracter_actual)
                     if self.token:
                         break
                 elif self.caracter_actual in self.palabras:
                     self.estado = self.ESTADO_PALABRA
-                    self.push_char(self.caracter_actual)
                     if self.token:
                         break
-                elif self.caracter_actual in self.simbolos:
-                    if self.ultimo_caracter == "(":
-                        if self.caracter_actual == '*':
-                            self.token = ''
-                            self.estado = self.ESTADO_COMENTARIO
-                            self.abrir_comentario = '(*'
-                            continue
-                        else:
-                            self.push_char(self.caracter_actual)
+                elif self.caracter_actual in self.simbolos: #Encontramos un símbolo en estado símbolo
+                    if self.caracter_actual == '/' and self.ultimo_caracter == '/':
+                        self.archivo.readline()
+                        self.estado = self.ESTADO_ESPACIO
+                        if self.token.endswith('/'):
+                            self.token = self.token[:-1]
+                        if self.token:
+                            self.caracter_actual = self.lee_caracter()
                             break
-                    elif self.ultimo_caracter == '/':
-                        if self.caracter_actual == '*':
-                            self.token = ''
-                            self.estado = self.ESTADO_COMENTARIO
-                            self.abrir_comentario = '/*'
-                            continue
-                        elif self.caracter_actual == '/':
-                            self.archivo.readline()
-                            self.estado = self.ESTADO_ESPACIO
-                            self.token = ''
-                            continue
-                        else:
-                            self.push_char(self.caracter_actual)
+                    elif self.caracter_actual == '*' and self.ultimo_caracter == '/':
+                        self.estado = self.ESTADO_COMENTARIO
+                        self.abrir_comentario = '/*'
+                        if self.token.endswith('/'):
+                            self.token = self.token[:-1]
+                        if self.token:
+                            self.caracter_actual = self.lee_caracter()
                             break
-                    elif self.caracter_actual != '(' and self.caracter_actual != '/': #los únicos símbolos con continuación
+                    elif self.caracter_actual in ['(', ';', ')', '{', '}', '!']: #Caracteres que viven solos
+                        self.estado = self.ESTADO_ESPACIO
+                        if self.token:
+                            break
                         self.token += self.caracter_actual
+                        self.caracter_actual = self.lee_caracter()
                         break
                     else:
                         self.token += self.caracter_actual
@@ -212,8 +207,11 @@ class klexer(object):
                     if self.caracter_actual == '\n':
                         self.tiene_cambio_de_linea = True
                     self.estado = self.ESTADO_ESPACIO
+                    if self.token:
+                        break
                 else:
                     raise KarelException("Caracter desconocido en la linea %d columna %d"%(self.linea, self.columna))
+            self.caracter_actual = self.lee_caracter()
         token = self.token
         self.token = ''
         return ktoken(token, self.linea, self.columna, self.posicion)
