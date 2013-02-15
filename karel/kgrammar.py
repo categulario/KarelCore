@@ -32,6 +32,7 @@ from kutil import KarelException
 from kutil import xml_prepare
 from string import ascii_letters
 from collections import deque
+from pprint import pprint
 import json
 import sys
 
@@ -177,6 +178,7 @@ class kgrammar:
     def class_body(self):
         if self.token_actual != '{':
             raise KarelException("Se esperaba '{' para iniciar la declaración de la clase")
+        self.avanza_token()
 
         while self.token_actual == 'void' or self.token_actual == 'define':
             self.method_declaration()
@@ -219,7 +221,7 @@ class kgrammar:
         self.avanza_token()
 
         if self.token_actual != '(':
-            raise KarelException("Se esperaba '('")
+            raise KarelException("Se esperaba '(' después del nombre de un método")
 
         self.avanza_token()
         while self.token_actual != ')':
@@ -241,9 +243,8 @@ class kgrammar:
 
         self.arbol['funciones'][nombre_funcion]['params'] = self.funciones[nombre_funcion]
 
-        self.avanza_token()
         if self.token_actual != ')':
-            raise KarelException("Se esperaba ')'")
+            raise KarelException("Se esperaba ')' luego de la lista de parámetros de un método")
         self.avanza_token()
 
         self.arbol['funciones'][nombre_funcion]['cola'] = self.statement(self.funciones[nombre_funcion], True, False)
@@ -256,7 +257,7 @@ class kgrammar:
             else:
                 raise KarelException("Se esperaba ')'")
         else:
-            raise KarelException("Se esperaba '('")
+            raise KarelException("Se esperaba '(' en esta declaración de argumentos vacíos")
 
     def block(self, lista_variables, c_funcion, c_bucle):
         retornar_valor = [] #Una lista de funciones
@@ -267,17 +268,13 @@ class kgrammar:
 
         while self.token_actual != '}':
             retornar_valor += self.statement(lista_variables, c_funcion, c_bucle)
-            if self.token_actual != ';':
-                raise KarelException("Se esperaba ';'")
-            else:
-                self.avanza_token()
 
         return retornar_valor
 
     def statement(self, lista_variables, c_funcion, c_bucle):
         retornar_valor = []
 
-        if self.token_actual in self.instrucciones:
+        if self.token_actual in self.instrucciones_java:
             if self.token_actual == 'return':
                 if c_funcion:
                     retornar_valor = [self.traducir(self.token_actual)]
@@ -293,10 +290,13 @@ class kgrammar:
             else:
                 if self.token_actual == 'turnoff':
                     self.tiene_apagate = True
+                retornar_valor = [self.traducir(self.token_actual)]
                 self.avanza_token()
                 self.empty_arguments()
-                retornar_valor = [self.token_actual]
-                self.avanza_token()
+                if self.token_actual != ';':
+                    raise KarelException("Se esperaba ';' después de una llamada a función")
+                else:
+                    self.avanza_token()
         elif self.token_actual == 'if':
             retornar_valor = [self.if_statement(lista_variables, c_funcion, c_bucle)]
         elif self.token_actual == 'while':
@@ -309,7 +309,7 @@ class kgrammar:
                 self.avanza_token()
             else:
                 raise KarelException("Se esperaba '}' para concluir el bloque, encontré '%s'"%self.token_actual)
-        elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
+        elif self.token_actual not in self.palabras_reservadas_java and self.es_identificador_valido(self.token_actual):
             #Se trata de una instrucción creada por el usuario
             nombre_funcion = self.token_actual
             retornar_valor = [{
@@ -318,23 +318,31 @@ class kgrammar:
                 'argumento': []
             }]
             self.avanza_token()
-            requiere_parametros = True
+
+            if self.token_actual != '(':
+                raise KarelException("Se esperaba '(' para indicar los parámetros de la funcion")
+            self.avanza_token()
+
             num_parametros = 0
-            if self.token_actual == '(':
-                self.avanza_token()
-                while True:
-                    retornar_valor[0]['argumento'].append(self.int_exp(lista_variables))
-                    num_parametros += 1
-                    if self.token_actual == ')':
-                        break
-                    elif self.token_actual == ',':
-                        self.avanza_token()
-                    else:
-                        raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
-                if not self.futuro and num_parametros>1:
-                    raise KarelException("No están habilitadas las funciones con varios parámetros")
-                self.avanza_token()
+            while self.token_actual != ')':
+                retornar_valor[0]['argumento'].append(self.int_exp(lista_variables))
+                num_parametros += 1
+                if self.token_actual == ')':
+                    break
+                elif self.token_actual == ',':
+                    self.avanza_token()
+                else:
+                    raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
+            self.avanza_token()
+
+            if not self.futuro and num_parametros>1:
+                raise KarelException("No están habilitadas las funciones con varios parámetros")
+
             self.llamadas_funciones.update({nombre_funcion: num_parametros}) #La usaremos para luego comparar existencias
+            if self.token_actual != ';':
+                raise KarelException("Se esperaba ';' después de una llamada a función")
+            else:
+                self.avanza_token()
         else:
             raise KarelException("Se esperaba un procedimiento, '%s' no es válido"%self.token_actual)
 
@@ -350,7 +358,7 @@ class kgrammar:
         self.avanza_token()
 
         if self.token_actual != '(':
-            raise KarelException("Se esperaba '('")
+            raise KarelException("Se esperaba '(' para indicar argumento lógico del 'if'")
         self.avanza_token()
 
         retornar_valor['argumento'] = self.expression(lista_variables)
@@ -377,10 +385,10 @@ class kgrammar:
         self.avanza_token()
 
         if self.token_actual != '(':
-            raise KarelException("Se esperaba '('")
+            raise KarelException("Se esperaba '(' para indicar el argumento lógico del 'while'")
         self.avanza_token()
 
-        retornar_valor['argumento'] = self.termino(lista_variables)
+        retornar_valor['argumento'] = self.expression(lista_variables)
 
         if self.token_actual != ')':
             raise KarelException("Se esperaba ')'")
@@ -400,13 +408,13 @@ class kgrammar:
         self.avanza_token()
 
         if self.token_actual != '(':
-            raise KarelException("Se esperaba '('")
+            raise KarelException("Se esperaba '(' para indicar el argumento de iterate")
         self.avanza_token()
 
         retornar_valor['argumento'] = self.int_exp(lista_variables)
 
         if self.token_actual != ')':
-            raise KarelException("Se esperaba ')'")
+            raise KarelException("Se esperaba ')' para cerrar el argumento de iterate")
         self.avanza_token()
 
         retornar_valor['cola'] = self.statement(lista_variables, c_funcion, True)
@@ -436,7 +444,7 @@ class kgrammar:
                     else:
                         raise KarelException("Se esperaba ')'")
                 else:
-                    raise KarelException("Se esperaba '('")
+                    raise KarelException("Se esperaba '(' para indicar argumento de succ o pred")
             elif self.token_actual not in self.palabras_reservadas_java and self.es_identificador_valido(self.token_actual):
                 #Se trata de una variable definida por el usuario
                 if self.token_actual not in lista_variables:
@@ -444,7 +452,7 @@ class kgrammar:
                 retornar_valor = self.token_actual
                 self.avanza_token()
             else:
-                raise KarelException("Se esperaba un entero, variable, sucede o predece, '%s' no es válido"%self.token_actual)
+                raise KarelException("Se esperaba un entero, variable, succ o pred, '%s' no es válido"%self.token_actual)
         if es_numero:
             #Si se pudo convertir, avanzamos
             self.avanza_token()
@@ -493,7 +501,7 @@ class kgrammar:
                 else:
                     raise KarelException("Se esperaba ')'")
             else:
-                raise KarelException("Se esperaba '('")
+                raise KarelException("Se esperaba '(' para indicar argumento de 'iszero'")
         elif self.token_actual == '(':
             self.avanza_token()
             retornar_valor = self.expression(lista_variables)
@@ -575,7 +583,7 @@ class kgrammar:
                 else:
                     raise KarelException("Se esperaba ')'")
             else:
-                raise KarelException("Se esperaba '('")
+                raise KarelException("Se esperaba '(' para indicar argumento de 'si-es-cero'")
         elif self.token_actual == '(':
             self.avanza_token()
             retornar_valor = self.termino(lista_variables)
@@ -889,7 +897,7 @@ class kgrammar:
                     else:
                         raise KarelException("Se esperaba ')'")
                 else:
-                    raise KarelException("Se esperaba '('")
+                    raise KarelException("Se esperaba '(' para indicar argumento de precede o sucede")
             elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
                 #Se trata de una variable definida por el usuario
                 if self.token_actual not in lista_variables:
@@ -1086,9 +1094,9 @@ class kgrammar:
                         self.class_body()
 
                         #toca revisar las llamadas a funciones hechas durante el programa
-                        for funcion, params in self.llamadas_funciones:
+                        for funcion in self.llamadas_funciones:
                             if self.funciones.has_key(funcion):
-                                if len(self.funciones[funcion]) != params:
+                                if len(self.funciones[funcion]) != self.llamadas_funciones[funcion]:
                                     raise KarelException("La funcion '%s' no se llama con la misma cantidad de parámetros que como se definió"%funcion)
                             else:
                                 raise KarelException("La función '%s' es llamada pero no fue declarada"%funcion)

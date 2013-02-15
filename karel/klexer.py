@@ -56,7 +56,7 @@ class klexer(object):
         self.estado = self.ESTADO_ESPACIO
         self.posicion = ktoken.POSICION_INICIO
 
-        self.sintaxis = 'java' #para la gestion de los comentarios
+        self.sintaxis = 'pascal' #para la gestion de los comentarios
 
         self.debug = debug
         self.caracter_actual = self.lee_caracter()
@@ -190,6 +190,14 @@ class klexer(object):
                         self.estado = self.ESTADO_COMENTARIO
                         self.abrir_comentario = '/*'
                         if self.token.endswith('/'):
+                            self.token = self.token[:-1]
+                        if self.token:
+                            self.caracter_actual = self.lee_caracter()
+                            break
+                    elif self.caracter_actual == '*' and self.ultimo_caracter == '(' and self.sintaxis == 'pascal':
+                        self.estado = self.ESTADO_COMENTARIO
+                        self.abrir_comentario = '(*'
+                        if self.token.endswith('('):
                             self.token = self.token[:-1]
                         if self.token:
                             self.caracter_actual = self.lee_caracter()
