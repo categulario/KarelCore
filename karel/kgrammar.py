@@ -279,12 +279,21 @@ class kgrammar:
                 if c_funcion:
                     retornar_valor = [self.traducir(self.token_actual)]
                     self.avanza_token()
+                    self.empty_arguments()
+                    if self.token_actual != ';':
+                        raise KarelException("Se esperaba ';' después de una llamada a función")
+                    else:
+                        self.avanza_token()
                 else:
                     raise KarelException("No es posible usar 'return' fuera de una instruccion :)")
             elif self.token_actual == 'break' or self.token_actual == 'continue':
                 if c_bucle:
                     retornar_valor = [self.traducir(self.token_actual)]
                     self.avanza_token()
+                    if self.token_actual != ';':
+                        raise KarelException("Se esperaba ';' después de una llamada a función")
+                    else:
+                        self.avanza_token()
                 else:
                     raise KarelException("No es posible usar '"+self.token_actual.token+"' fuera de un bucle :)")
             else:
