@@ -267,7 +267,7 @@ Copyright (c) 2012 Developingo
                             else:
                                 resultado['resultado'] = "CASOS_INCOMPLETOS"
                                 resultado['mensaje'] = 'Tu codigo no funciona en todos los casos'
-                            suma_puntos += caso['puntaje']
+                            suma_puntos += int(caso['puntaje'])
                             resultado['casos'].append({
                                 "terminacion": runner.estado,
                                 "mensaje": runner.mensaje,
