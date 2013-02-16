@@ -259,7 +259,7 @@ Copyright (c) 2012 Developingo
                                             all_ok = False
                                             runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta'
                                 if all_ok:
-                                    puntaje += caso['puntaje']
+                                    puntaje += int(caso['puntaje'])
                                 else:
                                     runner.estado = 'ERROR'
                                     resultado['resultado'] = "CASOS_INCOMPLETOS"
