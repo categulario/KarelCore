@@ -433,7 +433,7 @@ class kgrammar:
             #No era un entero
             if self.token_actual in self.expresiones_enteras_java:
                 retornar_valor = {
-                    self.token_actual: None
+                    self.traducir(self.token_actual): None
                 }
                 self.avanza_token()
                 if self.token_actual == '(':

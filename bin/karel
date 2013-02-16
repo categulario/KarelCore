@@ -109,6 +109,15 @@ def mundo_editar(archivomundo=False, mundo=kworld()):
         print mun
     return mun
 
+def index(lista, valor):
+    """Devuelve la posicion de valor en lista"""
+    c = 0
+    for i in lista:
+        if i == valor:
+            return c
+        c+=1
+    return -1
+
 if __name__ == '__main__':
     #karel_init()#Inicializamos las rutas
 
@@ -215,9 +224,9 @@ Copyright (c) 2012 Developingo
                             runner = krunner(
                                 grammar.ejecutable,
                                 mundo=mun,
-                                limite_recursion=[65000, sys.argv.index('--limite_recursion')+1]['--limite_recursion' in sys.argv],
-                                limite_iteracion=[65000, sys.argv.index('--limite_iteracion')+1]['--limite_iteracion' in sys.argv],
-                                limite_ejecucion=[200000, sys.argv.index('--limite_ejecucion')+1]['--limite_ejecucion' in sys.argv]
+                                limite_recursion=[65000, sys.argv[index(sys.argv, '--limite_recursion')+1]]['--limite_recursion' in sys.argv],
+                                limite_iteracion=[65000, sys.argv[index(sys.argv, '--limite_iteracion')+1]]['--limite_iteracion' in sys.argv],
+                                limite_ejecucion=[200000, sys.argv[index(sys.argv, '--limite_ejecucion')+1]]['--limite_ejecucion' in sys.argv]
                             )
                             runner.run()
                             all_ok = True
@@ -285,7 +294,8 @@ Copyright (c) 2012 Developingo
                 except IOError, e:
                     print e
                     print "No existe el archivo de mundo '%s'"%archivomundo
-                except ValueError:
+                except ValueError, e:
+                    print e
                     print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
             else:
                 print info.ayuda('test')
