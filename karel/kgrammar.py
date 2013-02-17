@@ -279,7 +279,8 @@ class kgrammar:
                 if c_funcion:
                     retornar_valor = [self.traducir(self.token_actual)]
                     self.avanza_token()
-                    self.empty_arguments()
+                    if self.token_actual == '(':
+                        self.empty_arguments()
                     if self.token_actual != ';':
                         raise KarelException("Se esperaba ';' después de una llamada a función")
                     else:
@@ -290,6 +291,8 @@ class kgrammar:
                 if c_bucle:
                     retornar_valor = [self.traducir(self.token_actual)]
                     self.avanza_token()
+                    if self.token_actual == '(':
+                        self.empty_arguments()
                     if self.token_actual != ';':
                         raise KarelException("Se esperaba ';' después de una llamada a función")
                     else:
