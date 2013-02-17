@@ -106,6 +106,13 @@ def mundo_editar(archivomundo=False, mundo=kworld()):
                 mun.exporta_mundo(archivomundo)
             print "Guardado!"
             continue
+        elif entrada[0] == 'limpia' or entrada[0] == 'l':
+            del mun
+            mun = kworld()
+        elif entrada[0] == 'load':
+            nombre_archivo = entrada[1]
+            del mun
+            mun = kworld(archivo=file(nombre_archivo))
         print mun
     return mun
 
@@ -221,12 +228,23 @@ Copyright (c) 2012 Developingo
                             num_caso += 1
                             mun = kworld(filas=caso['mundo']['dimensiones']['filas'], columnas=caso['mundo']['dimensiones']['columnas'], karel_pos=tuple(caso['mundo']['karel']['posicion']), orientacion=caso['mundo']['karel']['orientacion'], mochila=caso['mundo']['karel']['mochila'])
                             mun.carga_casillas(caso['mundo']['casillas'])
+
+                            limite_recursion = 65000
+                            if index(sys.argv, '--limite-recursion')!=-1:
+                                limite_recursion = int(sys.argv[index(sys.argv, '--limite-recursion')+1])
+                            limite_iteracion = 65000
+                            if index(sys.argv, '--limite-iteracion')!=-1:
+                                limite_iteracion = int(sys.argv[index(sys.argv, '--limite-iteracion')+1])
+                            limite_ejecucion = 200000
+                            if index(sys.argv, '--limite-ejecucion')!=-1:
+                                limite_ejecucion = int(sys.argv[index(sys.argv, '--limite-ejecucion')+1])
+
                             runner = krunner(
                                 grammar.ejecutable,
                                 mundo=mun,
-                                limite_recursion=[65000, sys.argv[index(sys.argv, '--limite_recursion')+1]]['--limite_recursion' in sys.argv],
-                                limite_iteracion=[65000, sys.argv[index(sys.argv, '--limite_iteracion')+1]]['--limite_iteracion' in sys.argv],
-                                limite_ejecucion=[200000, sys.argv[index(sys.argv, '--limite_ejecucion')+1]]['--limite_ejecucion' in sys.argv]
+                                limite_recursion=limite_recursion,
+                                limite_iteracion=limite_iteracion,
+                                limite_ejecucion=limite_ejecucion
                             )
                             runner.run()
                             all_ok = True
@@ -257,7 +275,7 @@ Copyright (c) 2012 Developingo
                                                 runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta'
                                         else:
                                             all_ok = False
-                                            runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta'
+                                            runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta!'
                                 if all_ok:
                                     puntaje += int(caso['puntaje'])
                                 else:
@@ -321,7 +339,16 @@ Copyright (c) 2012 Developingo
                 mundo.exporta_mundo(sys.argv[sys.argv.index('world')+1], '--expand' in sys.argv)
             elif 'code' in sys.argv:
                 f = file(sys.argv[sys.argv.index('code')+1], 'w')
-                f.write("""iniciar-programa
+                if '--java' in sys.argv:
+                    f.write("""class program{
+    program(){
+        //TODO escribe un poco de codigo
+        turnoff();
+    }
+}
+""")
+                else:
+                    f.write("""iniciar-programa
     inicia-ejecucion
         {TODO escribe un poco de codigo}
         apagate;
@@ -391,6 +418,49 @@ finalizar-programa
             f = file(raw_input('Nombre del archivo? '), 'w')
             f.write(json.dumps(resultado, indent=2))
             f.close()
+        elif 'step' in sys.argv:
+            try:
+                if '-m' in sys.argv:
+                    archivomundo = sys.argv[sys.argv.index('-m')+1]
+                    mun = kworld(archivo=file(archivomundo))
+                else:
+                    mun = kworld()
+                arch = sys.argv[sys.argv.index('-k')+1]
+                runner = None
+                grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv, strict=True)
+                try:
+                    grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
+                    grammar.expandir_arbol()
+                except KarelException, ke:
+                    print "El archivo %s tiene errores:"%arch
+                    print "\t", ke[0], "en la linea", grammar.lexer.linea
+                else:
+                    #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
+                    runner = krunner(grammar.ejecutable, mundo=mun)
+                    t_inicio = time()
+
+                    runner.step_run()
+                    while runner.corriendo:
+                        raw_input('>>>')
+                        runner.step()
+                    #runner.run()
+
+                    t_fin = time()
+                    print runner.estado, runner.mensaje
+                    print "Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo"
+                    if 'dim' in sys.argv:
+                        filas = int(sys.argv[sys.argv.index('dim')+1])
+                        columnas = int(sys.argv[sys.argv.index('dim')+2])
+                        if 1<=filas<=100 and 1<=columnas<=100:
+                            print runner.mundo.__str__(filas, columnas)
+                    else:
+                        print runner.mundo
+            except IndexError:
+                print "Falta el nombre de un archivo despues de '-k' o '-m'"
+            except OSError:
+                print "No existe el archivo '%s'"%arch
+            except IOError:
+                print "No existe el archivo '%s'"%arch
         else:
             try:
                 if '-m' in sys.argv:
