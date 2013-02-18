@@ -425,7 +425,7 @@ finalizar-programa
                     mun = kworld(archivo=file(archivomundo))
                 else:
                     mun = kworld()
-                arch = sys.argv[sys.argv.index('-k')+1]
+                arch = sys.argv[sys.argv.index('step')+1]
                 runner = None
                 grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv, strict=True)
                 try:
@@ -441,6 +441,7 @@ finalizar-programa
 
                     runner.step_run()
                     while runner.corriendo:
+                        print runner.mundo
                         raw_input('>>>')
                         runner.step()
                     #runner.run()
@@ -479,7 +480,7 @@ finalizar-programa
                     print "\t", ke[0], "en la linea", grammar.lexer.linea
                 else:
                     #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
-                    runner = krunner(grammar.ejecutable, mundo=mun)
+                    runner = krunner(grammar.ejecutable, mundo=mun, debug='--debug' in sys.argv)
                     t_inicio = time()
                     runner.run()
                     t_fin = time()
