@@ -41,18 +41,22 @@ Si conoces Karel el robot y tienes códigos escritos en PASCAL (el pascal de Kar
 
 Cualquier irregularidad me avisan a a.wonderful.code@gmail.com, información sobre cómo verificar la sintaxis de los archivos está abajo.
 
-Testing
--------
+Comand Line Interface (CLI)
+---------------------------
 
-Para probar alguno de los componentes hay que ejecutar el archivo `karel` en la carpeta `bin/` (desde la consola, claro).
+El núcleo de Karel es una utilería de consola, y la puedes utilizar muy bien como tal, el archivo más importante se llama `karel` y está en la carpeta `bin` de este repositorio, se usa como sigue:
 
-Ejemplo:
+`cd KarelCore/bin`
 
-`$ python karel check -k archivo.karel`
+(Si eres un usuario avanzado te recomiendo simplemente añadir la carpeta `KarelCore/bin` a tu variable PATH)
 
-O también
-
+Para correr un código basta con hacer
 `$ python karel archivo.karel`
+O puedes mandarle un archivo de mundo (de los nuevos, no los viejos MDO)
+`$ python karel archivo.karel -m mundo.world`
+
+Si tienes un archivo de condiciones de evaluación (.nkec) puedes usarlo como
+`$ python karel test codigo.karel -m condiciones.nkec`
 
 Es posible obtener una poca de ayuda con:
 
