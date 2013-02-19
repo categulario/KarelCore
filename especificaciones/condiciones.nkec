@@ -5,25 +5,19 @@
               "karel": {
                 "posicion": [1, 1],
                 "orientacion": "norte",
-                "mochila": "inf"
+                "mochila": 0
               },
               "casillas": [
                 {
-                    "fila": 1,
+                    "fila": 10,
                     "columna": 1,
-                    "zumbadores": 2,
-                    "paredes": ["norte", "este"]
+                    "zumbadores": 1,
+                    "paredes": ["norte"]
                 },
                 {
-                    "fila": 1,
-                    "columna": 2,
-                    "zumbadores": "inf",
-                    "paredes": ["oeste"]
-                },
-                {
-                    "fila": 2,
+                    "fila": 11,
                     "columna": 1,
-                    "zumbadores": 2,
+                    "zumbadores": 0,
                     "paredes": ["sur"]
                 }
               ],
@@ -35,39 +29,36 @@
             "resultado": {
                 "casillas" : [
                     {
+                        "fila": 10,
+                        "columna": 1,
+                        "zumbadores": 0
+                    },
+                    {
+                        "fila": 11,
+                        "columna": 1,
+                        "zumbadores": 0
+                    },
+                    {
                         "fila": 1,
                         "columna": 1,
-                        "zumbadores":1,
-                        "paredes": []
+                        "zumbadores":1
                     }
                 ]
             },
-            "puntaje": 50
+            "puntaje": 51
         },
         {
             "mundo":{
               "karel": {
                 "posicion": [1, 1],
                 "orientacion": "norte",
-                "mochila": "inf"
+                "mochila": 0
               },
               "casillas": [
                 {
-                    "fila": 1,
+                    "fila": 100,
                     "columna": 1,
-                    "zumbadores": 2,
-                    "paredes": ["este"]
-                },
-                {
-                    "fila": 1,
-                    "columna": 2,
-                    "zumbadores": "inf",
-                    "paredes": ["oeste"]
-                },
-                {
-                    "fila": 2,
-                    "columna": 1,
-                    "zumbadores": 2,
+                    "zumbadores": 1,
                     "paredes": []
                 }
               ],
@@ -81,12 +72,21 @@
                     {
                         "fila": 1,
                         "columna": 1,
-                        "zumbadores":1,
-                        "paredes": []
+                        "zumbadores":1
+                    },
+                    {
+                        "fila": 5,
+                        "columna": 5,
+                        "zumbadores": 1
                     }
-                ]
+                ],
+                "karel":{
+                    "posicion": [1, 1],
+                    "orientacion": "sur",
+                    "mochila": 0
+                }
             },
-            "puntaje": 50
+            "puntaje": 49
         }
     ]
 }
