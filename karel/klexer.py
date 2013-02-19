@@ -46,7 +46,6 @@ class klexer(object):
         self.abrir_comentario = '' #Indica cómo fue abierto un comentario
 
         self.pila_tokens = [] #Pila de tokens por si me lo devuelven
-        self.pila_chars = [] #Pila de caracteres
         self.char_pushed = False #Indica cuando un caracter ha sido puesto en la pila
 
         self.linea = 1 #El número de linea
@@ -83,11 +82,6 @@ class klexer(object):
     def push_token(self, token):
         """Empuja un token en la pila"""
         self.pila_tokens.append(token)
-
-    def push_char(self, char):
-        """Pone un caracter en la pila de caracteres"""
-        self.pila_chars.append(char)
-        self.char_pushed = True
 
     def lee_token(self):
         """Lee un token del archivo"""
