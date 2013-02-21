@@ -523,7 +523,8 @@ class kgrammar:
                 raise KarelException("Se esperaba ')'")
         else:
             retornar_valor = self.boolean_function()
-            self.empty_arguments()
+            if self.token_actual == '(':
+                self.empty_arguments()
 
         return retornar_valor
 
@@ -1098,7 +1099,7 @@ class kgrammar:
         else:
             if self.token_actual == 'class': #Está escrito en java
                 self.sintaxis = 'java'
-                self.lexer.sintaxis = 'java'
+                self.lexer.establecer_sintaxis('java')
                 if self.avanza_token():
                     if self.es_identificador_valido(self.token_actual):
                         self.nombre_clase = self.token_actual
