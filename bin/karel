@@ -37,9 +37,13 @@ from pprint import pprint
 
 """Provee acceso a los modulos de Karel"""
 # Try to detect where it is run from and set prefix and the search path.
-# It is assumed that the user installed Cola using the --prefix= option
-prefix = os.path.dirname(os.path.dirname(
-    os.path.realpath(os.path.abspath(__file__))))
+prefix = os.path.dirname(
+    os.path.dirname(
+        os.path.realpath(
+            os.path.abspath(__file__)
+        )
+    )
+)
 
 # Look for modules in the source or install trees
 cola_mod = os.path.join(prefix, 'karel', '__init__.py')
@@ -57,9 +61,9 @@ from karel.krunner import krunner
 from karel.kworld import kworld
 from karel.kutil import KarelException
 
-def mundo_editar(archivomundo=False, mundo=kworld()):
+def mundo_editar(archivomundo=False, mundo=kworld(), casillas_evaluacion=False):
     if archivomundo:
-        mun = kworld(archivo=file(archivomundo))
+        mun = kworld(archivo=file(archivomundo), casillas_evaluacion=casillas_evaluacion)
     else:
         mun = mundo
     print mun
@@ -78,27 +82,41 @@ def mundo_editar(archivomundo=False, mundo=kworld()):
                 if entrada[1] == 'inf':
                     mun.establece_mochila(entrada[1])
         elif entrada[0] == 'karel' or entrada[0] == 'k':
-            fila = int(entrada[1])
-            columna = int(entrada[2])
-            orientacion = entrada[3]
-            if 1<=fila<=100 and 1<=columna<=100 and orientacion in ['norte', 'sur', 'este', 'oeste']:
-                mun.establece_karel((fila, columna), orientacion)
-        elif entrada[0] == 'pared' or entrada[0] == 'p':
-            fila = int(entrada[1])
-            columna = int(entrada[2])
-            orientacion = entrada[3]
-            mun.conmuta_pared((fila, columna), orientacion)
-        elif entrada[0] == 'zumbador' or entrada[0] == 'z':
-            fila = int(entrada[1])
-            columna = int(entrada[2])
-            cantidad = 0
             try:
-                cantidad = int(entrada[3])
+                fila = int(entrada[1])
+                columna = int(entrada[2])
+                orientacion = entrada[3]
+                if 1<=fila<=100 and 1<=columna<=100 and orientacion in ['norte', 'sur', 'este', 'oeste']:
+                    mun.establece_karel((fila, columna), orientacion)
             except ValueError:
-                if entrada[3] == 'inf':
-                    cantidad = -1
-            print cantidad
-            mun.pon_zumbadores((fila, columna), cantidad)
+                print 'numeros no validos'
+            except IndexError:
+                print 'faltan parametros'
+        elif entrada[0] == 'pared' or entrada[0] == 'p':
+            try:
+                fila = int(entrada[1])
+                columna = int(entrada[2])
+                orientacion = entrada[3]
+                mun.conmuta_pared((fila, columna), orientacion)
+            except ValueError:
+                print 'numeros no validos'
+            except IndexError:
+                print 'faltan parametros'
+        elif entrada[0] == 'zumbador' or entrada[0] == 'z':
+            try:
+                fila = int(entrada[1])
+                columna = int(entrada[2])
+                cantidad = 0
+                try:
+                    cantidad = int(entrada[3])
+                except ValueError:
+                    if entrada[3] == 'inf':
+                        cantidad = -1
+                mun.pon_zumbadores((fila, columna), cantidad)
+            except ValueError:
+                print 'numeros no validos'
+            except IndexError:
+                print 'faltan parametros'
         elif entrada[0] == 'guarda' or entrada[0] == 'guardar' or entrada[0] == 'g':
             if len(entrada) == 2:
                 mun.exporta_mundo(entrada[1])
@@ -106,13 +124,54 @@ def mundo_editar(archivomundo=False, mundo=kworld()):
                 mun.exporta_mundo(archivomundo)
             print "Guardado!"
             continue
-        elif entrada[0] == 'limpia' or entrada[0] == 'l':
+        elif entrada[0] == 'limpia' or entrada[0] == 'l' or entrada[0] == 'clear':
             del mun
-            mun = kworld()
+            mun = kworld(casillas_evaluacion=casillas_evaluacion, casillas=dict())
         elif entrada[0] == 'load':
-            nombre_archivo = entrada[1]
-            del mun
-            mun = kworld(archivo=file(nombre_archivo))
+            try:
+                nombre_archivo = entrada[1]
+                del mun
+                mun = kworld(archivo=file(nombre_archivo), casillas_evaluacion=casillas_evaluacion)
+                if casillas_evaluacion:
+                    mun.establece_karel(posicion=(100, 100))
+            except IndexError:
+                print "No se especifica archivo a cargar"
+            except IOError:
+                print "Este archivo no existe"
+        elif entrada[0] == 'del' and casillas_evaluacion:#borramos un registro de casillas
+            try:
+                if len(entrada) == 5:
+                    fila_inicio = int(entrada[1])
+                    columna_inicio = int(entrada[2])
+                    fila_fin = int(entrada[3])
+                    columna_fin = int(entrada[4])
+                    for i in xrange(fila_inicio, fila_fin+[1, -1][fila_inicio>fila_fin], [1, -1][fila_inicio>fila_fin]):
+                        for j in xrange(columna_inicio, columna_fin+[1, -1][columna_inicio>columna_fin], [1, -1][columna_inicio>columna_fin]):
+                            if mun.mundo['casillas'].has_key((i, j)):
+                                del mun.mundo['casillas'][(i, j)]
+                else:
+                    fila = int(entrada[1])
+                    columna = int(entrada[2])
+                    if mun.mundo['casillas'].has_key((fila, columna)):
+                        del mun.mundo['casillas'][(fila, columna)]
+            except IndexError:
+                print 'debes indicar la casilla a borrar'
+        elif entrada[0] == 'pincel':
+            try:
+                cantidad = int(entrada[1])
+                while True:
+                    coords = re.split('\s+', raw_input('pincel> '))
+                    if coords[0] == 'fin':
+                        break
+                    else:
+                        fila = int(coords[0])
+                        columna = int(coords[1])
+                        mun.pon_zumbadores((fila, columna), cantidad)
+                    print mun
+            except ValueError:
+                print 'numeros no validos'
+            except IndexError:
+                print 'faltan parametros'
         print mun
     return mun
 
@@ -272,10 +331,13 @@ Copyright (c) 2012 Developingo
                                         if runner.mundo.mundo['casillas'].has_key((fila, columna)):
                                             if runner.mundo.mundo['casillas'][(fila, columna)]['zumbadores'] != casilla['zumbadores']:
                                                 all_ok = False
-                                                runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta'
-                                        else:
+                                                runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta!'
+                                                print fila, columna
+                                                break
+                                        elif casilla['zumbadores'] != 0:
                                             all_ok = False
                                             runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta!'
+                                            break
                                 if all_ok:
                                     puntaje += int(caso['puntaje'])
                                 else:
@@ -409,7 +471,7 @@ finalizar-programa
                     print "Casillas de comparacion para el mundo %d"%(i+1)
                     raw_input('listo?')
                     comparativo.update({
-                        'casillas': mundo_editar(mundo = kworld(karel_pos=(100, 100))).exporta_casillas()
+                        'casillas': mundo_editar(mundo = kworld(karel_pos=(100, 100), casillas_evaluacion=True, casillas=dict()), casillas_evaluacion=True).exporta_casillas_comparacion()
                     })
                 caso['resultado'] = comparativo
                 resultado['casos'].append(caso)
