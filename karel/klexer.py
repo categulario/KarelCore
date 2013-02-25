@@ -56,7 +56,7 @@ class klexer(object):
         self.posicion = ktoken.POSICION_INICIO
 
         self.sintaxis = 'pascal' #para la gestion de los comentarios
-        self.lonely_chars = [';', '{', '}', '!']
+        self.lonely_chars = [';', '{', '}', '!', ')']
 
         self.debug = debug
         self.caracter_actual = self.lee_caracter()
