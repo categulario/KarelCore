@@ -1,6 +1,7 @@
 *.py[co]
 *.log
 *.geany
+*.sublime*
 *.class
 
 # Packages
