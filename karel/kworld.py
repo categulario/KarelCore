@@ -95,6 +95,9 @@ class kworld(object):
             if not self.carga_archivo(archivo):
                 raise KarelException("El archivo de mundo que me diste esta dañado!")
 
+    def posicion_karel(self):
+        return self.mundo['karel']['posicion']
+
     def establece_karel(self, posicion=(1, 1), orientacion='norte'):
         """pone a karel en algun lugar especifico"""
         self.mundo['karel']['posicion'] = posicion
@@ -111,6 +114,27 @@ class kworld(object):
                 raise KarelException('Esta no es una cantidad apropiada de zumbadores')
         else:
             raise KarelException('Deberías consultar a un psiquiatra')
+
+    def obten_casilla(self, coordenadas):
+        """Obtiene una casilla del mundo y la devuelve así a lo sobres"""
+        casilla = {
+            'zumbadores': 0,
+            'paredes': set()
+        }
+        if coordenadas[0] == 1: #Primera fila, pared izquierda
+            casilla['paredes'].add('sur')
+        if coordenadas[0] == 100:
+            casilla['paredes'].add('norte')
+        if coordenadas[1] == 1: #primera columna
+            casilla['paredes'].add('oeste')
+        if coordenadas[1] == 100:
+            casilla['paredes'].add('este')
+
+        if self.mundo['casillas'].has_key(coordenadas):
+            casilla['zumbadores'] = self.mundo['casillas'][(coordenadas)]['zumbadores']
+            casilla['paredes'] = casilla['paredes'] | self.mundo['casillas'][(coordenadas)]['paredes']
+
+        return casilla
 
     def obten_mochila(self):
         """Obtiene la cantidad de zumbadores en la mochila de karel"""
@@ -463,7 +487,7 @@ class kworld(object):
             'casillas': dict()
         }
 
-    def __str__ (self, filas=16, columnas=18):
+    def __str__ (self, filas=26, columnas=28):
         """Imprime bien bonito la primera porción de mundo"""
         def num_digits(a):
             if a == -1:
