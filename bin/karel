@@ -138,6 +138,7 @@ def mundo_editar(archivomundo=False, mundo=kworld(), casillas_evaluacion=False):
                 print "No se especifica archivo a cargar"
             except IOError:
                 print "Este archivo no existe"
+                mun = kworld()
         elif entrada[0] == 'del' and casillas_evaluacion:#borramos un registro de casillas
             try:
                 if len(entrada) == 5:
