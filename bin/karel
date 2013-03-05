@@ -97,7 +97,8 @@ def mundo_editar(archivomundo=False, mundo=kworld(), casillas_evaluacion=False):
                 fila = int(entrada[1])
                 columna = int(entrada[2])
                 orientacion = entrada[3]
-                mun.conmuta_pared((fila, columna), orientacion)
+                if orientacion in ['norte', 'sur', 'este', 'oeste']:
+                    mun.conmuta_pared((fila, columna), orientacion)
             except ValueError:
                 print 'numeros no validos'
             except IndexError:
@@ -333,7 +334,6 @@ Copyright (c) 2012 Developingo
                                             if runner.mundo.mundo['casillas'][(fila, columna)]['zumbadores'] != casilla['zumbadores']:
                                                 all_ok = False
                                                 runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta!'
-                                                print fila, columna
                                                 break
                                         elif casilla['zumbadores'] != 0:
                                             all_ok = False
