@@ -129,6 +129,7 @@ class kgrammar:
             "no",
             "y",
             "o",
+            "u",
             "define-nueva-instruccion",
             "define-prototipo-instruccion",
             "inicio",
@@ -1080,7 +1081,7 @@ class kgrammar:
         """
         retornar_valor = {'o': [self.clausula_y(lista_variables)]} #Lista con las expresiones 'o'
 
-        while self.token_actual == 'o':
+        while self.token_actual == 'o' or self.token_actual == 'u':
             self.avanza_token()
             retornar_valor['o'].append(self.clausula_y(lista_variables))
 

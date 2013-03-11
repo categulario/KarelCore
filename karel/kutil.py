@@ -5,8 +5,6 @@ Clases y funciones utiles para Karel
 
 from collections import deque
 
-__all__ = ['KarelException', 'xml_prepare']
-
 class ktoken(object):
     """Define un token de la gramática de karel. Esencialmente un token
     es un trozo de cadena, sin embargo para esta gramática podría ser un"""
@@ -81,5 +79,31 @@ def xml_prepare(lista):
         s += str(i)+" "
     return s[:-1]
 
+def find_all(cadena, palabra):
+    if palabra == '':
+        return []
+    if cadena == '':
+        return []
+    resultado = []
+    i = 0
+    while i<len(cadena):
+        if cadena[i] == palabra[0]:
+            candidate_start = i
+            j = 0
+            while i+j < len(cadena) and j < len(palabra):
+                if cadena[i+j] != palabra[j]:
+                    break
+                j += 1
+                if i+j == len(cadena) and j < len(palabra):
+                    break
+            else:
+                i += len(palabra)
+                resultado.append((candidate_start, i))
+                continue
+        i += 1
+    return resultado
+
 if __name__ == '__main__':
-    print ktoken('(') == '('
+    cadena = raw_input('Cadena: ')
+    palabra = raw_input('Palabra: ')
+    print find_all(cadena, palabra)
