@@ -33,9 +33,9 @@ Hasta el momento sólo está soportada la sintaxis 'pascal' de Karel, algunos ca
 Necesito ayuda!
 -------------
 
-Si conoces Karel el robot y tienes códigos escritos en PASCAL (el pascal de Karel) puedes hacer dos cosas por mi:
+Si conoces Karel el robot y tienes códigos escritos puedes hacer dos cosas por mi:
 
-* Probar que los codigos sean correctamente reconocidos por el analizador sintáctico.
+* Probar que los codigos sean correctamente ejecutados por el analizador sintáctico.
 * Hecho lo anterior, poner un error de sintaxis en los códigos y ver si el analizador lo reconoce.
 * También puedes descargar todas las fuentes y probar los componentes, ¡es divertido!
 
@@ -67,11 +67,8 @@ TODO
 
 Cosas importantes por hacer:
 
-* Asegurar el buen funcionamiento de `sal-de-instruccion`, `apagate` y `sal-de-bucle` en `krunner` y `kgrammar`.
-* Añadir instruccion `continua-bucle`
-* Implementar la ejecucion paso a paso o step_run.
-* Soportar la sintaxis Java de pascal.
 * Extender la ayuda.
+* Optimizar el runner y la gramática.
 
 Algunas buenas ideas por implementar en este proyecto:
 
@@ -82,11 +79,11 @@ Notas
 -----
 
 * Añadí (para evitar conflictos y confusiones frecuentes) soporte para 'repetir' y 'repite' como bucles, ambos con la misma funcionalidad. Cualquier comentario me avisan. (Cuando competí en la OMI no saben cuánta lata me dio esto :) )
+* El operador lógico `o` de pascal tiene un amigo `u` con la misma función.
 * Trato de hacer los mensajes de error lo más comprensibles posible, se aceptan comentarios.
 * Ya están soportados los comentarios de la sintaxis original de Karel.
 * Los procedimientos tienen soporte para varias variables, quién sabe, con suerte esto abre las puertas a mas problemas.
-* Estoy usando Scintilla para el editor de código y la interfaz corre por cuenta de wxPython.
-* Provisionalmente estoy usando JSON para el almacenamiento de los mundos, es la magia de los diccionarios en python.
+* Estoy usando JSON para el almacenamiento de los mundos, es la magia de los diccionarios en python.
 * Se implementó la instruccion `sal-de-bucle` que rompe un ciclo, equivalente al `break` en otros lenguajes, para usarse en conjunto con las condiciones `verdadero` y `falso`.
 * En `kgrammar.py` hay una directiva llamada `futuro` en el constructor, que activa las palabras `verdadero`, `falso`, `sal-de-instruccion` y `sal-de-bucle`.
 
