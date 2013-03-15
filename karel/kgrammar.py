@@ -114,12 +114,22 @@ class kgrammar:
 
         self.estructuras = ['si', 'mientras', 'repite', 'repetir']
         self.estructuras_java = ['if', 'while', 'iterate']
+        self.estructuras_ruby = ['si', 'mientras']
 
         self.palabras_reservadas_java = [
             "class",
             "void",
             "define"
         ] + self.instrucciones_java + self.condiciones_java + self.expresiones_enteras_java + self.estructuras_java
+
+        self.palabras_reservadas_ruby = [
+            "def",
+            "veces",
+            "fin",
+            "o",
+            "y",
+            "no"
+        ] + self.instrucciones + self.condiciones + self.expresiones_enteras + self.estructuras_ruby
 
         self.palabras_reservadas = [
             "iniciar-programa",
@@ -1087,6 +1097,85 @@ class kgrammar:
 
         return retornar_valor
 
+    def ruby_codeblock(self, lista_variables, c_funcion, c_bucle):
+        """Un bloque de sentencias de ruby"""
+        retornar_valor = []
+        while self.token_actual != '' and self.token_actual != 'fin':
+            retornar_valor += self.ruby_statement(lista_variables, c_funcion, c_bucle)
+
+        return retornar_valor
+
+    def ruby_statement(self, lista_variables, c_funcion, c_bucle):
+        """Una llamada, declaración o estructura de ruby"""
+        retornar_valor = []
+
+        if self.token_actual in self.instrucciones:
+            if self.token_actual == 'sal-de-instruccion':
+                if c_funcion:
+                    retornar_valor = [self.token_actual]
+                    self.avanza_token()
+                else:
+                    raise KarelException("No es posible usar 'sal-de-instruccion' fuera de una instruccion :)")
+            elif self.token_actual == 'sal-de-bucle' or self.token_actual == 'continua-bucle':
+                if c_bucle:
+                    retornar_valor = [self.token_actual]
+                    self.avanza_token()
+                else:
+                    raise KarelException("No es posible usar '"+self.token_actual.token+"' fuera de un bucle :)")
+            else:
+                if self.token_actual == 'apagate':
+                    self.tiene_apagate = True
+                retornar_valor = [self.token_actual]
+                self.avanza_token()
+        elif self.token_actual == 'si':
+            retornar_valor = [self.ruby_if_statement(lista_variables, c_funcion, c_bucle)]
+        elif self.token_actual == 'mientras':
+            retornar_valor = [self.ruby_while_statement(lista_variables, c_funcion)]
+        elif self.es_numero(self.token_actual):
+            retornar_valor = [self.ruby_iterate_statement(lista_variables, c_funcion)]
+        elif self.token_actual == 'def':
+            if c_funcion or c_bucle:
+                raise KarelException("No se puede declarar una funcion dentro de otra o dentro de una estructura de control... aun")
+            retornar_valor = [self.ruby_method_declaration()]
+        elif self.token_actual not in self.palabras_reservadas_ruby and self.es_identificador_valido(self.token_actual):
+            #Se trata de una instrucción creada por el usuario
+            nombre_funcion = self.token_actual
+            retornar_valor = [{
+                'estructura': 'instruccion',
+                'nombre': nombre_funcion,
+                'argumento': []
+            }]
+            self.avanza_token()
+
+            if self.token_actual != '(':
+                raise KarelException("Se esperaba '(' para indicar los parámetros de la funcion")
+            self.avanza_token()
+
+            num_parametros = 0
+            while self.token_actual != ')':
+                retornar_valor[0]['argumento'].append(self.int_exp(lista_variables))
+                num_parametros += 1
+                if self.token_actual == ')':
+                    break
+                elif self.token_actual == ',':
+                    self.avanza_token()
+                else:
+                    raise KarelException("Se esperaba ',', encontré '%s'"%self.token_actual)
+            self.avanza_token()
+
+            if not self.futuro and num_parametros>1:
+                raise KarelException("No están habilitadas las funciones con varios parámetros")
+
+            self.llamadas_funciones.update({nombre_funcion: num_parametros}) #La usaremos para luego comparar existencias
+            if self.token_actual != ';':
+                raise KarelException("Se esperaba ';' después de una llamada a función")
+            else:
+                self.avanza_token()
+        else:
+            raise KarelException("Se esperaba un procedimiento, '%s' no es válido"%self.token_actual)
+
+        return retornar_valor
+
     def verificar_sintaxis (self):
         """ Verifica que este correcta la gramatica de un programa
         en karel """
@@ -1097,29 +1186,31 @@ class kgrammar:
                     raise KarelException("Se esperaba 'finalizar-programa' al final del codigo")
             else:
                 raise KarelException("Codigo mal formado")
-        else:
-            if self.token_actual == 'class': #Está escrito en java
-                self.sintaxis = 'java'
-                self.lexer.establecer_sintaxis('java')
-                if self.avanza_token():
-                    if self.es_identificador_valido(self.token_actual):
-                        self.nombre_clase = self.token_actual
-                        self.avanza_token()
-                        self.class_body()
+        elif self.token_actual == 'class': #Está escrito en java
+            self.sintaxis = 'java'
+            self.lexer.establecer_sintaxis('java')
+            if self.avanza_token():
+                if self.es_identificador_valido(self.token_actual):
+                    self.nombre_clase = self.token_actual
+                    self.avanza_token()
+                    self.class_body()
 
-                        #toca revisar las llamadas a funciones hechas durante el programa
-                        for funcion in self.llamadas_funciones:
-                            if self.funciones.has_key(funcion):
-                                if len(self.funciones[funcion]) != self.llamadas_funciones[funcion]:
-                                    raise KarelException("La funcion '%s' no se llama con la misma cantidad de parámetros que como se definió"%funcion)
-                            else:
-                                raise KarelException("La función '%s' es llamada pero no fue declarada"%funcion)
-                    else:
-                        raise KarelException('%s no es un identificador valido'%self.token_actual)
+                    #toca revisar las llamadas a funciones hechas durante el programa
+                    for funcion in self.llamadas_funciones:
+                        if self.funciones.has_key(funcion):
+                            if len(self.funciones[funcion]) != self.llamadas_funciones[funcion]:
+                                raise KarelException("La funcion '%s' no se llama con la misma cantidad de parámetros que como se definió"%funcion)
+                        else:
+                            raise KarelException("La función '%s' es llamada pero no fue declarada"%funcion)
                 else:
-                    raise KarelException("Codigo mal formado")
+                    raise KarelException('%s no es un identificador valido'%self.token_actual)
             else:
-                raise KarelException("Se esperaba 'iniciar-programa' al inicio del programa")
+                raise KarelException("Codigo mal formado")
+        else:
+            self.sintaxis = 'ruby'
+            self.lexer.establecer_sintaxis('ruby')
+
+            self.arbol['main'] = self.ruby_codeblock([], False, False)
         if self.strict and (not self.tiene_apagate):
             raise KarelException("Tu código no tiene 'apagate', esto no es permitido en el modo estricto")
 

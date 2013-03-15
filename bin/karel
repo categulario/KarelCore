@@ -490,7 +490,7 @@ finalizar-programa
                     mun = kworld()
                 arch = sys.argv[sys.argv.index('step')+1]
                 runner = None
-                grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv, strict=True)
+                grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv, strict='--nostrict' not in sys.argv)
                 try:
                     grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
                     grammar.expandir_arbol()
@@ -534,7 +534,7 @@ finalizar-programa
                     mun = kworld()
                 arch = sys.argv[1]
                 runner = None
-                grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv, strict=True)
+                grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv, strict='--nostrict' not in sys.argv)
                 try:
                     grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
                     grammar.expandir_arbol()

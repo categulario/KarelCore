@@ -36,7 +36,7 @@ class klexer(object):
 
         self.numeros = "0123456789"
         self.palabras = "abcdfeghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-"
-        self.simbolos = "(){}*/;,|&!" #Simbolos permitidos para esta sintaxis
+        self.simbolos = "(){}*/;,|&!#" #Simbolos permitidos para esta sintaxis
         self.espacios = " \n\r\t"
 
         self.caracteres = self.numeros+self.palabras+self.simbolos+self.espacios
@@ -56,7 +56,7 @@ class klexer(object):
         self.posicion = ktoken.POSICION_INICIO
 
         self.sintaxis = 'pascal' #para la gestion de los comentarios
-        self.lonely_chars = [';', '{', '}', '!', ')']
+        self.lonely_chars = [';', '{', '}', '!', ')', '#']
 
         self.debug = debug
         self.caracter_actual = self.lee_caracter()
@@ -67,7 +67,8 @@ class klexer(object):
         """Establece la sintaxis para este análisis"""
         if sintaxis == 'java':
             self.lonely_chars += ['(', ')']
-            self.sintaxis = sintaxis
+        if sintaxis == 'ruby':
+            self.lonely_chars.remove('#')
         self.sintaxis = sintaxis
 
     def lee_caracter(self):
@@ -166,6 +167,11 @@ class klexer(object):
                 if self.caracter_actual == '{' and self.sintaxis=='pascal':
                     self.abrir_comentario = '{'
                     self.estado = self.ESTADO_COMENTARIO
+                    if self.token:
+                        break
+                if self.caracter_actual == '#':
+                    self.estado = self.ESTADO_ESPACIO
+                    self.archivo.readline() #Nos comemos la línea entera
                     if self.token:
                         break
                 elif self.caracter_actual in self.numeros:
