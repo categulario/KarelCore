@@ -169,7 +169,7 @@ class klexer(object):
                     self.estado = self.ESTADO_COMENTARIO
                     if self.token:
                         break
-                if self.caracter_actual == '#':
+                elif self.caracter_actual == '#':
                     self.estado = self.ESTADO_ESPACIO
                     self.archivo.readline() #Nos comemos la línea entera
                     if self.token:
@@ -254,4 +254,5 @@ if __name__ == '__main__':
     for token in lexer:
         print "Token:", repr(token), "\t\tLine:", token.linea, "\t\tCol:", token.columna
         i += 1
+    print lexer.sintaxis
     print "Hubo", i, "tokens"
