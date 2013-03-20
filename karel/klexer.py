@@ -95,10 +95,6 @@ class klexer(object):
             self.columna += 1
             if not self.caracter_actual:
                 break
-            if self.tiene_cambio_de_linea:
-                self.linea += 1
-                self.columna = 0
-                self.tiene_cambio_de_linea = False
             if self.estado == self.ESTADO_COMENTARIO:
                 if self.debug:
                     print "Encontré", repr(self.caracter_actual), "en estado comentario"
@@ -109,8 +105,9 @@ class klexer(object):
                         self.estado = self.ESTADO_ESPACIO
                     if self.caracter_actual == '/' and self.abrir_comentario == '/*' and self.ultimo_caracter == '*':
                         self.estado = self.ESTADO_ESPACIO
-                elif self.caracter_actual == '\n':
-                    self.tiene_cambio_de_linea = True
+                if self.caracter_actual == '\n':
+                    self.linea += 1
+                    self.columna = 0
             elif self.estado == self.ESTADO_ESPACIO:
                 if self.debug:
                     print "Encontré", repr(self.caracter_actual), "en estado espacio"
@@ -126,7 +123,8 @@ class klexer(object):
                     self.estado = self.ESTADO_SIMBOLO
                     continue
                 elif self.caracter_actual == '\n':
-                    self.tiene_cambio_de_linea = True
+                    self.linea += 1
+                    self.columna = 0
             elif self.estado == self.ESTADO_NUMERO:
                 if self.debug:
                     print "Encontré", repr(self.caracter_actual), "en estado número"
@@ -140,8 +138,6 @@ class klexer(object):
                     self.estado = self.ESTADO_SIMBOLO
                     break
                 elif self.caracter_actual in self.espacios:
-                    if self.caracter_actual == '\n':
-                        self.tiene_cambio_de_linea = True
                     self.estado = self.ESTADO_ESPACIO
                     break #Terminamos este token
             elif self.estado == self.ESTADO_PALABRA:
@@ -155,8 +151,6 @@ class klexer(object):
                     self.estado = self.ESTADO_SIMBOLO
                     break
                 elif self.caracter_actual in self.espacios:
-                    if self.caracter_actual == '\n':
-                        self.tiene_cambio_de_linea = True
                     self.estado = self.ESTADO_ESPACIO
                     break #Terminamos este token
             elif self.estado == self.ESTADO_SIMBOLO:
@@ -217,8 +211,6 @@ class klexer(object):
                     else:
                         self.token += self.caracter_actual
                 elif self.caracter_actual in self.espacios:
-                    if self.caracter_actual == '\n':
-                        self.tiene_cambio_de_linea = True
                     self.estado = self.ESTADO_ESPACIO
                     if self.token:
                         break
