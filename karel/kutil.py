@@ -8,16 +8,10 @@ from collections import deque
 class ktoken(object):
     """Define un token de la gramática de karel. Esencialmente un token
     es un trozo de cadena, sin embargo para esta gramática podría ser un"""
-    #TODO implementar la posición del token
-    POSICION_INICIO = 'ini'
-    POSICION_FIN = 'fin'
-    POSICION_MEDIO = 'med'
-    def __init__(self, s_token, linea, columna, posicion):
+    def __init__(self, s_token, es_primer_token):
         """Inicializa el token con un token cadena"""
         self.token = s_token
-        self.linea = linea
-        self.columna = columna
-        self.posicion = posicion
+        self.es_primer_token = es_primer_token
 
     def lower(self):
         self.token = self.token.lower()

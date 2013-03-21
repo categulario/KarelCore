@@ -174,6 +174,13 @@ class kgrammar:
         self.sintaxis = 'pascal' #puede cambiar a java segun el primer token del programa
         self.nombre_clase = '' #Para la sintaxis de java
 
+    def obtener_linea_error(self):
+        """Obtiene la línea en la que acaba de ocurrir el error"""
+        if self.token_actual.es_primer_token:
+            return self.lexer.linea - 1
+        else:
+            return self.lexer.linea
+
     def avanza_token (self):
         """ Avanza un token en el archivo """
         siguiente_token = self.lexer.get_token()

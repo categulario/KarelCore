@@ -221,7 +221,7 @@ Copyright (c) 2012 Developingo
                             grammar.verificar_sintaxis()
                         except KarelException, ke:
                             print "El archivo %s tiene errores:"%arch
-                            print "\t", ke[0], "en la linea", grammar.lexer.linea
+                            print "\t", ke[0], "en la linea", grammar.obtener_linea_error()
                             err_count += 1
                 t_fin = time()
                 if err_count == 0:
@@ -236,15 +236,15 @@ Copyright (c) 2012 Developingo
         elif 'check' in sys.argv:
             #Verifica la sintaxis de un archivo .karel
             try:
-                arch = sys.argv[1]
+                arch = sys.argv[2]
                 t_inicio = time()
 
-                grammar = kgrammar(flujo=open(arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
+                grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv)
                 try:
                     grammar.verificar_sintaxis()
                 except KarelException, ke:
                     print "El archivo %s tiene errores:"%arch
-                    print "\t", ke[0], "en la linea", grammar.tokenizador.lineno
+                    print "\t", ke[0], "en la linea", grammar.obtener_linea_error()
                 else:
                     print "Sintaxis verificada, todo bien"
 
@@ -275,7 +275,7 @@ Copyright (c) 2012 Developingo
                         grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
                         grammar.expandir_arbol()
                     except KarelException, ke:
-                        resultado['mensaje'] = "El archivo %s tiene errores: %s cerca de la linea %d"%(arch, ke[0], grammar.lexer.linea)
+                        resultado['mensaje'] = "El archivo %s tiene errores: %s cerca de la linea %d"%(arch, ke[0], grammar.obtener_linea_error())
                         resultado['resultado'] = "ERROR_COMPILACION"
                         if '--json' not in sys.argv:
                             print "El archivo %s tiene errores:"%arch
@@ -496,7 +496,7 @@ finalizar-programa
                     grammar.expandir_arbol()
                 except KarelException, ke:
                     print "El archivo %s tiene errores:"%arch
-                    print "\t", ke[0], "en la linea", grammar.lexer.linea
+                    print "\t", ke[0], "en la linea", grammar.obtener_linea_error()
                 else:
                     #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
                     runner = krunner(grammar.ejecutable, mundo=mun)
@@ -540,7 +540,7 @@ finalizar-programa
                     grammar.expandir_arbol()
                 except KarelException, ke:
                     print "El archivo %s tiene errores:"%arch
-                    print "\t", ke[0], "en la linea", grammar.lexer.linea
+                    print "\t", ke[0], "en la linea", grammar.obtener_linea_error()
                 else:
                     #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
                     runner = krunner(grammar.ejecutable, mundo=mun, debug='--debug' in sys.argv)
