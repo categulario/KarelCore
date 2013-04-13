@@ -46,7 +46,6 @@ class klexer(object):
         self.abrir_comentario = '' #Indica cómo fue abierto un comentario
 
         self.pila_tokens = [] #Pila de tokens por si me lo devuelven
-        self.char_pushed = False #Indica cuando un caracter ha sido puesto en la pila
 
         self.linea = 1 #El número de linea
         self.columna = 0#El número de columna
