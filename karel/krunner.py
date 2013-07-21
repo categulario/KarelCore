@@ -35,8 +35,6 @@ from klexer import klexer
 import sys
 from collections import deque
 
-sys.setrecursionlimit(10000) #Ampliamos el limite de recursion del sistema
-
 def merge (lista_llaves, lista_valores):
     """ Combina un par de listas de la misma longitud en un
     diccionario """
