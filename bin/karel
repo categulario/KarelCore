@@ -479,7 +479,7 @@ finalizar-programa
                 print "termina caso %d"%(i+1)
                 print "---------------"
             f = file(raw_input('Nombre del archivo? '), 'w')
-            f.write(json.dumps(resultado, indent=2))
+            f.write(json.dumps(resultado))
             f.close()
         elif 'step' in sys.argv:
             try:
