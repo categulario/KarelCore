@@ -67,7 +67,8 @@ los mundos de prueba tienen la extension .kec
 Para ejecutar un test prueba con:
 $ karel test -k codigo.karel -m mundo.nmdo""",
         "contest": """Evalua una carpeta de codigos de Karel dado un
-archivo de condiciones de evaluacion."""
+archivo de condiciones de evaluacion.""",
+        "testcase": """Consola interactiva para crear casos de evaluación."""
     }
     try:
         return comandos[comando]
