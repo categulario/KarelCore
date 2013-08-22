@@ -1214,6 +1214,7 @@ class kgrammar:
             else:
                 raise KarelException("Codigo mal formado")
         else:
+            raise KarelException("Sintaxis no implementada: ruby")
             self.sintaxis = 'ruby'
             self.lexer.establecer_sintaxis('ruby')
 
