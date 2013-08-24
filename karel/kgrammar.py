@@ -1407,7 +1407,7 @@ if __name__ == "__main__":
     if deb:
         print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
     if len(sys.argv) == 1:
-        grammar = kgrammar(debug=deb, futuro=True)
+        grammar = kgrammar(futuro=True)
     else:
         fil = sys.argv[1]
         grammar = kgrammar(flujo=open(fil), archivo=fil, debug=deb, futuro=True)
@@ -1417,7 +1417,7 @@ if __name__ == "__main__":
     except KarelException, ke:
         print ke.args[0], "en la línea", grammar.lexer.linea, "columna", grammar.lexer.columna
         print
-        print "<syntax status='bad'/>"
+        print "sintaxis inoorrecta"
     else:
         print "Sintaxis correcta"
         print "----------"

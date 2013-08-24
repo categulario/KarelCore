@@ -67,7 +67,7 @@ def rotado (cardinal):
 class kworld(object):
     """ Representa el mundo de Karel """
 
-    def __init__ (self, filas=100, columnas=100, karel_pos=(1,1), orientacion='norte', mochila=0, casillas=dict(), archivo=None, casillas_evaluacion=False):
+    def __init__ (self, filas=100, columnas=100, karel_pos=(1,1), orientacion='norte', mochila=0, casillas=None, archivo=None, casillas_evaluacion=False):
         """ Inicializa el mundo, con Karel en la esquina 1,1 del mundo
         orientado al norte.
 
@@ -88,7 +88,7 @@ class kworld(object):
                     'filas': filas,
                     'columnas': columnas
                 },
-                'casillas': casillas
+                'casillas': [casillas, dict()][casillas==None]
             }
         self.casillas_evaluacion = casillas_evaluacion #Indica cuando se trabaja con un mundo de evaluación
         if archivo is not None and isinstance(archivo, file):

@@ -61,12 +61,13 @@ from karel.krunner import krunner
 from karel.kworld import kworld
 from karel.kutil import KarelException
 
-def mundo_editar(archivomundo=False, mundo=kworld(), casillas_evaluacion=False):
+def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
     if archivomundo:
         mun = kworld(archivo=file(archivomundo), casillas_evaluacion=casillas_evaluacion)
-    else:
+    elif mundo:
         mun = mundo
-    print mun
+    else:
+        mun = kworld()
     while True: #Bucle para editar el mundo
         try:
             entrada = re.split('\s+', raw_input('kcmd> '))
