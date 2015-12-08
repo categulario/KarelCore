@@ -28,10 +28,10 @@ análizis sintáctico, y un mundo.
 
 __all__ = ['merge', 'krunner']
 
-from kworld import kworld
-from kgrammar import kgrammar
-from kutil import KarelException, kstack
-from klexer import klexer
+from .kworld import kworld
+from .kgrammar import kgrammar
+from .kutil import KarelException, kstack
+from .klexer import klexer
 import sys
 from collections import deque
 
@@ -85,7 +85,7 @@ class krunner:
         """
         if type(valor) == dict:
             #Se trata de un sucede o un precede
-            if valor.has_key('sucede'):
+            if 'sucede' in valor:
                 return self.expresion_entera(valor['sucede'], diccionario_variables)+1
             else:
                 return self.expresion_entera(valor['precede'], diccionario_variables)-1
@@ -120,9 +120,9 @@ class krunner:
         logico """
         if type(termino) == dict:
             #Se trata de una negacion, un 'o' o un 'si-es-cero'
-            if termino.has_key('no'):
+            if 'no' in termino:
                 return not self.clausula_no(termino['no'], diccionario_variables)
-            elif termino.has_key('o'):
+            elif 'o' in termino:
                 return self.termino_logico(termino['o'], diccionario_variables)
             else:
                 #Si es cero
@@ -182,31 +182,31 @@ class krunner:
         try:
             if self.corriendo:
                 if self.ejecucion >= self.limite_ejecucion:
-                    raise KarelException(u"HanoiTowerException: Tu programa nunca termina ¿Usaste 'apagate'?")
+                    raise KarelException("HanoiTowerException: Tu programa nunca termina ¿Usaste 'apagate'?")
                 #Hay que ejecutar la función en turno en el índice actual
                 instruccion = self.ejecutable['lista'][self.indice]
                 if type(instruccion) == dict:
                     #Se trata de una estructura de control o una funcion definida
-                    if instruccion.has_key('si'):
+                    if 'si' in instruccion:
                         if self.debug:
-                            print 'si'
+                            print('si')
                         if self.termino_logico(instruccion['si']['argumento']['o'], self.diccionario_variables):
                             self.indice += 1 #Avanzamos a la siguiente posicion en la cinta
                         else:#nos saltamos el si, vamos a la siguiente casilla, que debe ser un sino o la siguiente instruccion
                             self.indice = instruccion['si']['fin']+1
                         self.ejecucion += 1
-                    elif instruccion.has_key('sino'): #Llegamos a un sino, procedemos, no hay de otra
+                    elif 'sino' in instruccion: #Llegamos a un sino, procedemos, no hay de otra
                         if self.debug:
-                            print 'sino'
+                            print('sino')
                         self.indice += 1
                         self.ejecucion += 1
-                    elif instruccion.has_key('repite'):
+                    elif 'repite' in instruccion:
                         if self.debug:
-                            print 'repite', instruccion['repite']['argumento']
+                            print('repite', instruccion['repite']['argumento'])
                         if not self.pila.en_tope(instruccion['repite']['id']):
                             argumento = self.expresion_entera(instruccion['repite']['argumento'], self.diccionario_variables)
                             if argumento < 0:
-                                raise KarelException(u"WeirdNumberException: Estás intentando que karel repita un número negativo de veces")
+                                raise KarelException("WeirdNumberException: Estás intentando que karel repita un número negativo de veces")
                             self.pila.append({
                                 'id': instruccion['repite']['id'],
                                 'cuenta': 0,
@@ -223,9 +223,9 @@ class krunner:
                             self.indice = instruccion['repite']['fin']+1
                             self.pila.pop()
                         self.ejecucion += 1
-                    elif instruccion.has_key('mientras'):
+                    elif 'mientras' in instruccion:
                         if self.debug:
-                            print 'mientras'
+                            print('mientras')
                         if not self.pila.en_tope(instruccion['mientras']['id']):
                             self.pila.append({
                                 'id': instruccion['mientras']['id'],
@@ -241,9 +241,9 @@ class krunner:
                             self.indice = instruccion['mientras']['fin']+1
                             self.pila.pop()
                         self.ejecucion += 1
-                    elif instruccion.has_key('fin'):#Algo termina aqui
+                    elif 'fin' in instruccion:#Algo termina aqui
                         if self.debug:
-                            print 'fin', instruccion['fin']['estructura']
+                            print('fin', instruccion['fin']['estructura'])
                         if instruccion['fin']['estructura'] in ['mientras', 'repite']:
                             self.indice = instruccion['fin']['inicio']
                         elif instruccion['fin']['estructura'] == 'si':
@@ -257,7 +257,7 @@ class krunner:
                             self.profundidad -= 1
                     else: #Se trata la llamada a una función
                         if self.debug:
-                            print instruccion['instruccion']['nombre']
+                            print(instruccion['instruccion']['nombre'])
                         if self.profundidad == self.limite_recursion:
                             raise KarelException('StackOverflow: Karel ha excedido el límite de recursión')
                         #Hay que guardar la posición actual y el diccionario de variables en uso
@@ -280,7 +280,7 @@ class krunner:
                 else:
                     #Es una instruccion predefinida de Karel
                     if self.debug:
-                        print instruccion
+                        print(instruccion)
                     if instruccion == 'avanza':
                         if not self.mundo.avanza():
                             raise KarelException('Karel se ha estrellado con una pared!')
@@ -302,7 +302,7 @@ class krunner:
                         self.mensaje = 'Ejecucion terminada'
                         return 'TERMINADO'
                     elif instruccion == 'sal-de-instruccion':
-                        while self.pila.top().has_key('id'):
+                        while 'id' in self.pila.top():
                             self.pila.pop() #Sacamos todos los bucles
                         nota = self.pila.pop()#Obtenemos la nota de donde nos hemos quedado
                         self.indice = nota['posicion']+1
@@ -314,14 +314,14 @@ class krunner:
                         bucle = self.pila.top()
                         self.indice = bucle['fin']
                     else:#FIN
-                        raise KarelException(u"HanoiTowerException: Tu programa excede el límite de ejecución ¿Usaste 'apagate'?")
+                        raise KarelException("HanoiTowerException: Tu programa excede el límite de ejecución ¿Usaste 'apagate'?")
                     self.ejecucion += 1
             else:
                 self.estado = 'OK'
                 self.mensaje = 'Ejecucion terminada'
                 self.corriendo = False
                 return 'TERMINADO'
-        except KarelException, kre:
+        except KarelException as kre:
             self.estado = 'ERROR'
             self.mensaje = kre.args[0]
             self.corriendo = False
@@ -348,8 +348,8 @@ if __name__ == '__main__':
         grammar.verificar_sintaxis(gen_arbol=True)
         grammar.expandir_arbol()
         c_fin = time()
-    except KarelException, ke:
-        print ke.args[0], "en la línea", grammar.lexer.linea, 'columna',grammar.lexer.columna
+    except KarelException as ke:
+        print(ke.args[0], "en la línea", grammar.lexer.linea, 'columna',grammar.lexer.columna)
     else:
         casillas_prueba = {
             (1, 1) : {
@@ -365,11 +365,11 @@ if __name__ == '__main__':
         fin = time()
 
         pprint(runner.mundo.mundo)
-        print '---'
-        print runner.estado,runner.mensaje
+        print('---')
+        print(runner.estado,runner.mensaje)
 
-    print "---"
-    print "tiempo: ", int((c_fin-c_inicio)*1000), "milisegundos en compilar"
-    print "tiempo: ", int((fin-inicio)*1000), "milisegundos en ejecutar"
-    print "total:", int((c_fin-c_inicio)*1000) + int((fin-inicio)*1000), "milisegundos"
+    print("---")
+    print("tiempo: ", int((c_fin-c_inicio)*1000), "milisegundos en compilar")
+    print("tiempo: ", int((fin-inicio)*1000), "milisegundos en ejecutar")
+    print("total:", int((c_fin-c_inicio)*1000) + int((fin-inicio)*1000), "milisegundos")
 

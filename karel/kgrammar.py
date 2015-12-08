@@ -27,9 +27,9 @@ Define la gramatica de Karel
 
 __all__ = ['kgrammar']
 
-from klexer import klexer
-from kutil import KarelException
-from kutil import xml_prepare
+from .klexer import klexer
+from .kutil import KarelException
+from .kutil import xml_prepare
 from string import ascii_letters
 from collections import deque
 from pprint import pprint
@@ -223,7 +223,7 @@ class kgrammar:
         if self.token_actual in self.palabras_reservadas_java or not self.es_identificador_valido(self.token_actual):
             raise KarelException("Se esperaba un nombre de método válido, '%s' no lo es"%self.token_actual)
 
-        if self.funciones.has_key(self.token_actual):
+        if self.token_actual in self.funciones:
             raise KarelException("Ya se ha definido una funcion con el nombre '%s'"%self.token_actual)
         else:
             self.funciones.update({self.token_actual: []})
@@ -468,7 +468,7 @@ class kgrammar:
                 self.avanza_token()
                 if self.token_actual == '(':
                     self.avanza_token()
-                    retornar_valor[retornar_valor.keys()[0]] = self.int_exp(lista_variables)
+                    retornar_valor[list(retornar_valor.keys())[0]] = self.int_exp(lista_variables)
                     if self.token_actual == ')':
                         self.avanza_token()
                     else:
@@ -579,8 +579,8 @@ class kgrammar:
                 #Se trata de una declaracion de enlace
                 self.declaracion_de_enlace()
         #Toca verificar que todos los prototipos se hayan definido
-        for funcion in self.prototipo_funciones.keys():
-            if not self.funciones.has_key(funcion):
+        for funcion in list(self.prototipo_funciones.keys()):
+            if funcion not in self.funciones:
                 raise KarelException("La instrucción '%s' tiene prototipo pero no fue definida"%funcion)
         #Sigue el bloque con la lógica del programa
         if self.token_actual == 'inicia-ejecucion':
@@ -678,7 +678,7 @@ class kgrammar:
         if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
             raise KarelException("Se esperaba un nombre de procedimiento vÃ¡lido, '%s' no lo es"%self.token_actual)
 
-        if self.funciones.has_key(self.token_actual):
+        if self.token_actual in self.funciones:
             raise KarelException("Ya se ha definido una funcion con el nombre '%s'"%self.token_actual)
         else:
             self.funciones.update({self.token_actual: []})
@@ -728,7 +728,7 @@ class kgrammar:
                 raise KarelException("se esperaba la palabra clave 'como'")
             self.avanza_token()
 
-        if self.prototipo_funciones.has_key(nombre_funcion):
+        if nombre_funcion in self.prototipo_funciones:
             #Hay que verificar que se defina como se planeó
             if len(self.prototipo_funciones[nombre_funcion]) != len(self.funciones[nombre_funcion]):
                 raise KarelException("La función '%s' no está definida como se planeó en el prototipo, verifica el número de variables"%nombre_funcion)
@@ -756,7 +756,7 @@ class kgrammar:
 
         if self.token_actual in self.palabras_reservadas or not self.es_identificador_valido(self.token_actual):
             raise KarelException("Se esperaba un nombre de función, '%s' no es válido"%self.token_actual)
-        if self.prototipo_funciones.has_key(self.token_actual):
+        if self.token_actual in self.prototipo_funciones:
             raise KarelException("Ya se ha definido un prototipo de funcion con el nombre '%s'"%self.token_actual)
         else:
             self.prototipo_funciones.update({self.token_actual: []})
@@ -861,7 +861,7 @@ class kgrammar:
                 raise KarelException("Se esperaba 'fin' para concluir el bloque, encontré '%s'"%self.token_actual)
         elif self.token_actual not in self.palabras_reservadas and self.es_identificador_valido(self.token_actual):
             #Se trata de una instrucción creada por el usuario
-            if self.prototipo_funciones.has_key(self.token_actual) or self.funciones.has_key(self.token_actual):
+            if self.token_actual in self.prototipo_funciones or self.token_actual in self.funciones:
                 nombre_funcion = self.token_actual
                 retornar_valor = [{
                     'estructura': 'instruccion',
@@ -886,7 +886,7 @@ class kgrammar:
                     if not self.futuro and num_parametros>1:
                         raise KarelException("No están habilitadas las funciones con varios parámetros")
                     self.avanza_token()
-                if self.prototipo_funciones.has_key(nombre_funcion):
+                if nombre_funcion in self.prototipo_funciones:
                     if num_parametros != len(self.prototipo_funciones[nombre_funcion]):
                         raise KarelException("Estas intentando llamar la funcion '%s' con %d parámetros, pero así no fue definida"%(nombre_funcion, num_parametros))
                 else:
@@ -922,7 +922,7 @@ class kgrammar:
                 self.avanza_token()
                 if self.token_actual == '(':
                     self.avanza_token()
-                    retornar_valor[retornar_valor.keys()[0]] = self.expresion_entera(lista_variables)
+                    retornar_valor[list(retornar_valor.keys())[0]] = self.expresion_entera(lista_variables)
                     if self.token_actual == ')':
                         self.avanza_token()
                     else:
@@ -1204,7 +1204,7 @@ class kgrammar:
 
                     #toca revisar las llamadas a funciones hechas durante el programa
                     for funcion in self.llamadas_funciones:
-                        if self.funciones.has_key(funcion):
+                        if funcion in self.funciones:
                             if len(self.funciones[funcion]) != self.llamadas_funciones[funcion]:
                                 raise KarelException("La funcion '%s' no se llama con la misma cantidad de parámetros que como se definió"%funcion)
                         else:
@@ -1334,7 +1334,7 @@ class kgrammar:
                         }
                     })
                     self.lista_programa[posicion_inicio]['si'].update({'fin': posicion_fin})
-                    if elem.has_key('sino-cola'):
+                    if 'sino-cola' in elem:
                         nueva_estructura = {
                             'sino': {}
                         }
@@ -1405,7 +1405,7 @@ if __name__ == "__main__":
     inicio = time()
     deb = False
     if deb:
-        print "<xml>" #Mi grandiosa idea del registro XML, Ajua!!
+        print("<xml>") #Mi grandiosa idea del registro XML, Ajua!!
     if len(sys.argv) == 1:
         grammar = kgrammar(futuro=True)
     else:
@@ -1414,21 +1414,21 @@ if __name__ == "__main__":
     try:
         grammar.verificar_sintaxis()
         #grammar.guardar_compilado('codigo.kcmp', True)
-    except KarelException, ke:
-        print ke.args[0], "en la línea", grammar.lexer.linea, "columna", grammar.lexer.columna
-        print
-        print "sintaxis inoorrecta"
+    except KarelException as ke:
+        print(ke.args[0], "en la línea", grammar.lexer.linea, "columna", grammar.lexer.columna)
+        print()
+        print("sintaxis inoorrecta")
     else:
-        print "Sintaxis correcta"
-        print "----------"
+        print("Sintaxis correcta")
+        print("----------")
     finally:
         pprint(grammar.arbol)
         grammar.expandir_arbol()
-        print "----------"
-        for i in xrange(len(grammar.lista_programa)):
-            print i,grammar.lista_programa[i]
-        print "----------"
+        print("----------")
+        for i in range(len(grammar.lista_programa)):
+            print(i,grammar.lista_programa[i])
+        print("----------")
     if deb:
-        print "</xml>"
+        print("</xml>")
     fin = time()
-    print "time: ", fin-inicio
+    print("time: ", fin-inicio)

@@ -27,7 +27,7 @@ Construccion de el mundo de Karel
 __all__ = ['contrario', 'obten_casilla_avance', 'rotado', 'kworld']
 
 import json
-from kutil import KarelException
+from .kutil import KarelException
 
 def contrario (cardinal):
     """ Suena ridículo, pero obtiene el punto cardinal contrario al
@@ -130,7 +130,7 @@ class kworld(object):
         if coordenadas[1] == 100:
             casilla['paredes'].add('este')
 
-        if self.mundo['casillas'].has_key(coordenadas):
+        if coordenadas in self.mundo['casillas']:
             casilla['zumbadores'] = self.mundo['casillas'][(coordenadas)]['zumbadores']
             casilla['paredes'] = casilla['paredes'] | self.mundo['casillas'][(coordenadas)]['paredes']
 
@@ -142,7 +142,7 @@ class kworld(object):
 
     def obten_zumbadores(self, casilla):
         """Devuelve los zumbadores para esta casilla"""
-        if self.mundo['casillas'].has_key(casilla):
+        if casilla in self.mundo['casillas']:
             return self.mundo['casillas'][casilla]['zumbadores']
         else:
             return 0
@@ -162,7 +162,7 @@ class kworld(object):
             if coordenadas[1] == 100 and orientacion == 'este':
                 return
             agregar = True #Indica si agregamos o quitamos la pared
-            if self.mundo['casillas'].has_key(coordenadas):
+            if coordenadas in self.mundo['casillas']:
                 #Puede existir una pared
                 if orientacion in self.mundo['casillas'][coordenadas]['paredes']:
                     #Ya existe la pared, la quitamos
@@ -186,7 +186,7 @@ class kworld(object):
                 #no es una casilla en los bordes
                 if agregar:
                     #Agregamos una pared
-                    if self.mundo['casillas'].has_key(casilla_opuesta):
+                    if casilla_opuesta in self.mundo['casillas']:
                         #Del otro lado si existe registro
                         self.mundo['casillas'][casilla_opuesta]['paredes'].add(posicion_opuesta)
                     else:
@@ -212,7 +212,7 @@ class kworld(object):
         if cantidad == 'inf':
             cantidad = -1
         if 0<posicion[0]<self.mundo['dimensiones']['filas']+1 and 0<posicion[1]<self.mundo['dimensiones']['columnas']+1:
-            if self.mundo['casillas'].has_key(posicion):
+            if posicion in self.mundo['casillas']:
                 self.mundo['casillas'][posicion]['zumbadores'] = cantidad
             else:
                 self.mundo['casillas'].update({
@@ -271,7 +271,7 @@ class kworld(object):
         posicion = self.mundo['karel']['posicion']
         if self.algun_zumbador_en_la_mochila():
             if not test:
-                if self.mundo['casillas'].has_key(posicion):
+                if posicion in self.mundo['casillas']:
                     if self.mundo['casillas'][posicion]['zumbadores'] != -1:
                         self.mundo['casillas'][posicion]['zumbadores'] += 1
                 else:
@@ -303,7 +303,7 @@ class kworld(object):
         elif direccion == 'oeste':
             if posicion[1] == 1:
                 return False
-        if not self.mundo['casillas'].has_key(posicion):
+        if posicion not in self.mundo['casillas']:
             return True #No hay un registro para esta casilla, no hay paredes
         else:
             if direccion in self.mundo['casillas'][posicion]['paredes']:
@@ -327,7 +327,7 @@ class kworld(object):
         elif direccion == 'oeste':
             if posicion[0] == 1:
                 return False
-        if not self.mundo['casillas'].has_key(posicion):
+        if posicion not in self.mundo['casillas']:
             return True #No hay un registro para esta casilla, no hay paredes
         else:
             if rotado(direccion) in self.mundo['casillas'][posicion]['paredes']:
@@ -351,7 +351,7 @@ class kworld(object):
         elif direccion == 'oeste':
             if posicion[0] == self.mundo['dimensiones']['filas']:
                 return False
-        if not self.mundo['casillas'].has_key(posicion):
+        if posicion not in self.mundo['casillas']:
             return True #No hay un registro para esta casilla, no hay paredes extra
         else:
             if rotado(rotado(rotado(direccion))) in self.mundo['casillas'][posicion]['paredes']:
@@ -361,7 +361,7 @@ class kworld(object):
 
     def junto_a_zumbador (self):
         """ Determina si Karel esta junto a un zumbador. """
-        if self.mundo['casillas'].has_key(self.mundo['karel']['posicion']):
+        if self.mundo['karel']['posicion'] in self.mundo['casillas']:
             if self.mundo['casillas'][self.mundo['karel']['posicion']]['zumbadores'] == -1:
                 return True
             elif self.mundo['casillas'][self.mundo['karel']['posicion']]['zumbadores'] > 0:
@@ -400,7 +400,7 @@ class kworld(object):
             },
             'casillas': []
         }
-        for llave, valor in self.mundo['casillas'].iteritems():
+        for llave, valor in self.mundo['casillas'].items():
             mundo['casillas'].append({
                 'fila': llave[0],
                 'columna': llave[1],
@@ -419,7 +419,7 @@ class kworld(object):
 
     def exporta_casillas (self):
         casillas = []
-        for llave, valor in self.mundo['casillas'].iteritems():
+        for llave, valor in self.mundo['casillas'].items():
             casillas.append({
                     'fila': llave[0],
                     'columna': llave[1],
@@ -430,7 +430,7 @@ class kworld(object):
 
     def exporta_casillas_comparacion (self):
         casillas = []
-        for llave, valor in self.mundo['casillas'].iteritems():
+        for llave, valor in self.mundo['casillas'].items():
             casillas.append({
                     'fila': llave[0],
                     'columna': llave[1],
@@ -530,10 +530,10 @@ class kworld(object):
         }
         #s = " " + "   +"*13
         s = ""
-        for i in xrange(filas, 0, -1):
+        for i in range(filas, 0, -1):
             s += "\n    +"
-            for j in xrange(1, columnas):
-                if self.mundo['casillas'].has_key((i, j)):
+            for j in range(1, columnas):
+                if (i, j) in self.mundo['casillas']:
                     if 'norte' in self.mundo['casillas'][(i,j)]['paredes']:
                         s += "---+"
                     else:
@@ -541,16 +541,16 @@ class kworld(object):
                 else:
                     s += "   +"
             s += "\n %s|"%num(i)
-            for j in xrange(1, columnas):
+            for j in range(1, columnas):
                 if self.mundo['karel']['posicion'] == (i, j):
-                    if self.mundo['casillas'].has_key((i, j)):
+                    if (i, j) in self.mundo['casillas']:
                         if 'este' in self.mundo['casillas'][(i,j)]['paredes']:
                             s+= " %s |"%karel[self.mundo['karel']['orientacion']]
                         else:
                             s+= " %s  "%karel[self.mundo['karel']['orientacion']]
                     else:
                         s+= " %s  "%karel[self.mundo['karel']['orientacion']]
-                elif self.mundo['casillas'].has_key((i, j)):
+                elif (i, j) in self.mundo['casillas']:
                     if self.mundo['casillas'][(i, j)]['zumbadores'] or (self.casillas_evaluacion):
                         digitos = num_digits(self.mundo['casillas'][(i, j)]['zumbadores'])
                         if digitos  == 1:
@@ -577,7 +577,7 @@ class kworld(object):
                     s += "    "
         s += "\n    +" + "---+"*(columnas-1)
         s += '\n     '
-        for i in xrange(1, columnas):
+        for i in range(1, columnas):
             if num_digits(i)==1:
                 s += " %d  "%i
             else:
@@ -617,8 +617,8 @@ if __name__ == '__main__':
     mundo.pon_zumbadores((2, 1), 15)
     mundo.pon_zumbadores((1, 1), 7)
     mundo.avanza()
-    for i in xrange(3):
+    for i in range(3):
         mundo.gira_izquierda()
     mundo.avanza()
 
-    print mundo
+    print(mundo)

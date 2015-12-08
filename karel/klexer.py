@@ -15,7 +15,7 @@
 #  MA 02110-1301, USA.
 #
 import sys
-from kutil import KarelException, ktoken
+from .kutil import KarelException, ktoken
 
 """
 El analizador léxico de Karel completamente reescrito por mi para la
@@ -59,7 +59,7 @@ class klexer(object):
         self.debug = debug
         self.caracter_actual = self.lee_caracter()
         if self.debug:
-            print "leyendo archivo '%s'"%self.nombre_archivo
+            print("leyendo archivo '%s'"%self.nombre_archivo)
 
     def establecer_sintaxis(self, sintaxis):
         """Establece la sintaxis para este análisis"""
@@ -100,7 +100,7 @@ class klexer(object):
                 break
             if self.estado == self.ESTADO_COMENTARIO:
                 if self.debug:
-                    print "Encontré", repr(self.caracter_actual), "en estado comentario"
+                    print("Encontré", repr(self.caracter_actual), "en estado comentario")
                 if self.caracter_actual in self.simbolos: #Lo que puede pasar es que sea basura o termine el comentario
                     if self.caracter_actual == ')' and self.abrir_comentario == '(*' and self.ultimo_caracter == '*':
                         self.estado = self.ESTADO_ESPACIO
@@ -112,7 +112,7 @@ class klexer(object):
                     self.cambio_de_linea()
             elif self.estado == self.ESTADO_ESPACIO:
                 if self.debug:
-                    print "Encontré", repr(self.caracter_actual), "en estado espacio"
+                    print("Encontré", repr(self.caracter_actual), "en estado espacio")
                 if self.caracter_actual not in self.caracteres:
                     raise KarelException("Caracter desconocido en la linea %d columna %d"%(self.linea, self.columna))
                 if self.caracter_actual in self.numeros:
@@ -128,7 +128,7 @@ class klexer(object):
                     self.cambio_de_linea()
             elif self.estado == self.ESTADO_NUMERO:
                 if self.debug:
-                    print "Encontré", repr(self.caracter_actual), "en estado número"
+                    print("Encontré", repr(self.caracter_actual), "en estado número")
                 if self.caracter_actual not in self.caracteres:
                     raise KarelException("Caracter desconocido en la linea %d columna %d"%(self.linea, self.columna))
                 if self.caracter_actual in self.numeros:
@@ -143,7 +143,7 @@ class klexer(object):
                     break #Terminamos este token
             elif self.estado == self.ESTADO_PALABRA:
                 if self.debug:
-                    print "Encontré", repr(self.caracter_actual), "en estado palabra"
+                    print("Encontré", repr(self.caracter_actual), "en estado palabra")
                 if self.caracter_actual not in self.caracteres:
                     raise KarelException("Caracter desconocido en la linea %d columna %d"%(self.linea, self.columna))
                 if self.caracter_actual in self.palabras+self.numeros:
@@ -156,7 +156,7 @@ class klexer(object):
                     break #Terminamos este token
             elif self.estado == self.ESTADO_SIMBOLO:
                 if self.debug:
-                    print "Encontré", repr(self.caracter_actual), "en estado símbolo"
+                    print("Encontré", repr(self.caracter_actual), "en estado símbolo")
                 if self.caracter_actual not in self.caracteres:
                     raise KarelException("Caracter desconocido en la linea %d columna %d"%(self.linea, self.columna))
                 if self.caracter_actual == '{' and self.sintaxis=='pascal':
@@ -229,7 +229,7 @@ class klexer(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         """Devuelve un token de la pila si no está vacía o devuelve el
         siguiente token del archivo, esta función sirve al iterador de
         tokens"""
@@ -249,7 +249,7 @@ if __name__ == '__main__':
         lexer = klexer(debug=debug)
     i=0
     for token in lexer:
-        print "Token:", repr(token), "\t\tLine:", lexer.linea, "\t\tCol:", lexer.columna, "\t\tPrimer:", token.es_primer_token
+        print("Token:", repr(token), "\t\tLine:", lexer.linea, "\t\tCol:", lexer.columna, "\t\tPrimer:", token.es_primer_token)
         i += 1
-    print lexer.sintaxis
-    print "Hubo", i, "tokens"
+    print(lexer.sintaxis)
+    print("Hubo", i, "tokens")

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  karel
@@ -70,7 +70,7 @@ def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
         mun = kworld()
     while True: #Bucle para editar el mundo
         try:
-            entrada = re.split('\s+', raw_input('kcmd> '))
+            entrada = re.split('\s+', input('kcmd> '))
         except EOFError:
             break
         if entrada[0] == 'salir' or entrada[0] == 'exit' or entrada[0] == 'quit' or entrada[0] == 'q':
@@ -90,9 +90,9 @@ def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
                 if 1<=fila<=100 and 1<=columna<=100 and orientacion in ['norte', 'sur', 'este', 'oeste']:
                     mun.establece_karel((fila, columna), orientacion)
             except ValueError:
-                print 'numeros no validos'
+                print('numeros no validos')
             except IndexError:
-                print 'faltan parametros'
+                print('faltan parametros')
         elif entrada[0] == 'pared' or entrada[0] == 'p':
             try:
                 fila = int(entrada[1])
@@ -101,9 +101,9 @@ def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
                 if orientacion in ['norte', 'sur', 'este', 'oeste']:
                     mun.conmuta_pared((fila, columna), orientacion)
             except ValueError:
-                print 'numeros no validos'
+                print('numeros no validos')
             except IndexError:
-                print 'faltan parametros'
+                print('faltan parametros')
         elif entrada[0] == 'zumbador' or entrada[0] == 'z':
             try:
                 fila = int(entrada[1])
@@ -116,15 +116,15 @@ def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
                         cantidad = -1
                 mun.pon_zumbadores((fila, columna), cantidad)
             except ValueError:
-                print 'numeros no validos'
+                print('numeros no validos')
             except IndexError:
-                print 'faltan parametros'
+                print('faltan parametros')
         elif entrada[0] == 'guarda' or entrada[0] == 'guardar' or entrada[0] == 'g':
             if len(entrada) == 2:
                 mun.exporta_mundo(entrada[1])
             else:
                 mun.exporta_mundo(archivomundo)
-            print "Guardado!"
+            print("Guardado!")
             continue
         elif entrada[0] == 'limpia' or entrada[0] == 'l' or entrada[0] == 'clear':
             del mun
@@ -137,9 +137,9 @@ def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
                 if casillas_evaluacion:
                     mun.establece_karel(posicion=(100, 100))
             except IndexError:
-                print "No se especifica archivo a cargar"
+                print("No se especifica archivo a cargar")
             except IOError:
-                print "Este archivo no existe"
+                print("Este archivo no existe")
                 mun = kworld()
         elif entrada[0] == 'del' and casillas_evaluacion:#borramos un registro de casillas
             try:
@@ -148,34 +148,34 @@ def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
                     columna_inicio = int(entrada[2])
                     fila_fin = int(entrada[3])
                     columna_fin = int(entrada[4])
-                    for i in xrange(fila_inicio, fila_fin+[1, -1][fila_inicio>fila_fin], [1, -1][fila_inicio>fila_fin]):
-                        for j in xrange(columna_inicio, columna_fin+[1, -1][columna_inicio>columna_fin], [1, -1][columna_inicio>columna_fin]):
-                            if mun.mundo['casillas'].has_key((i, j)):
+                    for i in range(fila_inicio, fila_fin+[1, -1][fila_inicio>fila_fin], [1, -1][fila_inicio>fila_fin]):
+                        for j in range(columna_inicio, columna_fin+[1, -1][columna_inicio>columna_fin], [1, -1][columna_inicio>columna_fin]):
+                            if (i, j) in mun.mundo['casillas']:
                                 del mun.mundo['casillas'][(i, j)]
                 else:
                     fila = int(entrada[1])
                     columna = int(entrada[2])
-                    if mun.mundo['casillas'].has_key((fila, columna)):
+                    if (fila, columna) in mun.mundo['casillas']:
                         del mun.mundo['casillas'][(fila, columna)]
             except IndexError:
-                print 'debes indicar la casilla a borrar'
+                print('debes indicar la casilla a borrar')
         elif entrada[0] == 'pincel':
             try:
                 cantidad = int(entrada[1])
                 while True:
-                    coords = re.split('\s+', raw_input('pincel> '))
+                    coords = re.split('\s+', input('pincel> '))
                     if coords[0] == 'fin':
                         break
                     else:
                         fila = int(coords[0])
                         columna = int(coords[1])
                         mun.pon_zumbadores((fila, columna), cantidad)
-                    print mun
+                    print(mun)
             except ValueError:
-                print 'numeros no validos'
+                print('numeros no validos')
             except IndexError:
-                print 'faltan parametros'
-        print mun
+                print('faltan parametros')
+        print(mun)
     return mun
 
 def index(lista, valor):
@@ -191,20 +191,20 @@ if __name__ == '__main__':
     #karel_init()#Inicializamos las rutas
 
     if len(sys.argv) == 1:
-        print info.cmd_help
+        print(info.cmd_help)
     else:
         if '--version' in sys.argv:
-            print """Karel %.2f (built: %s)
+            print("""Karel %.2f (built: %s)
 Copyright (c) 2012 Developingo
-"""%(info.VERSION, info.BUILD_DATE)
+"""%(info.VERSION, info.BUILD_DATE))
         elif '--help' in sys.argv:
-            print info.cmd_help
+            print(info.cmd_help)
         elif 'help' in sys.argv:
             try:
                 comando = sys.argv[sys.argv.index('help')+1]
-                print info.ayuda(comando)
+                print(info.ayuda(comando))
             except:
-                print info.cmd_help
+                print(info.cmd_help)
         elif 'check_all' in sys.argv:
             #Opcion para checar la sintaxis de una carpeta llena de
             #archivos de Karel
@@ -220,20 +220,20 @@ Copyright (c) 2012 Developingo
                         grammar = kgrammar(flujo=open(carpeta+arch), archivo=arch, debug=False, futuro='--futuro' in sys.argv)
                         try:
                             grammar.verificar_sintaxis()
-                        except KarelException, ke:
-                            print "El archivo %s tiene errores:"%arch
-                            print "\t", ke[0], "en la linea", grammar.obtener_linea_error()
+                        except KarelException as ke:
+                            print("El archivo %s tiene errores:"%arch)
+                            print("\t", ke[0], "en la linea", grammar.obtener_linea_error())
                             err_count += 1
                 t_fin = time()
                 if err_count == 0:
-                    print "Todos los archivos estan correctos"
+                    print("Todos los archivos estan correctos")
                 else:
-                    print "Se encontraron", err_count, "errores"
-                print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar", file_count, "archivos"
+                    print("Se encontraron", err_count, "errores")
+                print("Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar", file_count, "archivos")
             except IndexError:
-                print "Falta el nombre de una carpeta despues de '-d'"
+                print("Falta el nombre de una carpeta despues de '-d'")
             except OSError:
-                print "No existe la carpeta '%s'"%carpeta
+                print("No existe la carpeta '%s'"%carpeta)
         elif 'check' in sys.argv:
             #Verifica la sintaxis de un archivo .karel
             try:
@@ -243,18 +243,18 @@ Copyright (c) 2012 Developingo
                 grammar = kgrammar(flujo=open(arch), archivo=arch, futuro='--futuro' in sys.argv)
                 try:
                     grammar.verificar_sintaxis()
-                except KarelException, ke:
-                    print "El archivo %s tiene errores:"%arch
-                    print "\t", ke[0], "en la linea", grammar.obtener_linea_error()
+                except KarelException as ke:
+                    print("El archivo %s tiene errores:"%arch)
+                    print("\t", ke[0], "en la linea", grammar.obtener_linea_error())
                 else:
-                    print "Sintaxis verificada, todo bien"
+                    print("Sintaxis verificada, todo bien")
 
                 t_fin = time()
-                print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar el archivo"
+                print("Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en analizar el archivo")
             except IndexError:
-                print "Falta el nombre de un archivo"
+                print("Falta el nombre de un archivo")
             except OSError:
-                print "No existe el archivo '%s'"%arch
+                print("No existe el archivo '%s'"%arch)
         elif 'test' in sys.argv:
             if '-m' in sys.argv:
                 try:
@@ -275,12 +275,12 @@ Copyright (c) 2012 Developingo
                     try:
                         grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
                         grammar.expandir_arbol()
-                    except KarelException, ke:
+                    except KarelException as ke:
                         resultado['mensaje'] = "El archivo %s tiene errores: %s cerca de la linea %d"%(arch, ke[0], grammar.obtener_linea_error())
                         resultado['resultado'] = "ERROR_COMPILACION"
                         if '--json' not in sys.argv:
-                            print "El archivo %s tiene errores:"%arch
-                            print "\t", ke[0], "en la linea", grammar.lexer.linea
+                            print("El archivo %s tiene errores:"%arch)
+                            print("\t", ke[0], "en la linea", grammar.lexer.linea)
                     else:
                         t_inicio = time()
                         puntaje = 0
@@ -311,27 +311,27 @@ Copyright (c) 2012 Developingo
                             runner.run()
                             all_ok = True
                             if runner.estado == 'OK':
-                                if caso['resultado'].has_key('karel'):
+                                if 'karel' in caso['resultado']:
                                     #Debemos buscar la posicion de karel o su mochila
-                                    if caso['resultado']['karel'].has_key('posicion'):
+                                    if 'posicion' in caso['resultado']['karel']:
                                         #verificamos la posicion
                                         if tuple(caso['resultado']['karel']['posicion']) != runner.mundo.mundo['karel']['posicion']:
                                             all_ok = False
                                             runner.mensaje = 'La posicion de Karel es incorrecta'
-                                    if caso['resultado']['karel'].has_key('orientacion'):
+                                    if 'orientacion' in caso['resultado']['karel']:
                                         #verificamos la posicion
                                         if caso['resultado']['karel']['orientacion'] != runner.mundo.mundo['karel']['orientacion']:
                                             all_ok = False
                                             runner.mensaje = 'La orientacion de Karel es incorrecta'
-                                    if caso['resultado']['karel'].has_key('mochila'):
+                                    if 'mochila' in caso['resultado']['karel']:
                                         #verificamos la posicion
                                         if caso['resultado']['karel']['mochila'] != runner.mundo.mundo['karel']['mochila']:
                                             all_ok = False
                                             runner.mensaje = 'La cantidad de zumbadores en la mochila de Karel es incorrecta'
-                                if caso['resultado'].has_key('casillas'):
+                                if 'casillas' in caso['resultado']:
                                     for casilla in caso['resultado']['casillas']:
                                         fila, columna = casilla['fila'], casilla['columna']
-                                        if runner.mundo.mundo['casillas'].has_key((fila, columna)):
+                                        if (fila, columna) in runner.mundo.mundo['casillas']:
                                             if runner.mundo.mundo['casillas'][(fila, columna)]['zumbadores'] != casilla['zumbadores']:
                                                 all_ok = False
                                                 runner.mensaje = 'La cantidad de zumbadores en el mundo es incorrecta!'
@@ -357,32 +357,32 @@ Copyright (c) 2012 Developingo
                                 "obtenidos": [0, caso['puntaje']][all_ok]
                             })
                             if '--json' not in sys.argv:
-                                print 'caso', num_caso, runner.estado, runner.mensaje, caso['puntaje'], 'puntos'
+                                print('caso', num_caso, runner.estado, runner.mensaje, caso['puntaje'], 'puntos')
                         t_fin = time()
                         resultado['puntaje'] = puntaje
                         resultado['total'] = suma_puntos
                         resultado['efectividad'] = puntaje/float(suma_puntos)
                         resultado['tiempo_ejecucion'] = int((t_fin-t_inicio)*1000)
                         if '--json' not in sys.argv:
-                            print 'puntaje:', puntaje, '/', suma_puntos
-                            print 'efectividad:', puntaje/float(suma_puntos)
-                            print "Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo"
+                            print('puntaje:', puntaje, '/', suma_puntos)
+                            print('efectividad:', puntaje/float(suma_puntos))
+                            print("Me tarde", int((t_fin-t_inicio)*1000), "milisegundos en ejecutar el archivo")
                     if '--json' in sys.argv:
-                        print json.dumps(resultado)
+                        print(json.dumps(resultado))
                 except IndexError:
-                    print "Falta el nombre de un archivo despues de '-k' o '-m'"
+                    print("Falta el nombre de un archivo despues de '-k' o '-m'")
                 except OSError:
-                    print "No existe el archivo '%s'"%arch
-                except IOError, e:
-                    print e
-                    print "No existe el archivo de mundo '%s'"%archivomundo
-                except ValueError, e:
-                    print e
-                    print "El mundo '%s' no es un archivo de mundo valido"%archivomundo
+                    print("No existe el archivo '%s'"%arch)
+                except IOError as e:
+                    print(e)
+                    print("No existe el archivo de mundo '%s'"%archivomundo)
+                except ValueError as e:
+                    print(e)
+                    print("El mundo '%s' no es un archivo de mundo valido"%archivomundo)
             else:
-                print info.ayuda('test')
-                print
-                print "Son necesarios ambos, el programa y las condiciones de evaluacion..."
+                print(info.ayuda('test'))
+                print()
+                print("Son necesarios ambos, el programa y las condiciones de evaluacion...")
         elif 'render' in sys.argv:
             archivomundo = sys.argv[sys.argv.index('render')+1]
             mun = kworld(archivo=file(archivomundo))
@@ -390,13 +390,13 @@ Copyright (c) 2012 Developingo
                 filas = int(sys.argv[sys.argv.index('dim')+1])
                 columnas = int(sys.argv[sys.argv.index('dim')+2])
                 if 1<=filas<=100 and 1<=columnas<=100:
-                    print mun.__str__(filas, columnas)
+                    print(mun.__str__(filas, columnas))
             else:
-                print mun
+                print(mun)
         elif 'edit' in sys.argv:
             archivomundo = sys.argv[sys.argv.index('edit')+1]
             mundo_editar(archivomundo)
-            print "Nos vemos pronto!"
+            print("Nos vemos pronto!")
         elif 'new' in sys.argv:
             if 'world' in sys.argv:
                 mundo = kworld()
@@ -421,65 +421,65 @@ finalizar-programa
 """)
                 f.close()
         elif 'testcase' in sys.argv: #Suite para construir casos de prueba
-            num_casos = input("Cuantos casos se van a evaluar? ")
-            importa_posicion = raw_input('Importa la posicion final de karel? S/n: ').lower() == 's'
-            importa_orientacion = raw_input('Importa orientacion de karel? S/n: ').lower() == 's'
-            importa_mochila = raw_input('Importa la mochila de karel? S/n: ').lower() == 's'
-            importa_casillas = raw_input('Importan las casillas del mundo? S/n: ').lower() == 's'
+            num_casos = eval(input("Cuantos casos se van a evaluar? "))
+            importa_posicion = input('Importa la posicion final de karel? S/n: ').lower() == 's'
+            importa_orientacion = input('Importa orientacion de karel? S/n: ').lower() == 's'
+            importa_mochila = input('Importa la mochila de karel? S/n: ').lower() == 's'
+            importa_casillas = input('Importan las casillas del mundo? S/n: ').lower() == 's'
             resultado = {
                 "casos": []
             }
-            for i in xrange(num_casos):
-                print "vas a editar el mundo del caso %d"%(i+1)
-                raw_input('listo?')
+            for i in range(num_casos):
+                print("vas a editar el mundo del caso %d"%(i+1))
+                input('listo?')
                 caso = {
                     "mundo": mundo_editar(mundo = kworld()).exporta_mundo(),
                     "resultado": dict(),
-                    "puntaje": raw_input("Caso %d\nCuantos puntos vale este caso? "%(i+1))
+                    "puntaje": input("Caso %d\nCuantos puntos vale este caso? "%(i+1))
                 }
                 comparativo = dict()
                 if importa_posicion:
-                    print "Posicion final de karel en el mundo %d"%(i+1)
+                    print("Posicion final de karel en el mundo %d"%(i+1))
                     comparativo.update({
                         'karel': {
-                            'posicion': [input('fila? '), input('columna? ')]
+                            'posicion': [eval(input('fila? ')), eval(input('columna? '))]
                         }
                     })
                 if importa_orientacion:
-                    print "Orientacion final de karel en el mundo %d"%(i+1)
-                    if comparativo.has_key('karel'):
+                    print("Orientacion final de karel en el mundo %d"%(i+1))
+                    if 'karel' in comparativo:
                         comparativo['karel'].update({
-                            'orientacion': raw_input('Orientacion? ')
+                            'orientacion': input('Orientacion? ')
                         })
                     else:
                         comparativo.update({
                             'karel':{
-                                'orientacion': raw_input('Orientacion? ')
+                                'orientacion': input('Orientacion? ')
                             }
                         })
                 if importa_mochila:
-                    print "Mochila final de karel en el mundo %d"%(i+1)
-                    if comparativo.has_key('karel'):
+                    print("Mochila final de karel en el mundo %d"%(i+1))
+                    if 'karel' in comparativo:
                         comparativo['karel'].update({
-                            'mochila': input('mochila? ')
+                            'mochila': eval(input('mochila? '))
                         })
                     else:
                         comparativo.update({
                             'karel':{
-                                'mochila': input('Orientacion? ')
+                                'mochila': eval(input('Orientacion? '))
                             }
                         })
                 if importa_casillas:
-                    print "Casillas de comparacion para el mundo %d"%(i+1)
-                    raw_input('listo?')
+                    print("Casillas de comparacion para el mundo %d"%(i+1))
+                    input('listo?')
                     comparativo.update({
                         'casillas': mundo_editar(mundo = kworld(karel_pos=(100, 100), casillas_evaluacion=True, casillas=dict()), casillas_evaluacion=True).exporta_casillas_comparacion()
                     })
                 caso['resultado'] = comparativo
                 resultado['casos'].append(caso)
-                print "termina caso %d"%(i+1)
-                print "---------------"
-            f = file(raw_input('Nombre del archivo? '), 'w')
+                print("termina caso %d"%(i+1))
+                print("---------------")
+            f = file(input('Nombre del archivo? '), 'w')
             f.write(json.dumps(resultado))
             f.close()
         elif 'step' in sys.argv:
@@ -495,9 +495,9 @@ finalizar-programa
                 try:
                     grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
                     grammar.expandir_arbol()
-                except KarelException, ke:
-                    print "El archivo %s tiene errores:"%arch
-                    print "\t", ke[0], "en la linea", grammar.obtener_linea_error()
+                except KarelException as ke:
+                    print("El archivo %s tiene errores:"%arch)
+                    print("\t", ke[0], "en la linea", grammar.obtener_linea_error())
                 else:
                     #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
                     runner = krunner(grammar.ejecutable, mundo=mun)
@@ -505,27 +505,27 @@ finalizar-programa
 
                     runner.step_run()
                     while runner.corriendo:
-                        print runner.mundo
-                        raw_input('>>>')
+                        print(runner.mundo)
+                        input('>>>')
                         runner.step()
                     #runner.run()
 
                     t_fin = time()
-                    print runner.estado, runner.mensaje
-                    print "Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo"
+                    print(runner.estado, runner.mensaje)
+                    print("Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo")
                     if 'dim' in sys.argv:
                         filas = int(sys.argv[sys.argv.index('dim')+1])
                         columnas = int(sys.argv[sys.argv.index('dim')+2])
                         if 1<=filas<=100 and 1<=columnas<=100:
-                            print runner.mundo.__str__(filas, columnas)
+                            print(runner.mundo.__str__(filas, columnas))
                     else:
-                        print runner.mundo
+                        print(runner.mundo)
             except IndexError:
-                print "Falta el nombre de un archivo despues de '-k' o '-m'"
+                print("Falta el nombre de un archivo despues de '-k' o '-m'")
             except OSError:
-                print "No existe el archivo '%s'"%arch
+                print("No existe el archivo '%s'"%arch)
             except IOError:
-                print "No existe el archivo '%s'"%arch
+                print("No existe el archivo '%s'"%arch)
         else:
             try:
                 if '-m' in sys.argv:
@@ -539,27 +539,27 @@ finalizar-programa
                 try:
                     grammar.verificar_sintaxis() #Pedimos que genere el arbol de instrucciones
                     grammar.expandir_arbol()
-                except KarelException, ke:
-                    print "El archivo %s tiene errores:"%arch
-                    print "\t", ke[0], "en la linea", grammar.obtener_linea_error()
+                except KarelException as ke:
+                    print("El archivo %s tiene errores:"%arch)
+                    print("\t", ke[0], "en la linea", grammar.obtener_linea_error())
                 else:
                     #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
                     runner = krunner(grammar.ejecutable, mundo=mun, debug='--debug' in sys.argv)
                     t_inicio = time()
                     runner.run()
                     t_fin = time()
-                    print runner.estado, runner.mensaje
-                    print "Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo"
+                    print(runner.estado, runner.mensaje)
+                    print("Me tarde", (t_fin-t_inicio)*1000, "milisegundos en ejecutar el archivo")
                     if 'dim' in sys.argv:
                         filas = int(sys.argv[sys.argv.index('dim')+1])
                         columnas = int(sys.argv[sys.argv.index('dim')+2])
                         if 1<=filas<=100 and 1<=columnas<=100:
-                            print runner.mundo.__str__(filas, columnas)
+                            print(runner.mundo.__str__(filas, columnas))
                     else:
-                        print runner.mundo
+                        print(runner.mundo)
             except IndexError:
-                print "Falta el nombre de un archivo despues de '-k' o '-m'"
+                print("Falta el nombre de un archivo despues de '-k' o '-m'")
             except OSError:
-                print "No existe el archivo '%s'"%arch
+                print("No existe el archivo '%s'"%arch)
             except IOError:
-                print "No existe el archivo '%s'"%arch
+                print("No existe el archivo '%s'"%arch)

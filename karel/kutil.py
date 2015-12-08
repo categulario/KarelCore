@@ -58,7 +58,7 @@ class kstack(deque):
         if self.is_empty():
             return False
         ultimo = self.top()
-        if ultimo.has_key('id'):
+        if 'id' in ultimo:
             return ultimo['id'] == id
 
 class KarelException(Exception):
@@ -98,6 +98,6 @@ def find_all(cadena, palabra):
     return resultado
 
 if __name__ == '__main__':
-    cadena = raw_input('Cadena: ')
-    palabra = raw_input('Palabra: ')
-    print find_all(cadena, palabra)
+    cadena = input('Cadena: ')
+    palabra = input('Palabra: ')
+    print(find_all(cadena, palabra))
