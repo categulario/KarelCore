@@ -63,7 +63,7 @@ from karel.kutil import KarelException
 
 def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
     if archivomundo:
-        mun = kworld(archivo=file(archivomundo), casillas_evaluacion=casillas_evaluacion)
+        mun = kworld(archivo=open(archivomundo), casillas_evaluacion=casillas_evaluacion)
     elif mundo:
         mun = mundo
     else:
@@ -133,7 +133,7 @@ def mundo_editar(archivomundo=False, mundo=None, casillas_evaluacion=False):
             try:
                 nombre_archivo = entrada[1]
                 del mun
-                mun = kworld(archivo=file(nombre_archivo), casillas_evaluacion=casillas_evaluacion)
+                mun = kworld(archivo=open(nombre_archivo), casillas_evaluacion=casillas_evaluacion)
                 if casillas_evaluacion:
                     mun.establece_karel(posicion=(100, 100))
             except IndexError:
@@ -268,7 +268,7 @@ Copyright (c) 2012 Developingo
                         "tiempo_ejecucion": 0
                     }
                     archivomundo = sys.argv[sys.argv.index('-m')+1]
-                    f = file(archivomundo)
+                    f = open(archivomundo)
                     kec = json.load(f) #Tenemos el archivo de condiciones de evaluacion cargado.
                     arch = sys.argv[sys.argv.index('test')+1] #Programa a evaluar
                     grammar = kgrammar(flujo=open(arch), archivo=arch, strict=True,futuro='--futuro' in sys.argv, strong_logic='--strong-logic' in sys.argv)
@@ -385,7 +385,7 @@ Copyright (c) 2012 Developingo
                 print("Son necesarios ambos, el programa y las condiciones de evaluacion...")
         elif 'render' in sys.argv:
             archivomundo = sys.argv[sys.argv.index('render')+1]
-            mun = kworld(archivo=file(archivomundo))
+            mun = kworld(archivo=open(archivomundo))
             if 'dim' in sys.argv:
                 filas = int(sys.argv[sys.argv.index('dim')+1])
                 columnas = int(sys.argv[sys.argv.index('dim')+2])
@@ -402,7 +402,7 @@ Copyright (c) 2012 Developingo
                 mundo = kworld()
                 mundo.exporta_mundo(sys.argv[sys.argv.index('world')+1], '--expand' in sys.argv)
             elif 'code' in sys.argv:
-                f = file(sys.argv[sys.argv.index('code')+1], 'w')
+                f = open(sys.argv[sys.argv.index('code')+1], 'w')
                 if '--java' in sys.argv:
                     f.write("""class program{
     program(){
@@ -479,14 +479,14 @@ finalizar-programa
                 resultado['casos'].append(caso)
                 print("termina caso %d"%(i+1))
                 print("---------------")
-            f = file(input('Nombre del archivo? '), 'w')
+            f = open(input('Nombre del archivo? '), 'w')
             f.write(json.dumps(resultado))
             f.close()
         elif 'step' in sys.argv:
             try:
                 if '-m' in sys.argv:
                     archivomundo = sys.argv[sys.argv.index('-m')+1]
-                    mun = kworld(archivo=file(archivomundo))
+                    mun = kworld(archivo=open(archivomundo))
                 else:
                     mun = kworld()
                 arch = sys.argv[sys.argv.index('step')+1]
@@ -530,7 +530,7 @@ finalizar-programa
             try:
                 if '-m' in sys.argv:
                     archivomundo = sys.argv[sys.argv.index('-m')+1]
-                    mun = kworld(archivo=file(archivomundo))
+                    mun = kworld(archivo=open(archivomundo))
                 else:
                     mun = kworld()
                 arch = sys.argv[1]
@@ -541,7 +541,7 @@ finalizar-programa
                     grammar.expandir_arbol()
                 except KarelException as ke:
                     print("El archivo %s tiene errores:"%arch)
-                    print("\t", ke[0], "en la linea", grammar.obtener_linea_error())
+                    print("\t", ke, "en la linea", grammar.obtener_linea_error())
                 else:
                     #print "el codigo pesa", sys.getsizeof(grammar.arbol), "bytes"
                     runner = krunner(grammar.ejecutable, mundo=mun, debug='--debug' in sys.argv)

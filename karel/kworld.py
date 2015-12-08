@@ -91,7 +91,7 @@ class kworld(object):
                 'casillas': [casillas, dict()][casillas==None]
             }
         self.casillas_evaluacion = casillas_evaluacion #Indica cuando se trabaja con un mundo de evaluación
-        if archivo is not None and isinstance(archivo, file):
+        if archivo is not None:
             if not self.carga_archivo(archivo):
                 raise KarelException("El archivo de mundo que me diste esta dañado!")
 
@@ -408,12 +408,11 @@ class kworld(object):
                 'paredes': list(valor['paredes'])
             })
         if nombrearchivo:
-            f = file(nombrearchivo, 'w')
-            if expandir:
-                f.write(json.dumps(mundo, indent=2))
-            else:
-                f.write(json.dumps(mundo))
-            f.close()
+            with open(nombrearchivo, 'w') as f:
+                if expandir:
+                    f.write(json.dumps(mundo, indent=2))
+                else:
+                    f.write(json.dumps(mundo))
         else:
             return mundo
 
