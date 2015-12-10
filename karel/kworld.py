@@ -63,6 +63,24 @@ def rotado (cardinal):
     }
     return puntos[cardinal]
 
+def num_digits(a):
+    if a == -1:
+        return 3
+    elif 0<=a <= 9:
+        return 1
+    elif 10<= a <= 99:
+        return 2
+    else:
+        return 3
+
+def num(numero):
+    if 0<=numero<=9:
+        return " %d "%numero
+    elif 10<=numero<=99:
+        return " %d"%numero
+    else:
+        "%d"%numero
+
 
 class kworld(object):
     """ Representa el mundo de Karel """
@@ -504,22 +522,9 @@ class kworld(object):
 
     def __str__ (self, filas=26, columnas=28):
         """Imprime bien bonito la primera porción de mundo"""
-        def num_digits(a):
-            if a == -1:
-                return 3
-            elif 0<=a <= 9:
-                return 1
-            elif 10<= a <= 99:
-                return 2
-            else:
-                return 3
-        def num(numero):
-            if 0<=numero<=9:
-                return " %d "%numero
-            elif 10<=numero<=99:
-                return " %d"%numero
-            else:
-                "%d"%numero
+        filas    = min(filas,    self.mundo['dimensiones']['filas'])
+        columnas = min(columnas, self.mundo['dimensiones']['columnas'])
+
         columnas+=1
         karel  = {
             'norte': '^',
